@@ -8,13 +8,14 @@
 
 import UIKit
 import SwiftyJSON
+import Haneke
 class DetailViewController: UIViewController,UICollectionViewDataSource,CollectionViewWaterfallLayoutDelegate{
 
     
     @IBOutlet weak var imageCollectionView: UICollectionView!
     
     var picturesURL = [String]()
-    var pictures = [UIImage]()
+    var cellImageSize = [CGSize]()
     
     var albumID :String?{
         didSet{
@@ -36,21 +37,22 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,Collecti
     
     //MARK: CollectionView data source
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return pictures.count
+        return picturesURL.count
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("imageCollectionViewCell", forIndexPath: indexPath) as! CollectionViewCell
         cell.backgroundColor = UIColor.whiteColor()
-        cell.imageView.image = pictures[indexPath.row]
-        cell.imageView.setupForImageViewer(nil, backgroundColor: UIColor.blackColor())
+        let url = NSURL(string: picturesURL[indexPath.row])
+        cell.imageView.hnk_setImageFromURL(url!)
+        cell.imageView.setupForImageViewer(url, backgroundColor: UIColor.blackColor())
         return cell
     }
     
     // MARK: WaterfallLayoutDelegate
     
     func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return pictures[indexPath.row].size 
+        return cellImageSize[indexPath.row]
     }
     
     //MARK: Get image from URL
@@ -59,51 +61,35 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,Collecti
         //building NSURL
         if let id = albumID {
             stringURL = stringURL + "/aid/" + id
-        
-            let url = NSURL(string: stringURL)
-           
-            let session = NSURLSession.sharedSession()
+            let cache = Shared.JSONCache
+            let URL = NSURL(string: stringURL)!
             
-            let dataTask = session.dataTaskWithURL(url!)  {
-                data,response,error in
-                dispatch_async(dispatch_get_main_queue()) {
-                    UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-                }
-                if let error = error {
-                    print(error.localizedDescription)
-                } else if let httpResponse = response as? NSHTTPURLResponse {
-                    if httpResponse.statusCode == 200 {
-                        self.initPicturesURL(data)
+            cache.fetch(URL: URL).onSuccess { jsonObject in
+                let json = JSON(jsonObject.dictionary)
+                self.picturesURL.removeAll()
+                self.cellImageSize.removeAll()
+                for  picJSON in json["pic"].array! {
+                    if let url = picJSON["linkurl"].string {
+                        self.picturesURL.append(url)
                         
+                    }else {
+                        print("linkurl key no found")
+                    }
+                    if let width = picJSON["width"].string ,let height = picJSON["height"].string {
+                        self.cellImageSize.append(CGSize(width: Int(width)!, height: Int(height)!))
+                    }else{
+                        print("width and height key no found")
                     }
                 }
-            }
-            dataTask.resume()
-        }
-    }
-    
-    func initPicturesURL(data:NSData?){
-        picturesURL.removeAll()
-        pictures.removeAll()
-        let json = JSON(data:data!)["pic"].array
-        for  picJSON in json! {
-            if let url = picJSON["linkurl"].string {
-                picturesURL.append(url)
-                pictures.append(getImageFromURL(url)!)
+                
+//                print(" detail picURL \(self.cellImageSize)")
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.imageCollectionView.reloadData()
+                }
             }
         }
-        
-        print(" detail picURL \(picturesURL)")
-        dispatch_async(dispatch_get_main_queue()) {
-            self.imageCollectionView.reloadData()
-        }
     }
-    
-    func getImageFromURL(url:String)->UIImage? {
-        
-        let data = NSData(contentsOfURL: NSURL(string: url)!)
-        return UIImage(data: data!)
-    }
+
     /*
     // MARK: - Navigation
 
@@ -141,5 +127,19 @@ extension ImageViewer {
     func didSwipeRight(recognizer:UISwipeGestureRecognizer){
         print("didSwipeRight")
         
+    }
+    
+}
+
+extension UIView {
+    var parentViewController: UIViewController? {
+        var parentResponder: UIResponder? = self
+        while parentResponder != nil {
+            parentResponder = parentResponder!.nextResponder()
+            if let viewController = parentResponder as? UIViewController {
+                return viewController
+            }
+        }
+        return nil
     }
 }

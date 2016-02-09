@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftyJSON
+import Haneke
 
 protocol CategorySelectionDelegate: class {
     func categorySelected(albumID: String)
@@ -21,74 +22,59 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
     
     var albumList = [[String]]()
     
-//    var pic = [UIImage]()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 //        categoryTabelView.backgroundView = UIView()
 //        categoryTabelView.backgroundView?.backgroundColor = UIColor.blackColor()
 //         Do any additional setup after loading the view.
-        let stringURL:String = "http://api.tietuku.com/v2/api/getalbum/key/a5rMlZpnZG6VnpNllmaUkpJon2NrlZVsmGdplGOXamxpmczKm2KVbMObmGSWYpY=/pid/13557"
-        //building NSURL
-        let url = NSURL(string: stringURL)
-        //        //building NSURLRequest
-        //        let request = NSURLRequest(URL: url!)
-        //connection
-        let session = NSURLSession.sharedSession()
-        
-        let dataTask = session.dataTaskWithURL(url!)  {
-            data,response,error in
-            dispatch_async(dispatch_get_main_queue()) {
-                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-            }
-            if let error = error {
-                print(error.localizedDescription)
-            } else if let httpResponse = response as? NSHTTPURLResponse {
-                if httpResponse.statusCode == 200 {
-                    self.initAlbumList(data)
-                    
-                }
-            }
-        }
-        dataTask.resume()
+        initAlbumList()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    func initAlbumList(data: NSData?) {
-//        var list = [[String]]()
-        var json = JSON(data:data!)
-        print("json  \(json)")
-        if let albums = json["album"].array?.reverse() {
-            print("\(albums)")
-            for albumJSON in albums{
-                var listCell = [String]()
-                if let albumName = albumJSON["albumname"].string {
-                    listCell.append(albumName)
-                }else{
-                    print(" albumname key no found")
+    
+    
+    
+    func initAlbumList() {
+        let stringURL:String = "http://api.tietuku.com/v2/api/getalbum/key/a5rMlZpnZG6VnpNllmaUkpJon2NrlZVsmGdplGOXamxpmczKm2KVbMObmGSWYpY="
+        
+        let cache = Shared.JSONCache
+        let URL = NSURL(string: stringURL)!
+        
+        cache.fetch(URL: URL).onSuccess { jsonObject in
+            print(jsonObject.dictionary?["album"])
+            let json = JSON(jsonObject.dictionary)
+            if let albums = json["album"].array?.reverse() {
+                print("\(albums)")
+                for albumJSON in albums{
+                    var listCell = [String]()
+                    if let albumName = albumJSON["albumname"].string {
+                        listCell.append(albumName)
+                    }else{
+                        print(" albumname key no found")
+                    }
+                    if let picURL = albumJSON["pic"][0]["url"].string {
+                        listCell.append(picURL)
+                    }else{
+                        print("pic/url key no found")
+                    }
+                    if let albumID = albumJSON["aid"].string {
+                        listCell.append(albumID)
+                    }else{
+                        print("ID key no found")
+                    }
+                    self.albumList.append(listCell)
                 }
-                if let picURL = albumJSON["pic"][0]["url"].string {
-                    listCell.append(picURL)
-//                    pic.append(getImageFromURL(picURL)!)
-                }else{
-                    print("pic/url key no found")
-                }
-                if let albumID = albumJSON["aid"].string {
-                    listCell.append(albumID)
-                }else{
-                    print("ID key no found")
-                }
-                albumList.append(listCell)
+            }else{
+                print("album key no found")
             }
-        }else{
-            print("album key no found")
-        }
-        print("albumList  \(albumList)")
-        dispatch_async(dispatch_get_main_queue()) {
-            self.categoryTabelView.reloadData()
+            print("albumList  \(self.albumList)")
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                self.categoryTabelView.reloadData()
+            }
         }
     }
 
@@ -106,8 +92,7 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! TableViewCell
         
         cell.titleLabel.text = albumList[indexPath.row][0]
-        cell.cellImageView.image = getImageFromURL(albumList[indexPath.row][1])
-//        cell.cellImageView.image = pic[indexPath.row]
+        cell.cellImageView.hnk_setImageFromURL(NSURL(string: albumList[indexPath.row][1])!)
         return cell
     }
     
@@ -123,14 +108,4 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
         self.delegate?.categorySelected(selectedCategory[2])
     }
     
-    func getImageFromURL(url:String?)->UIImage? {
-        
-        if let url = url{
-            let data = NSData(contentsOfURL: NSURL(string: url)!)
-            return UIImage(data: data!)
-        }else{
-            return nil
-        }
-        
-    }
 }

@@ -18,7 +18,11 @@ class ImageViewer: UIViewController {
     var senderView: UIImageView!
     var originalFrameRelativeToScreen: CGRect!
     var rootViewController: UIViewController!
+    
     var imageView = UIImageView()
+    var nextImageView = UIImageView()
+    var previousImageView = UIImageView()
+    
     var panGesture: UIPanGestureRecognizer!
     var panOrigin: CGPoint!
     var highQualityImageUrl: NSURL?
@@ -36,11 +40,18 @@ class ImageViewer: UIViewController {
     init(senderView: UIImageView,highQualityImageUrl: NSURL?, backgroundColor: UIColor) {
         self.senderView = senderView
         self.highQualityImageUrl = highQualityImageUrl
-     ｀
+     
         rootViewController = UIApplication.sharedApplication().keyWindow!.rootViewController!
         maskView.backgroundColor = backgroundColor
         
         super.init(nibName: nil, bundle: nil)
+        
+//        let cell = self.senderView.superview?.superview as! CollectionViewCell
+//        let collection = cell.superview as! UICollectionView
+//        let indexPath = collection.indexPathForCell(cell)
+//        let controller = collection.parentViewController as! DetailViewController
+//        let url = controller.picturesURL
+//        print("indexPath = \(url)")
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -70,6 +81,11 @@ class ImageViewer: UIViewController {
         scrollView.maximumZoomScale = kMaxImageScale
         scrollView.zoomScale = 1
         
+        //我添加的代码
+        scrollView.contentSize = CGSizeMake(scrollView.frame.width * 3, scrollView.frame.height)
+        scrollView.pagingEnabled = true
+//        scrollView.setContentOffset(CGPoint(x: scrollView.frame.width, y: 0), animated: false)
+        
         view.addSubview(scrollView)
     }
     
@@ -94,7 +110,6 @@ class ImageViewer: UIViewController {
     }
     func configureDownloadButton() {
         downloadButton.alpha = 0.0
-//        downloadButton.backgroundColor = UIColor(white: 0.1, alpha: 0.5)
         let image = UIImage(named: "ImageDownload", inBundle: NSBundle(forClass: ImageViewer.self), compatibleWithTraitCollection: nil)
         
         downloadButton.setImage(image, forState: .Normal)
@@ -123,14 +138,19 @@ class ImageViewer: UIViewController {
         imageView.contentMode = UIViewContentMode.ScaleAspectFit
         
         if let highQualityImageUrl = highQualityImageUrl {
-            imageView.hnk_setImageFromURL(highQualityImageUrl, placeholder: senderView.image, format: nil, failure: nil, success: nil)
+            let cache = Cache<UIImage>(name: "highQualityImageCache")
+            cache.fetch(URL: highQualityImageUrl).onSuccess { image in
+                self.imageView.image = image
+                self.animateEntry()
+            }
+//            imageView.hnk_setImageFromURL(highQualityImageUrl, placeholder: senderView.image, format: nil, failure: nil, success: nil)
         } else {
             imageView.image = senderView.image
         }
         
         scrollView.addSubview(imageView)
         
-        animateEntry()
+//        animateEntry()
 //        addPanGestureToView()
         addGestures()
         
@@ -197,6 +217,7 @@ class ImageViewer: UIViewController {
         UIView.animateWithDuration(0.8, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {() -> Void in
             if let image = self.imageView.image {
                 self.imageView.frame = self.centerFrameFromImage(image)
+//                self.imageView.frame.origin.x += self.scrollView.frame.width
             } else {
                 fatalError("Image within UIImageView needed.")
             }
@@ -217,8 +238,8 @@ class ImageViewer: UIViewController {
     func centerFrameFromImage(image: UIImage) -> CGRect {
         var newImageSize = imageResizeBaseOnWidth(windowBounds.size.width, oldWidth: image.size.width, oldHeight: image.size.height)
         newImageSize.height = min(windowBounds.size.height, newImageSize.height)
-        
-        return CGRectMake(0, windowBounds.size.height / 2 - newImageSize.height / 2, newImageSize.width, newImageSize.height)
+//        return CGRectMake(0, windowBounds.size.height / 2 - newImageSize.height / 2, newImageSize.width, newImageSize.height)
+        return CGRectMake(scrollView.frame.width, windowBounds.size.height / 2 - newImageSize.height / 2, newImageSize.width, newImageSize.height)
     }
     
     func imageResizeBaseOnWidth(newWidth: CGFloat, oldWidth: CGFloat, oldHeight: CGFloat) -> CGSize {
@@ -385,4 +406,8 @@ extension ImageViewer: UIScrollViewDelegate {
     func scrollViewDidEndZooming(scrollView: UIScrollView, withView view: UIView?, atScale scale: CGFloat) {
         isAnimating = false
     }
+    
+//    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+//        <#code#>
+//    }
 }
