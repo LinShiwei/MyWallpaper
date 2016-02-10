@@ -22,6 +22,7 @@ class ImageViewer: UIViewController {
     var imageView = UIImageView()
     var nextImageView = UIImageView()
     var previousImageView = UIImageView()
+    var currentIndexPathRow :Int = 0
     
     var panGesture: UIPanGestureRecognizer!
     var panOrigin: CGPoint!
@@ -46,12 +47,6 @@ class ImageViewer: UIViewController {
         
         super.init(nibName: nil, bundle: nil)
         
-//        let cell = self.senderView.superview?.superview as! CollectionViewCell
-//        let collection = cell.superview as! UICollectionView
-//        let indexPath = collection.indexPathForCell(cell)
-//        let controller = collection.parentViewController as! DetailViewController
-//        let url = controller.picturesURL
-//        print("indexPath = \(url)")
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -84,7 +79,7 @@ class ImageViewer: UIViewController {
         //我添加的代码
         scrollView.contentSize = CGSizeMake(scrollView.frame.width * 3, scrollView.frame.height)
         scrollView.pagingEnabled = true
-//        scrollView.setContentOffset(CGPoint(x: scrollView.frame.width, y: 0), animated: false)
+        scrollView.setContentOffset(CGPoint(x: scrollView.frame.width, y: 0), animated: false)
         
         view.addSubview(scrollView)
     }
@@ -124,13 +119,104 @@ class ImageViewer: UIViewController {
         var originalFrame = senderView.convertRect(windowBounds, toView: nil)
         originalFrame.origin = CGPointMake(originalFrame.origin.x, originalFrame.origin.y)
         originalFrame.size = senderView.frame.size
-        
+
         originalFrameRelativeToScreen = originalFrame
         
 //        UIApplication.sharedApplication().setStatusBarHidden(true, withAnimation: UIStatusBarAnimation.Slide)
     }
+    func initSenderView(currentIndexPathRow:Int){
+        if !(self.senderView.superview is UIScrollView) {
+            senderView.alpha = 1.0
+            let cell = self.senderView.superview?.superview as! CollectionViewCell
+            let collection = cell.superview as! UICollectionView
+            let indexPath = NSIndexPath(forRow: currentIndexPathRow, inSection: 0)
+            let senderCell = collection.cellForItemAtIndexPath(indexPath) as! CollectionViewCell
+            senderView = senderCell.imageView
+            senderView.alpha = 0
+            collection.scrollToItemAtIndexPath(indexPath, atScrollPosition: .CenteredVertically, animated: false)
+            configureView()
+        }else{
+            
+        }
+        
+    }
+    func getCurrentIndexPathRow()->Int{
+        
+        let cell = self.senderView.superview?.superview as! CollectionViewCell
+        let collection = cell.superview as! UICollectionView
+        let indexPath = collection.indexPathForCell(cell)
+        return indexPath!.row
+    }
+    func nextIndexPathRow(currentIndexPathRow:Int)->Int{
+        let cell = self.senderView.superview?.superview as! CollectionViewCell
+        let collection = cell.superview as! UICollectionView
+        let controller = collection.parentViewController as! DetailViewController
+        if currentIndexPathRow == controller.picturesURL.count - 1 {
+            return 0
+        }else{
+            return currentIndexPathRow + 1
+        }
+    }
+    func previousIndexPathRow(currentIndexPathRow:Int)->Int{
+        let cell = self.senderView.superview?.superview as! CollectionViewCell
+        let collection = cell.superview as! UICollectionView
+        let controller = collection.parentViewController as! DetailViewController
+        if currentIndexPathRow == 0 {
+            return controller.picturesURL.count - 1
+        }else{
+            return currentIndexPathRow - 1
+        }
+    }
+    func getImageURLAtIndexPathRowWithOffset(indexPathRow:Int,previousOrCurrentOrNext:Int)->NSURL{
+        var row:Int
+        switch previousOrCurrentOrNext{
+        case -1: row = previousIndexPathRow(indexPathRow)
+        case 1:  row = nextIndexPathRow(indexPathRow)
+        default: row = indexPathRow
+        }
+        let cell = self.senderView.superview?.superview as! CollectionViewCell
+        let collection = cell.superview as! UICollectionView
+        let controller = collection.parentViewController as! DetailViewController
+        return NSURL(string: controller.picturesURL[row])!
+
+    }
+    func getImageSizeAtIndexPathRowWithOffset(indexPathRow:Int,previousOrCurrentOrNext:Int)->CGSize{
+        var row:Int
+        switch previousOrCurrentOrNext{
+        case -1: row = previousIndexPathRow(indexPathRow)
+        case 1:  row = nextIndexPathRow(indexPathRow)
+        default: row = indexPathRow
+        }
+        let cell = self.senderView.superview?.superview as! CollectionViewCell
+        let collection = cell.superview as! UICollectionView
+        let controller = collection.parentViewController as! DetailViewController
+        
+        return controller.cellImageSize[row]
+    }
     
     func configureImageView() {
+        let cache = Cache<UIImage>(name: "highQualityImageCache")
+
+        currentIndexPathRow = getCurrentIndexPathRow()
+        
+        let previousImageSize = getImageSizeAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: -1)
+        previousImageView.frame = centerFrameFromImageSize(previousImageSize)
+        previousImageView.contentMode = UIViewContentMode.ScaleAspectFit
+        let previousURL = getImageURLAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: -1)
+        cache.fetch(URL: previousURL).onSuccess { image in
+            self.previousImageView.image = image
+        }
+        
+        let nextImageSize = getImageSizeAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: 1)
+        var nextFrame = centerFrameFromImageSize(nextImageSize)
+        nextFrame.origin.x += scrollView.frame.width * 2
+        nextImageView.frame = nextFrame
+        nextImageView.contentMode = UIViewContentMode.ScaleAspectFit
+        let nextURL = getImageURLAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: 1)
+        cache.fetch(URL: nextURL).onSuccess { image in
+            self.nextImageView.image = image
+        }
+        
         senderView.alpha = 0.0
         
         imageView.frame = originalFrameRelativeToScreen
@@ -138,7 +224,6 @@ class ImageViewer: UIViewController {
         imageView.contentMode = UIViewContentMode.ScaleAspectFit
         
         if let highQualityImageUrl = highQualityImageUrl {
-            let cache = Cache<UIImage>(name: "highQualityImageCache")
             cache.fetch(URL: highQualityImageUrl).onSuccess { image in
                 self.imageView.image = image
                 self.animateEntry()
@@ -147,15 +232,13 @@ class ImageViewer: UIViewController {
         } else {
             imageView.image = senderView.image
         }
-        
+
         scrollView.addSubview(imageView)
-        
+        scrollView.addSubview(previousImageView)
+        scrollView.addSubview(nextImageView)
 //        animateEntry()
 //        addPanGestureToView()
         addGestures()
-        
-        addSwipeGestureRecognizer()
-        
         centerScrollViewContents()
     }
     
@@ -177,13 +260,13 @@ class ImageViewer: UIViewController {
     }
     
     // MARK: - Gestures
-    func addPanGestureToView() {
-        panGesture = UIPanGestureRecognizer(target: self, action: "gestureRecognizerDidPan:")
-        panGesture.cancelsTouchesInView = false
-        panGesture.delegate = self
-        
-        imageView.addGestureRecognizer(panGesture)
-    }
+//    func addPanGestureToView() {
+//        panGesture = UIPanGestureRecognizer(target: self, action: "gestureRecognizerDidPan:")
+//        panGesture.cancelsTouchesInView = false
+//        panGesture.delegate = self
+//        
+//        imageView.addGestureRecognizer(panGesture)
+//    }
     
     func addGestures() {
         let singleTapRecognizer = UITapGestureRecognizer(target: self, action: "didSingleTap:")
@@ -214,15 +297,18 @@ class ImageViewer: UIViewController {
     
     // MARK: - Animation
     func animateEntry() {
+        self.imageView.frame.origin.x += scrollView.frame.width
         UIView.animateWithDuration(0.8, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {() -> Void in
             if let image = self.imageView.image {
-                self.imageView.frame = self.centerFrameFromImage(image)
+                var frame = self.centerFrameFromImageSize(image.size)
+                frame.origin.x += self.scrollView.frame.width
+                self.imageView.frame = frame
 //                self.imageView.frame.origin.x += self.scrollView.frame.width
             } else {
                 fatalError("Image within UIImageView needed.")
             }
             }, completion: nil)
-        
+    
         UIView.animateWithDuration(0.4, delay: 0.03, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {() -> Void in
             self.closeButton.alpha = 0.5
             self.downloadButton.alpha = self.closeButton.alpha
@@ -235,11 +321,11 @@ class ImageViewer: UIViewController {
             }, completion: nil)
     }
     
-    func centerFrameFromImage(image: UIImage) -> CGRect {
-        var newImageSize = imageResizeBaseOnWidth(windowBounds.size.width, oldWidth: image.size.width, oldHeight: image.size.height)
+    func centerFrameFromImageSize(imageSize:CGSize) -> CGRect {
+        var newImageSize = imageResizeBaseOnWidth(windowBounds.size.width, oldWidth: imageSize.width, oldHeight: imageSize.height)
         newImageSize.height = min(windowBounds.size.height, newImageSize.height)
 //        return CGRectMake(0, windowBounds.size.height / 2 - newImageSize.height / 2, newImageSize.width, newImageSize.height)
-        return CGRectMake(scrollView.frame.width, windowBounds.size.height / 2 - newImageSize.height / 2, newImageSize.width, newImageSize.height)
+        return CGRectMake(0, windowBounds.size.height / 2 - newImageSize.height / 2, newImageSize.width, newImageSize.height)
     }
     
     func imageResizeBaseOnWidth(newWidth: CGFloat, oldWidth: CGFloat, oldHeight: CGFloat) -> CGSize {
@@ -250,6 +336,7 @@ class ImageViewer: UIViewController {
     
     // MARK: - Actions
     /// 以下这个函数完成的是拖移照片的手势响应函数
+    /*
     func gestureRecognizerDidPan(recognizer: UIPanGestureRecognizer) {
         if scrollView.zoomScale != 1.0 || isAnimating {
             return
@@ -276,7 +363,7 @@ class ImageViewer: UIViewController {
             }
         }
     }
-    
+    */
     func didSingleTap(recognizer: UITapGestureRecognizer) {
         if scrollView.zoomScale == 1.0 {
             dismissViewController()
@@ -331,7 +418,7 @@ class ImageViewer: UIViewController {
         
         imageView.frame = contentsFrame
     }
-    
+  /*
     func rollbackViewController() {
         isAnimating = true
         UIView.animateWithDuration(0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {() in
@@ -347,7 +434,7 @@ class ImageViewer: UIViewController {
                 self.isAnimating = false
         })
     }
-    
+    */
     func dismissViewController() {
         isAnimating = true
         dispatch_async(dispatch_get_main_queue(), {
@@ -360,7 +447,9 @@ class ImageViewer: UIViewController {
             })
             
             UIView.animateWithDuration(0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {() in
-                self.imageView.frame = self.originalFrameRelativeToScreen
+                var frame = self.originalFrameRelativeToScreen
+                frame.origin.x += self.scrollView.frame.width
+                self.imageView.frame = frame
                 self.rootViewController.view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0, 1.0)
                 self.view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0, 1.0)
                 self.maskView.alpha = 0.0
@@ -407,7 +496,51 @@ extension ImageViewer: UIScrollViewDelegate {
         isAnimating = false
     }
     
-//    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-//        <#code#>
-//    }
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        if scrollView.contentOffset.x > scrollView.frame.width {
+            print("offset > width")
+            currentIndexPathRow = nextIndexPathRow(currentIndexPathRow)
+            previousImageView.frame.size = imageView.frame.size
+            previousImageView.frame.origin.y = imageView.frame.origin.y
+            previousImageView.image = imageView.image
+            imageView.frame.size = nextImageView.frame.size
+            imageView.frame.origin.y = nextImageView.frame.origin.y
+            imageView.image = nextImageView.image
+            scrollView.setContentOffset(CGPoint(x: scrollView.frame.width, y: 0), animated: false)
+            let nextImageSize = getImageSizeAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: 1)
+            var nextFrame = centerFrameFromImageSize(nextImageSize)
+            nextFrame.origin.x += scrollView.frame.width * 2
+            nextImageView.frame = nextFrame
+            let nextURL = getImageURLAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: 1)
+            let cache = Cache<UIImage>(name: "highQualityImageCache")
+            cache.fetch(URL: nextURL).onSuccess { image in
+                self.nextImageView.image = image
+            }
+            initSenderView(currentIndexPathRow)
+        }else{
+            if scrollView.contentOffset.x < scrollView.frame.width {
+                print("offset <width")
+                currentIndexPathRow = previousIndexPathRow(currentIndexPathRow)
+                nextImageView.frame.size = imageView.frame.size
+                nextImageView.frame.origin.y = imageView.frame.origin.y
+                nextImageView.image = imageView.image
+                imageView.frame.size = previousImageView.frame.size
+                imageView.frame.origin.y = previousImageView.frame.origin.y
+                imageView.image = previousImageView.image
+                scrollView.setContentOffset(CGPoint(x: scrollView.frame.width, y: 0), animated: false)
+                let previousImageSize = getImageSizeAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: -1)
+                var previousFrame = centerFrameFromImageSize(previousImageSize)
+                previousFrame.origin.x += 0
+                previousImageView.frame = previousFrame
+                let previousURL = getImageURLAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: -1)
+                let cache = Cache<UIImage>(name: "highQualityImageCache")
+                cache.fetch(URL: previousURL).onSuccess { image in
+                    self.previousImageView.image = image
+                }
+                initSenderView(currentIndexPathRow)
+            }else{
+                print("offset = width")
+            }
+        }
+    }
 }

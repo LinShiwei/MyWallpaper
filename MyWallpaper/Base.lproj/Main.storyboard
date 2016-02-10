@@ -19,8 +19,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SjH-Z8-PyT">
+                                <rect key="frame" x="276" y="284" width="51" height="31"/>
+                            </switch>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NAa-nR-L1h">
+                                <rect key="frame" x="20" y="20" width="560" height="580"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            </scrollView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Rw-0N-lro">
+                                <rect key="frame" x="20" y="7" width="156" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0hq-Ed-rbs">
-                                <rect key="frame" x="20" y="28" width="560" height="552"/>
+                                <rect key="frame" x="20" y="20" width="560" height="580"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="bsw-PA-L4J">
                                     <size key="itemSize" width="184" height="185"/>
@@ -59,18 +72,21 @@
                                     <outlet property="delegate" destination="BoJ-w3-Hah" id="R9Z-0I-tSP"/>
                                 </connections>
                             </collectionView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Rw-0N-lro">
-                                <rect key="frame" x="20" y="7" width="156" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="QF2-No-iom">
+                                <rect key="frame" x="281" y="499" width="39" height="37"/>
+                            </pageControl>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="NAa-nR-L1h" firstAttribute="leading" secondItem="XNV-Nl-zWX" secondAttribute="leadingMargin" id="0hx-pM-1Jt"/>
                             <constraint firstAttribute="trailingMargin" secondItem="0hq-Ed-rbs" secondAttribute="trailing" id="1rL-xb-lQV"/>
-                            <constraint firstItem="0hq-Ed-rbs" firstAttribute="top" secondItem="odn-7R-fAo" secondAttribute="bottom" constant="8" id="FbT-4d-cDg"/>
-                            <constraint firstItem="0HG-mV-Cej" firstAttribute="top" secondItem="0hq-Ed-rbs" secondAttribute="bottom" constant="20" id="I8j-jU-Qru"/>
+                            <constraint firstItem="QF2-No-iom" firstAttribute="centerX" secondItem="NAa-nR-L1h" secondAttribute="centerX" id="5a2-Ec-8mV"/>
+                            <constraint firstItem="0hq-Ed-rbs" firstAttribute="top" secondItem="odn-7R-fAo" secondAttribute="bottom" id="FbT-4d-cDg"/>
+                            <constraint firstItem="0HG-mV-Cej" firstAttribute="top" secondItem="NAa-nR-L1h" secondAttribute="bottom" id="GwQ-Ve-6uU"/>
+                            <constraint firstItem="0HG-mV-Cej" firstAttribute="top" secondItem="0hq-Ed-rbs" secondAttribute="bottom" id="I8j-jU-Qru"/>
                             <constraint firstItem="0hq-Ed-rbs" firstAttribute="leading" secondItem="XNV-Nl-zWX" secondAttribute="leadingMargin" id="LZa-uB-A1v"/>
+                            <constraint firstItem="NAa-nR-L1h" firstAttribute="trailing" secondItem="XNV-Nl-zWX" secondAttribute="trailingMargin" id="Yh8-ml-7ez"/>
+                            <constraint firstItem="NAa-nR-L1h" firstAttribute="top" secondItem="odn-7R-fAo" secondAttribute="bottom" id="bZT-pc-S9R"/>
+                            <constraint firstItem="0HG-mV-Cej" firstAttribute="top" secondItem="QF2-No-iom" secondAttribute="bottom" constant="64" id="r68-aK-A4N"/>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
@@ -79,7 +95,10 @@
                         </variation>
                     </view>
                     <connections>
+                        <outlet property="albumIndexScrollView" destination="NAa-nR-L1h" id="65g-Hz-Kfe"/>
                         <outlet property="imageCollectionView" destination="0hq-Ed-rbs" id="oub-XH-AVS"/>
+                        <outlet property="pageControl" destination="QF2-No-iom" id="5Qe-7n-huZ"/>
+                        <outlet property="switchController" destination="SjH-Z8-PyT" id="0Df-ww-H36"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="t09-GP-HcK" userLabel="First Responder" sceneMemberID="firstResponder"/>
