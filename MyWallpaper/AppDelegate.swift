@@ -18,9 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let splitViewController = self.window!.rootViewController as! UISplitViewController
         let masterViewController = splitViewController.viewControllers.first as! MasterViewController
         let detailViewController = splitViewController.viewControllers.last as! DetailViewController
-//        print("appdelegate  \(masterViewController.albumList)")
-//        let firstAlbumID = masterViewController.albumList[0][2]
-//        detailViewController.albumID = firstAlbumID
+
         masterViewController.delegate = detailViewController
         return true
     }

@@ -15,7 +15,6 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
 
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var albumIndexScrollView: UIScrollView!
-    @IBOutlet weak var switchController: UISwitch!
     
     @IBOutlet weak var imageCollectionView: UICollectionView!
     
@@ -24,8 +23,6 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
     var picturesURL = [String]()
     var cellImageSize = [CGSize]()
     
-    var indexPicturesURL = [String]()
-    var indexImageSize = [CGSize]()
     
     var albumID :String = albumIndex{
         didSet{
@@ -37,6 +34,8 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
         super.viewDidLoad()
         fetchDataWithAlbumID()
         self.imageCollectionView!.collectionViewLayout = getLayout()
+        
+        view.backgroundColor = UIColor.blackColor() 
         // Do any additional setup after loading the view.
     }
 
@@ -71,8 +70,6 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
         //building NSURL
         picturesURL.removeAll()
         cellImageSize.removeAll()
-        indexPicturesURL.removeAll()
-        indexImageSize.removeAll()
         if let timer = timer {
             timer.invalidate()
         }
@@ -81,13 +78,12 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
 
         if albumID != albumIndex {
             imageCollectionView.alpha = 1
-            switchController.alpha = 0
             albumIndexScrollView.alpha = 0
             pageControl.alpha = 0
             stringURL = stringURL + "/aid/" + albumID
             let cache = Shared.JSONCache
             let URL = NSURL(string: stringURL)!
-            
+            cache.removeAll()
             cache.fetch(URL: URL).onSuccess { jsonObject in
                 let json = JSON(jsonObject.dictionary)
                 for  picJSON in json["pic"].array! {
@@ -102,29 +98,28 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
                         print("width and height key no found")
                     }
                 }
-//                print(" detail picURL \(self.cellImageSize)")
                 dispatch_async(dispatch_get_main_queue()) {
                     self.imageCollectionView.reloadData()
                 }
             }
         }else{
             imageCollectionView.alpha = 0
-            switchController.alpha = 1
             albumIndexScrollView.alpha = 1
             pageControl.alpha = 1
             stringURL = stringURL + "/aid/" + albumID
             let cache = Shared.JSONCache
             let URL = NSURL(string: stringURL)!
+            cache.removeAll()
             cache.fetch(URL: URL).onSuccess{ jsonObject in
                 let json = JSON(jsonObject.dictionary)
                 for  picJSON in json["pic"].array! {
                     if let url = picJSON["linkurl"].string {
-                        self.indexPicturesURL.append(url)
+                        self.picturesURL.append(url)
                     }else {
                         print("linkurl key no found")
                     }
                     if let width = picJSON["width"].string ,let height = picJSON["height"].string {
-                        self.indexImageSize.append(CGSize(width: Int(width)!, height: Int(height)!))
+                        self.cellImageSize.append(CGSize(width: Int(width)!, height: Int(height)!))
                     }else{
                         print("width and height key no found")
                     }
@@ -135,15 +130,6 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
         }
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
     func getLayout()->CollectionViewWaterfallLayout{
         let layout = CollectionViewWaterfallLayout()
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -156,23 +142,20 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
         return layout
     }
     func initPageControl(){
-        pageControl.numberOfPages = indexPicturesURL.count - 1
+        pageControl.numberOfPages = picturesURL.count
+        initTimer()
+    }
+    func initTimer(){
         timer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "moveToNextPage", userInfo: nil, repeats: true)
-//        var constraints: [NSLayoutConstraint] = []
-//        
-//        let views: [String: UIView] = [
-//            "pageControl"   : pageControl
-//        ]
-//        constraints.append(NSLayoutConstraint(item: pageControl, attribute: .CenterX, relatedBy: .Equal, toItem: albumIndexScrollView, attribute: .CenterX, multiplier: 1.0, constant: 0))
-//        constraints.appendContentsOf(NSLayoutConstraint.constraintsWithVisualFormat("V:[pageControl]-0-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views))
-//        NSLayoutConstraint.activateConstraints(constraints)
-
     }
     func moveToNextPage (){
-        
         // Move to next page
+        albumIndexScrollView.userInteractionEnabled = false
+        for view in albumIndexScrollView.subviews {
+            view.userInteractionEnabled = false
+        }
         let pageWidth:CGFloat = CGRectGetWidth(albumIndexScrollView.frame)
-        let maxWidth:CGFloat = pageWidth * CGFloat(indexPicturesURL.count)
+        let maxWidth:CGFloat = pageWidth * CGFloat(picturesURL.count)
         let contentOffset:CGFloat = albumIndexScrollView.contentOffset.x
         
         var slideToX = contentOffset + pageWidth
@@ -180,24 +163,21 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
         if  contentOffset + pageWidth == maxWidth{
             slideToX = 0
         }
+        
         albumIndexScrollView.scrollRectToVisible(CGRectMake(slideToX, 0, pageWidth, CGRectGetHeight(albumIndexScrollView.frame)), animated: true)
     }
     func initScrollView(){
         albumIndexScrollView.delegate = self
-        albumIndexScrollView.contentSize = CGSizeMake(albumIndexScrollView.frame.width * CGFloat(indexPicturesURL.count), albumIndexScrollView.frame.height)
-        for index in 0...indexPicturesURL.count-1 {
+        albumIndexScrollView.contentSize = CGSizeMake(albumIndexScrollView.frame.width * CGFloat(picturesURL.count), albumIndexScrollView.frame.height)
+        for index in 0...picturesURL.count-1 {
             let scrollImageView = initScrollImageView(index)
-            let cache = Cache<UIImage>(name: "highQualityImageCache")
-            let URL = NSURL(string: indexPicturesURL[index])!
+            let cache = Cache<UIImage>(name: "indexImageCache")
+            let URL = NSURL(string: picturesURL[index])!
             cache.fetch(URL:URL).onSuccess{ image in
                 scrollImageView.image = image
+                scrollImageView.setupForImageViewer(URL, backgroundColor: UIColor.blackColor())
                 self.albumIndexScrollView.addSubview(scrollImageView)
-                if index == 0 {
-                    print("frame")
-                    print(self.albumIndexScrollView.frame)
-                    print(scrollImageView.frame)
-                }
-
+                
             }
         }
         
@@ -207,7 +187,7 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
     func initScrollImageView(index:Int)->UIImageView {
         let indexFloat = CGFloat(index)
         let imageView = UIImageView()
-        var frame = centerFrameFromImageSize(indexImageSize[index])
+        var frame = centerFrameFromImageSize(cellImageSize[index])
         frame.origin.x += albumIndexScrollView.frame.width * indexFloat
         imageView.frame = frame
         return imageView
@@ -224,13 +204,35 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
         return CGSizeMake(newWidth, newHeight)
     }
     //MARK: ScrollView Delegate
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         let pageWidth:CGFloat = CGRectGetWidth(scrollView.frame)
         let currentPage:CGFloat = floor((scrollView.contentOffset.x-pageWidth/2)/pageWidth)+1
         // Change the indicator
         pageControl.currentPage = Int(currentPage)
-        
-
+        scrollView.userInteractionEnabled = true
+        for view in scrollView.subviews {
+            view.userInteractionEnabled = true
+        }
+        initTimer()
+    }
+    func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        scrollView.userInteractionEnabled = false
+        for view in scrollView.subviews {
+            view.userInteractionEnabled = false
+        }
+        if let timer = timer {
+            timer.invalidate()
+        }
+    }
+    func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
+        let pageWidth:CGFloat = CGRectGetWidth(scrollView.frame)
+        let currentPage:CGFloat = floor((scrollView.contentOffset.x-pageWidth/2)/pageWidth)+1
+        // Change the indicator
+        pageControl.currentPage = Int(currentPage)
+        scrollView.userInteractionEnabled = true
+        for view in scrollView.subviews {
+            view.userInteractionEnabled = true
+        }
     }
 }
 //MARK: CategorySelectionDelegate

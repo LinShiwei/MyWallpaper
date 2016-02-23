@@ -19,9 +19,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SjH-Z8-PyT">
-                                <rect key="frame" x="276" y="284" width="51" height="31"/>
-                            </switch>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NAa-nR-L1h">
                                 <rect key="frame" x="20" y="20" width="560" height="580"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -34,7 +31,7 @@
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0hq-Ed-rbs">
                                 <rect key="frame" x="20" y="20" width="560" height="580"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.049104324489999997" green="0.049104324489999997" blue="0.049104324489999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="bsw-PA-L4J">
                                     <size key="itemSize" width="184" height="185"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -98,7 +95,6 @@
                         <outlet property="albumIndexScrollView" destination="NAa-nR-L1h" id="65g-Hz-Kfe"/>
                         <outlet property="imageCollectionView" destination="0hq-Ed-rbs" id="oub-XH-AVS"/>
                         <outlet property="pageControl" destination="QF2-No-iom" id="5Qe-7n-huZ"/>
-                        <outlet property="switchController" destination="SjH-Z8-PyT" id="0Df-ww-H36"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="t09-GP-HcK" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -149,7 +145,7 @@
                                                         <constraint firstAttribute="width" constant="97" id="vbS-fy-AhW"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HvE-9l-YVU">
@@ -160,6 +156,7 @@
                                                     </constraints>
                                                 </imageView>
                                             </subviews>
+                                            <color key="backgroundColor" red="0.049104324489999997" green="0.049104324489999997" blue="0.049104324489999997" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstItem="HvE-9l-YVU" firstAttribute="centerY" secondItem="JpK-hq-lPv" secondAttribute="centerY" id="Bcf-bF-Kk3"/>
                                                 <constraint firstItem="N70-6C-91g" firstAttribute="centerX" secondItem="JpK-hq-lPv" secondAttribute="centerX" id="I16-vr-On9"/>

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		563D44FE1C63226200A581FA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 563D44FD1C63226200A581FA /* AppDelegate.swift */; };
-		563D45001C63226200A581FA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 563D44FF1C63226200A581FA /* ViewController.swift */; };
 		563D45031C63226200A581FA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 563D45011C63226200A581FA /* Main.storyboard */; };
 		563D45051C63226200A581FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 563D45041C63226200A581FA /* Assets.xcassets */; };
 		563D45081C63226200A581FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 563D45061C63226200A581FA /* LaunchScreen.storyboard */; };
@@ -27,7 +26,6 @@
 /* Begin PBXFileReference section */
 		563D44FA1C63226200A581FA /* MyWallpaper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyWallpaper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		563D44FD1C63226200A581FA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		563D44FF1C63226200A581FA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		563D45021C63226200A581FA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		563D45041C63226200A581FA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		563D45071C63226200A581FA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -79,7 +77,6 @@
 			isa = PBXGroup;
 			children = (
 				563D44FD1C63226200A581FA /* AppDelegate.swift */,
-				563D44FF1C63226200A581FA /* ViewController.swift */,
 				563D45011C63226200A581FA /* Main.storyboard */,
 				563D45041C63226200A581FA /* Assets.xcassets */,
 				563D45061C63226200A581FA /* LaunchScreen.storyboard */,
@@ -213,7 +210,6 @@
 			files = (
 				56F66AB31C672ED000240006 /* UIImageView+ImageViewer.swift in Sources */,
 				56402D591C64AA5D008B0499 /* SplitViewController.swift in Sources */,
-				563D45001C63226200A581FA /* ViewController.swift in Sources */,
 				56402D571C64758C008B0499 /* TableViewCell.swift in Sources */,
 				56402D5D1C64FC79008B0499 /* CollectionViewCell.swift in Sources */,
 				56402D5B1C64F9E3008B0499 /* DetailViewController.swift in Sources */,

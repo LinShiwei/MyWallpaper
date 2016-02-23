@@ -24,8 +24,9 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        categoryTabelView.backgroundView = UIView()
-//        categoryTabelView.backgroundView?.backgroundColor = UIColor.blackColor()
+        view.backgroundColor = UIColor.blackColor()
+        categoryTabelView.backgroundView = UIView()
+        categoryTabelView.backgroundView?.backgroundColor = UIColor.blackColor()
 //         Do any additional setup after loading the view.
         initAlbumList()
     }
@@ -42,12 +43,10 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
         
         let cache = Shared.JSONCache
         let URL = NSURL(string: stringURL)!
-        
+        cache.removeAll()
         cache.fetch(URL: URL).onSuccess { jsonObject in
-            print(jsonObject.dictionary?["album"])
             let json = JSON(jsonObject.dictionary)
             if let albums = json["album"].array?.reverse() {
-                print("\(albums)")
                 for albumJSON in albums{
                     var listCell = [String]()
                     if let albumName = albumJSON["albumname"].string {
@@ -70,7 +69,6 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
             }else{
                 print("album key no found")
             }
-            print("albumList  \(self.albumList)")
             
             dispatch_async(dispatch_get_main_queue()) {
                 self.categoryTabelView.reloadData()
@@ -78,21 +76,15 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
         }
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cellIdentifier = "categoryCell"
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! TableViewCell
         
         cell.titleLabel.text = albumList[indexPath.row][0]
         cell.cellImageView.hnk_setImageFromURL(NSURL(string: albumList[indexPath.row][1])!)
+        let view = UIView()
+        view.backgroundColor = UIColor(white: 0.1, alpha: 1)
+        cell.selectedBackgroundView = view
         return cell
     }
     
