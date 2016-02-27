@@ -125,9 +125,8 @@ class ImageViewer: UIViewController {
     func configureView() {
 //        print("before configure view\(senderView)")
         var originalFrame = senderView.convertRect(windowBounds, toView: nil)
-        
         originalFrame.size = senderView.frame.size
-    
+        
 //        print("originalFrame \(originalFrame)")
     
         originalFrameRelativeToScreen = originalFrame
@@ -146,15 +145,8 @@ class ImageViewer: UIViewController {
 
             senderView = senderCell.imageView
             senderView.alpha = 0
-      //这里出现了问题，不注释下一行的话 动画不对
             configureView()
             
-//            senderView.alpha = 1
-//            print(" ")
-//            print("init before configure view\(senderView)")
-//
-//            var originalFrame = senderView.convertRect(windowBounds, toView: nil)
-//            print("originalFrame \(originalFrame)")
 
         }else{
             senderView.alpha = 1.0
@@ -169,7 +161,7 @@ class ImageViewer: UIViewController {
             senderView.alpha = 0
             scrollView.scrollRectToVisible(senderView.frame, animated: false)
                     print("init finish senderview frame\(senderView.frame)")
-
+            configureView()
         }
         
     }
@@ -318,8 +310,8 @@ class ImageViewer: UIViewController {
             }, completion: nil)
         
         UIView.animateWithDuration(0.4, delay: 0.1, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {() -> Void in
-            self.view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.1, 1.1)
-            self.rootViewController.view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.95, 0.95)
+//            self.view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.1, 1.1)
+//            self.rootViewController.view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.95, 0.95)
             }, completion: nil)
     }
     
@@ -328,7 +320,6 @@ class ImageViewer: UIViewController {
         newImageSize.height = min(windowBounds.size.height, newImageSize.height)
        
         return CGRectMake(0, windowBounds.size.height / 2 - newImageSize.height / 2, newImageSize.width, newImageSize.height)
-//        return windowBounds
     }
     
     func imageResizeBaseOnWidth(newWidth: CGFloat, oldWidth: CGFloat, oldHeight: CGFloat) -> CGSize {
@@ -388,16 +379,13 @@ class ImageViewer: UIViewController {
             })
             
             var frame = self.originalFrameRelativeToScreen
-            //                print("frame")
-            //                print(frame)
             frame.origin.x += self.scrollView.frame.width
 
             UIView.animateWithDuration(0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {() in
                 
                 self.imageView.frame = frame
-//                print("dismiss frame\(frame)")
-                self.rootViewController.view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0, 1.0)
-                self.view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0, 1.0)
+//                self.rootViewController.view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0, 1.0)
+//                self.view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0, 1.0)
                 self.maskView.alpha = 0.0
                 }, completion: {(finished) in
                     self.willMoveToParentViewController(nil)
