@@ -27,7 +27,6 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
         view.backgroundColor = UIColor.blackColor()
         categoryTabelView.backgroundView = UIView()
         categoryTabelView.backgroundView?.backgroundColor = UIColor.blackColor()
-//         Do any additional setup after loading the view.
         initAlbumList()
     }
 
@@ -40,7 +39,6 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
     
     func initAlbumList() {
         let stringURL:String = "http://api.tietuku.com/v2/api/getalbum/key/a5rMlZpnZG6VnpNllmaUkpJon2NrlZVsmGdplGOXamxpmczKm2KVbMObmGSWYpY="
-        
         let cache = Shared.JSONCache
         let URL = NSURL(string: stringURL)!
         cache.removeAll()
@@ -81,10 +79,21 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! TableViewCell
         
         cell.titleLabel.text = albumList[indexPath.row][0]
+        cell.titleLabel.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI / 2))
         cell.cellImageView.hnk_setImageFromURL(NSURL(string: albumList[indexPath.row][1])!)
         let view = UIView()
-        view.backgroundColor = UIColor(white: 0.1, alpha: 1)
+        view.backgroundColor = UIColor(white: 0, alpha: 1)
         cell.selectedBackgroundView = view
+        cell.contentView.backgroundColor = view.backgroundColor
+        setTableViewCellImageLayer(cell)
+        
+        if indexPath.row == 0 {
+            cell.titleLabel.alpha = 0
+            for layer in cell.cellImageView.layer.sublayers! {
+                layer.opacity = 1
+            }
+            tableView.selectRowAtIndexPath(indexPath, animated: false, scrollPosition: .None)
+        }
         return cell
     }
     
@@ -98,6 +107,77 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let selectedCategory = self.albumList[indexPath.row]
         self.delegate?.categorySelected(selectedCategory[2])
+        
+        let cell = tableView.cellForRowAtIndexPath(indexPath) as! TableViewCell
+        let duration = CFTimeInterval(0.5)
+
+        let fadeInAnimation = CABasicAnimation(keyPath: "opacity")
+        fadeInAnimation.fromValue = 0.0
+        fadeInAnimation.toValue = 1.0
+        fadeInAnimation.duration = duration
+        fadeInAnimation.repeatCount = 0
+
+        UIView.animateWithDuration(duration, animations: {()-> Void in
+            cell.titleLabel.alpha = 0
+            }, completion: {(finish) in
+                for layer in cell.cellImageView.layer.sublayers!{
+                    layer.removeAllAnimations()
+                    layer.opacity = 1
+                    layer.addAnimation(fadeInAnimation, forKey: "opacity")
+                }
+        })
+        
+        
+//        print(cell.cellImageView.bounds)
+        
+    }
+    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+        let cell = tableView.cellForRowAtIndexPath(indexPath) as! TableViewCell
+        let duration = CFTimeInterval(0.5)
+        
+        let fadeOutAnimation = CABasicAnimation(keyPath: "opacity")
+        fadeOutAnimation.fromValue = 1.0
+        fadeOutAnimation.toValue = 0
+        fadeOutAnimation.duration = duration
+        fadeOutAnimation.repeatCount = 0
+        for layer in cell.cellImageView.layer.sublayers!{
+            layer.removeAllAnimations()
+            layer.opacity = 0
+            layer.addAnimation(fadeOutAnimation, forKey: "opacity")
+        }
+
+        UIView.animateWithDuration(duration, delay: duration, options: .TransitionNone, animations: {()-> Void in
+            cell.titleLabel.alpha = 1
+            }, completion: nil )
+    }
+    
+    
+    //MARK: Cell Layer
+    func setTableViewCellImageLayer(cell:TableViewCell){
+        let layer = CALayer()
+        let bounds = cell.cellImageView.bounds
+        let boarderWidth = CGFloat(5)
+        layer.frame = bounds
+        layer.backgroundColor = UIColor(white: 0,  alpha: 1).CGColor
+        layer.hidden = false
+        layer.masksToBounds = false
+        layer.cornerRadius = 0
+        layer.borderWidth = boarderWidth
+        layer.borderColor = UIColor(white: 0.1, alpha: 1).CGColor
+        layer.opacity = 0
+        
+        let textLayer = CATextLayer()
+        let baseFontSize: CGFloat = 24.0
+        let textframe = CGRect(x: 0, y: 0, width: bounds.width, height: 36.0)
+        textLayer.frame = textframe
+        textLayer.position = CGPoint(x: bounds.width/2, y: bounds.height/2)
+        textLayer.string = cell.titleLabel.text
+        textLayer.font = CTFontCreateWithName("Helvetica", baseFontSize, nil)
+        textLayer.fontSize = 24.0
+        textLayer.wrapped = true
+        textLayer.alignmentMode = kCAAlignmentCenter
+        layer.addSublayer(textLayer)
+        cell.cellImageView.layer.addSublayer(layer)
     }
     
 }

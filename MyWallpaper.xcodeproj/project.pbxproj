@@ -17,6 +17,7 @@
 		56402D591C64AA5D008B0499 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56402D581C64AA5D008B0499 /* SplitViewController.swift */; };
 		56402D5B1C64F9E3008B0499 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56402D5A1C64F9E3008B0499 /* DetailViewController.swift */; };
 		56402D5D1C64FC79008B0499 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56402D5C1C64FC79008B0499 /* CollectionViewCell.swift */; };
+		564496871C81B97800E4F217 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564496861C81B97800E4F217 /* LoadingView.swift */; };
 		56F66AAD1C6710A300240006 /* CollectionViewWaterfallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F66AAC1C6710A300240006 /* CollectionViewWaterfallLayout.swift */; };
 		56F66AAF1C672D6500240006 /* Haneke.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56F66AAE1C672D6500240006 /* Haneke.framework */; };
 		56F66AB21C672ED000240006 /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F66AB01C672ED000240006 /* ImageViewer.swift */; };
@@ -36,6 +37,7 @@
 		56402D581C64AA5D008B0499 /* SplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
 		56402D5A1C64F9E3008B0499 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		56402D5C1C64FC79008B0499 /* CollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
+		564496861C81B97800E4F217 /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		56F66AAC1C6710A300240006 /* CollectionViewWaterfallLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewWaterfallLayout.swift; sourceTree = "<group>"; };
 		56F66AAE1C672D6500240006 /* Haneke.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Haneke.framework; path = Carthage/Build/iOS/Haneke.framework; sourceTree = "<group>"; };
 		56F66AB01C672ED000240006 /* ImageViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewer.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 				56402D5A1C64F9E3008B0499 /* DetailViewController.swift */,
 				56402D5C1C64FC79008B0499 /* CollectionViewCell.swift */,
 				56F66AAC1C6710A300240006 /* CollectionViewWaterfallLayout.swift */,
+				564496861C81B97800E4F217 /* LoadingView.swift */,
 			);
 			name = DetailView;
 			sourceTree = "<group>";
@@ -211,6 +214,7 @@
 				56F66AB31C672ED000240006 /* UIImageView+ImageViewer.swift in Sources */,
 				56402D591C64AA5D008B0499 /* SplitViewController.swift in Sources */,
 				56402D571C64758C008B0499 /* TableViewCell.swift in Sources */,
+				564496871C81B97800E4F217 /* LoadingView.swift in Sources */,
 				56402D5D1C64FC79008B0499 /* CollectionViewCell.swift in Sources */,
 				56402D5B1C64F9E3008B0499 /* DetailViewController.swift in Sources */,
 				56F66AAD1C6710A300240006 /* CollectionViewWaterfallLayout.swift in Sources */,

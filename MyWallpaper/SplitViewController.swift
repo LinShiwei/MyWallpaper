@@ -12,6 +12,7 @@ class SplitViewController: UISplitViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor.blackColor()
         maximumPrimaryColumnWidth = CGFloat(MAXFLOAT)
         let ratio:CGFloat = 180/(self.view.frame.width)
         preferredPrimaryColumnWidthFraction = ratio
@@ -22,8 +23,12 @@ class SplitViewController: UISplitViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
+    override func prefersStatusBarHidden() -> Bool {
+        return false
+    }
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
+    }
     /*
     // MARK: - Navigation
 
