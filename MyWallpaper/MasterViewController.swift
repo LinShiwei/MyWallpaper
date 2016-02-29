@@ -127,11 +127,10 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
                 }
         })
         
-        
-//        print(cell.cellImageView.bounds)
-        
     }
     func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.userInteractionEnabled = false
+        
         let cell = tableView.cellForRowAtIndexPath(indexPath) as! TableViewCell
         let duration = CFTimeInterval(0.5)
         
@@ -148,7 +147,9 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
 
         UIView.animateWithDuration(duration, delay: duration, options: .TransitionNone, animations: {()-> Void in
             cell.titleLabel.alpha = 1
-            }, completion: nil )
+            }, completion: {(finish) in
+                tableView.userInteractionEnabled = true
+        })
     }
     
     

@@ -87,17 +87,17 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
             timer.invalidate()
         }
         timer = nil
-        imageCollectionView.alpha = 0
-        albumHomeScrollView.alpha = 0
-        pageControl.alpha = 0
+        
         if albumID != albumIndex {
+            albumHomeScrollView.alpha = 0
+            pageControl.alpha = 0
+            imageCollectionView.alpha = 1
             
             stringURL = stringURL + "/aid/" + albumID
             let cache = Shared.JSONCache
             let URL = NSURL(string: stringURL)!
             cache.removeAll()
             cache.fetch(URL: URL).onSuccess { jsonObject in
-                self.imageCollectionView.alpha = 1
 
                 let json = JSON(jsonObject.dictionary)
                 for  picJSON in json["pic"].array! {
@@ -117,7 +117,9 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
                 }
             }
         }else{
-            
+            imageCollectionView.alpha = 0
+            self.albumHomeScrollView.alpha = 1
+
             stringURL = stringURL + "/aid/" + albumID
             let cache = Shared.JSONCache
             let URL = NSURL(string: stringURL)!
@@ -126,7 +128,6 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
                 print("fail to fetch")
             }).onSuccess{ jsonObject in
                 self.loadingView.alpha = 0
-                self.albumHomeScrollView.alpha = 1
                 self.pageControl.alpha = 1
                 let json = JSON(jsonObject.dictionary)
                 for  picJSON in json["pic"].array! {
