@@ -20,8 +20,8 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
     @IBOutlet weak var imageCollectionView: UICollectionView!
     
     var timer:NSTimer?
-    var picturesURL = [String]()
-    var cellImageSize = [CGSize]()
+    var pictures = [Picture]()
+    
     var albumID :String = albumIndex{
         didSet{
             self.fetchDataWithAlbumID()
@@ -44,13 +44,13 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
     
     //MARK: CollectionView data source
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return picturesURL.count
+        return pictures.count
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("imageCollectionViewCell", forIndexPath: indexPath) as! CollectionViewCell
         cell.backgroundColor = UIColor.whiteColor()
-        let url = NSURL(string: picturesURL[indexPath.row])
+        let url = NSURL(string: pictures[indexPath.row].url)
         cell.loadingView.hidden = false
         cell.imageView.hnk_setImageFromURL(url!, success: {
         image in
@@ -65,7 +65,7 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
     // MARK: WaterfallLayoutDelegate
     
     func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return cellImageSize[indexPath.row]
+        return pictures[indexPath.row].size
     }
     func getLayout()->CollectionViewWaterfallLayout{
         let layout = CollectionViewWaterfallLayout()
@@ -81,8 +81,7 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
     //MARK: Get image from URL
     func fetchDataWithAlbumID(){
         var stringURL:String = "http://api.tietuku.com/v2/api/getpiclist/key/a5rMlZpnZG6VnpNllmaUkpJon2NrlZVsmGdplGOXamxpmczKm2KVbMObmGSWYpY="
-        picturesURL.removeAll()
-        cellImageSize.removeAll()
+        pictures.removeAll()
         if let timer = timer {
             timer.invalidate()
         }
@@ -92,68 +91,48 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
             albumHomeScrollView.alpha = 0
             pageControl.alpha = 0
             imageCollectionView.alpha = 1
-            
             stringURL = stringURL + "/aid/" + albumID
-            let cache = Shared.JSONCache
-            let URL = NSURL(string: stringURL)!
-            cache.removeAll()
-            cache.fetch(URL: URL).onSuccess { jsonObject in
-
-                let json = JSON(jsonObject.dictionary)
-                for  picJSON in json["pic"].array! {
-                    if let url = picJSON["linkurl"].string {
-                        self.picturesURL.append(url)
-                    }else {
-                        print("linkurl key no found")
-                    }
-                    if let width = picJSON["width"].string ,let height = picJSON["height"].string {
-                        self.cellImageSize.append(CGSize(width: Int(width)!, height: Int(height)!))
-                    }else{
-                        print("width and height key no found")
-                    }
-                }
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.imageCollectionView.reloadData()
-                }
-            }
         }else{
             imageCollectionView.alpha = 0
             self.albumHomeScrollView.alpha = 1
-
             stringURL = stringURL + "/aid/" + albumID
-            let cache = Shared.JSONCache
-            let URL = NSURL(string: stringURL)!
-            cache.removeAll()
-            cache.fetch(URL: URL,failure:{ error in
-                print("fail to fetch")
-            }).onSuccess{ jsonObject in
+        }
+        let cache = Shared.JSONCache
+        let URL = NSURL(string: stringURL)!
+        cache.removeAll()
+        cache.fetch(URL: URL,failure:{ error in
+            print("fail to fetch")
+        }).onSuccess{ jsonObject in
+            let json = JSON(jsonObject.dictionary)
+            for  picJSON in json["pic"].array! {
+                if let url = picJSON["linkurl"].string,let width = picJSON["width"].string ,let height = picJSON["height"].string,let name = picJSON["name"].string {
+                    let size = CGSize(width: Int(width)!, height: Int(height)!)
+                    let picture = Picture(name: name, url: url, size: size)
+                    self.pictures.append(picture)
+                }else {
+                    print("picture no found")
+                }
+            }
+            if self.albumID != albumIndex {
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.imageCollectionView.reloadData()
+                }
+            }else{
+                self.initScrollView()
                 self.loadingView.alpha = 0
                 self.pageControl.alpha = 1
-                let json = JSON(jsonObject.dictionary)
-                for  picJSON in json["pic"].array! {
-                    if let url = picJSON["linkurl"].string {
-                        self.picturesURL.append(url)
-                    }else {
-                        print("linkurl key no found")
-                    }
-                    if let width = picJSON["width"].string ,let height = picJSON["height"].string {
-                        self.cellImageSize.append(CGSize(width: Int(width)!, height: Int(height)!))
-                    }else{
-                        print("width and height key no found")
-                    }
-                }
-                self.initScrollView()
             }
         }
     }
     //MARK: Home Page (Scroll view)
     func initScrollView(){
         albumHomeScrollView.delegate = self
-        albumHomeScrollView.contentSize = CGSizeMake(albumHomeScrollView.frame.width * CGFloat(picturesURL.count), albumHomeScrollView.frame.height)
-        for index in 0...picturesURL.count-1 {
+        albumHomeScrollView.contentSize = CGSizeMake(albumHomeScrollView.frame.width * CGFloat(pictures.count), albumHomeScrollView.frame.height)
+        for index in 0...pictures.count-1 {
             let scrollImageView = initScrollImageView(index)
             let cache = Cache<UIImage>(name: "indexImageCache")
-            let URL = NSURL(string: picturesURL[index])!
+            let URL = NSURL(string: pictures[index].url)!
+
             cache.fetch(URL:URL).onSuccess{ image in
                 scrollImageView.image = image
                 scrollImageView.setupForImageViewer(URL, backgroundColor: UIColor.blackColor())
@@ -166,13 +145,13 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
     func initScrollImageView(index:Int)->UIImageView {
         let indexFloat = CGFloat(index)
         let imageView = UIImageView()
-        var frame = centerFrameFromImageSize(cellImageSize[index])
+        var frame = centerFrameFromImageSize(pictures[index].size)
         frame.origin.x += albumHomeScrollView.frame.width * indexFloat
         imageView.frame = frame
         return imageView
     }
     func initPageControl(){
-        pageControl.numberOfPages = picturesURL.count
+        pageControl.numberOfPages = pictures.count
         initTimer()
     }
     func initTimer(){
@@ -185,7 +164,7 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
             view.userInteractionEnabled = false
         }
         let pageWidth:CGFloat = CGRectGetWidth(albumHomeScrollView.frame)
-        let maxWidth:CGFloat = pageWidth * CGFloat(picturesURL.count)
+        let maxWidth:CGFloat = pageWidth * CGFloat(pictures.count)
         let contentOffset:CGFloat = albumHomeScrollView.contentOffset.x
         
         var slideToX = contentOffset + pageWidth

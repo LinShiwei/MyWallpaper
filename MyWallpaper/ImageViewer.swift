@@ -190,7 +190,7 @@ class ImageViewer: UIViewController {
     }
     func nextIndexPathRow(currentIndexPathRow:Int)->Int{
         let controller = getController()
-        if currentIndexPathRow == controller.picturesURL.count - 1 {
+        if currentIndexPathRow == controller.pictures.count - 1 {
             return 0
         }else{
             return currentIndexPathRow + 1
@@ -199,7 +199,7 @@ class ImageViewer: UIViewController {
     func previousIndexPathRow(currentIndexPathRow:Int)->Int{
         let controller = getController()
         if currentIndexPathRow == 0 {
-            return controller.picturesURL.count - 1
+            return controller.pictures.count - 1
         }else{
             return currentIndexPathRow - 1
         }
@@ -213,7 +213,7 @@ class ImageViewer: UIViewController {
         }
         let controller = getController()
 
-        return NSURL(string: controller.picturesURL[row])!
+        return NSURL(string: controller.pictures[row].url)!
     }
     func getImageSizeAtIndexPathRowWithOffset(indexPathRow:Int,previousOrCurrentOrNext:Int)->CGSize{
         var row:Int
@@ -224,7 +224,7 @@ class ImageViewer: UIViewController {
         }
         let controller = getController()
  
-        return controller.cellImageSize[row]
+        return controller.pictures[row].size
     }
     
     func configureImageView() {

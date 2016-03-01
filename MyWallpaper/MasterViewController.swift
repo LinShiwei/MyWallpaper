@@ -18,16 +18,21 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
 
     weak var delegate: CategorySelectionDelegate?
     
-    @IBOutlet weak var categoryTabelView: UITableView!
+    @IBOutlet weak var categoryTableView: UITableView!
+    
+    @IBOutlet weak var searchBar: UISearchBar!
     
     var albumList = [[String]]()
     
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.blackColor()
-        categoryTabelView.backgroundView = UIView()
-        categoryTabelView.backgroundView?.backgroundColor = UIColor.blackColor()
+        categoryTableView.backgroundView = UIView()
+        categoryTableView.backgroundView?.backgroundColor = UIColor.blackColor()
         initAlbumList()
+        searchBar.delegate = self
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -69,7 +74,7 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
             }
             
             dispatch_async(dispatch_get_main_queue()) {
-                self.categoryTabelView.reloadData()
+                self.categoryTableView.reloadData()
             }
         }
     }
@@ -179,6 +184,17 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
         textLayer.alignmentMode = kCAAlignmentCenter
         layer.addSublayer(textLayer)
         cell.cellImageView.layer.addSublayer(layer)
+    }
+    
+}
+
+extension MasterViewController: UISearchBarDelegate{
+
+    func searchBarShouldBeginEditing(searchBar: UISearchBar) -> Bool {
+        let searchPage = SearchPage(senderView:searchBar,backgroundColor: UIColor.blackColor())
+        searchPage.presentFromRootViewController()
+
+        return false
     }
     
 }
