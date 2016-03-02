@@ -31,9 +31,10 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchDataWithAlbumID()
-        self.imageCollectionView!.collectionViewLayout = getLayout()
-        
-        view.backgroundColor = UIColor.blackColor() 
+        self.imageCollectionView.collectionViewLayout = getLayout()
+        self.imageCollectionView.registerNib(UINib(nibName: "ImageCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ImageCollectionViewCell")
+
+        view.backgroundColor = UIColor.blackColor()
         // Do any additional setup after loading the view.
     }
 
@@ -48,7 +49,9 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("imageCollectionViewCell", forIndexPath: indexPath) as! CollectionViewCell
+//        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("imageCollectionViewCell", forIndexPath: indexPath) as! CollectionViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ImageCollectionViewCell", forIndexPath: indexPath) as! ImageCollectionViewCell
+
         cell.backgroundColor = UIColor.whiteColor()
         let url = NSURL(string: pictures[indexPath.row].url)
         cell.loadingView.hidden = false

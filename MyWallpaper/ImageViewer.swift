@@ -24,12 +24,8 @@ class ImageViewer: UIViewController {
     var previousImageView = UIImageView()
     var currentIndexPathRow :Int = 0
     
-    var panGesture: UIPanGestureRecognizer!
-    var panOrigin: CGPoint!
     var highQualityImageUrl: NSURL?
-    
-    var isAnimating = false
-    var isLoaded = false
+    var pictures:[Picture]!
     
     let downloadButton = UIButton()
     let closeButton = UIButton()
@@ -38,8 +34,9 @@ class ImageViewer: UIViewController {
     var maskView = UIView()
     
     // MARK: - Lifecycle methods
-    init(senderView: UIImageView,highQualityImageUrl: NSURL?, backgroundColor: UIColor) {
+    init(senderView: UIImageView,highQualityImageUrl: NSURL?,pictures:[Picture], backgroundColor: UIColor) {
         self.senderView = senderView
+        self.pictures = pictures
         self.highQualityImageUrl = highQualityImageUrl
      
         
@@ -47,12 +44,10 @@ class ImageViewer: UIViewController {
         maskView.backgroundColor = backgroundColor
         
         super.init(nibName: nil, bundle: nil)
-        
-        let controller = self.getController()
-        if let timer = controller.timer {
+        if let timer = self.getTimer() {
             timer.invalidate()
-//            timer = nil
         }
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -76,6 +71,7 @@ class ImageViewer: UIViewController {
         return true
     }
     // MARK: - View configuration
+   
     func configureScrollView() {
         scrollView.frame = windowBounds
         scrollView.delegate = self
@@ -123,25 +119,21 @@ class ImageViewer: UIViewController {
     }
     
     func configureView() {
-//        print("before configure view\(senderView)")
         var originalFrame = senderView.convertRect(windowBounds, toView: nil)
         originalFrame.size = senderView.frame.size
         
-//        print("originalFrame \(originalFrame)")
-    
         originalFrameRelativeToScreen = originalFrame
     
     }
     func initSenderView(currentIndexPathRow:Int){
-//        print("init begin senderview frame\(senderView.frame)")
 
         if !(self.senderView.superview is UIScrollView) {
             senderView.alpha = 1.0
-            let cell = self.senderView.superview?.superview as! CollectionViewCell
+            let cell = self.senderView.superview?.superview as! ImageCollectionViewCell
             let collection = cell.superview as! UICollectionView
             let indexPath = NSIndexPath(forRow: currentIndexPathRow, inSection: 0)
             collection.scrollToItemAtIndexPath(indexPath, atScrollPosition: .CenteredVertically, animated: false)
-            let senderCell = collection.cellForItemAtIndexPath(indexPath) as! CollectionViewCell
+            let senderCell = collection.cellForItemAtIndexPath(indexPath) as! ImageCollectionViewCell
 
             senderView = senderCell.imageView
             senderView.alpha = 0
@@ -165,15 +157,19 @@ class ImageViewer: UIViewController {
         }
         
     }
-    func getController()->DetailViewController{
+    func getTimer()->NSTimer?{
         if senderView.superview is UIScrollView {
             let controller = senderView.superview!.parentViewController as! DetailViewController
-            return controller
+            return controller.timer
         }else{
-            let cell = senderView.superview?.superview as! CollectionViewCell
-            let collection = cell.superview as! UICollectionView
-            let controller = collection.parentViewController as! DetailViewController
-            return controller
+            return nil
+        }
+    }
+    func initTimer(){
+        if senderView.superview is UIScrollView {
+            let controller = senderView.superview!.parentViewController as! DetailViewController
+            controller.initTimer()
+        }else{
         }
     }
     func getCurrentIndexPathRow()->Int{
@@ -182,24 +178,22 @@ class ImageViewer: UIViewController {
             let index = Int(senderView.frame.origin.x / scrollView.frame.width)
             return index
         }else{
-            let cell = senderView.superview?.superview as! CollectionViewCell
+            let cell = senderView.superview?.superview as! ImageCollectionViewCell
             let collection = cell.superview as! UICollectionView
             let indexPath = collection.indexPathForCell(cell)
             return indexPath!.row
         }
     }
     func nextIndexPathRow(currentIndexPathRow:Int)->Int{
-        let controller = getController()
-        if currentIndexPathRow == controller.pictures.count - 1 {
+        if currentIndexPathRow == pictures.count - 1 {
             return 0
         }else{
             return currentIndexPathRow + 1
         }
     }
     func previousIndexPathRow(currentIndexPathRow:Int)->Int{
-        let controller = getController()
         if currentIndexPathRow == 0 {
-            return controller.pictures.count - 1
+            return pictures.count - 1
         }else{
             return currentIndexPathRow - 1
         }
@@ -211,9 +205,8 @@ class ImageViewer: UIViewController {
         case 1:  row = nextIndexPathRow(indexPathRow)
         default: row = indexPathRow
         }
-        let controller = getController()
 
-        return NSURL(string: controller.pictures[row].url)!
+        return NSURL(string: pictures[row].url)!
     }
     func getImageSizeAtIndexPathRowWithOffset(indexPathRow:Int,previousOrCurrentOrNext:Int)->CGSize{
         var row:Int
@@ -222,9 +215,7 @@ class ImageViewer: UIViewController {
         case 1:  row = nextIndexPathRow(indexPathRow)
         default: row = indexPathRow
         }
-        let controller = getController()
- 
-        return controller.pictures[row].size
+        return pictures[row].size
     }
     
     func configureImageView() {
@@ -270,7 +261,6 @@ class ImageViewer: UIViewController {
         scrollView.addSubview(previousImageView)
         scrollView.addSubview(nextImageView)
 
-//        centerScrollViewContents()
     }
     
     func configureConstraints() {
@@ -310,8 +300,7 @@ class ImageViewer: UIViewController {
             }, completion: nil)
         
         UIView.animateWithDuration(0.4, delay: 0.1, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {() -> Void in
-//            self.view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.1, 1.1)
-//            self.rootViewController.view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.95, 0.95)
+
             }, completion: nil)
     }
     
@@ -367,9 +356,7 @@ class ImageViewer: UIViewController {
         imageView.frame = contentsFrame
     }
     func dismissViewController() {
-        let controller = self.getController()
-        controller.initTimer()
-        isAnimating = true
+        initTimer()
         dispatch_async(dispatch_get_main_queue(), {
             self.imageView.clipsToBounds = true
             
@@ -384,15 +371,12 @@ class ImageViewer: UIViewController {
             UIView.animateWithDuration(0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {() in
                 
                 self.imageView.frame = frame
-//                self.rootViewController.view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0, 1.0)
-//                self.view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0, 1.0)
                 self.maskView.alpha = 0.0
                 }, completion: {(finished) in
                     self.willMoveToParentViewController(nil)
                     self.view.removeFromSuperview()
                     self.removeFromParentViewController()
                     self.senderView.alpha = 1.0
-                    self.isAnimating = false
             })
         })
     }

@@ -17,8 +17,23 @@ public extension UIImageView {
         addGestureRecognizer(gestureRecognizer)
     }
     
-    internal func didTap(recognizer: ImageViewerTapGestureRecognizer) {        
-        let imageViewer = ImageViewer(senderView: self, highQualityImageUrl: recognizer.highQualityImageUrl, backgroundColor: recognizer.backgroundColor)
+    internal func didTap(recognizer: ImageViewerTapGestureRecognizer) {
+        var pictures=[Picture]()
+        if self.superview is UIScrollView {
+            let controller = self.superview!.parentViewController as! DetailViewController
+            pictures = controller.pictures
+        }else{
+            let cell = self.superview?.superview as! ImageCollectionViewCell
+            let collection = cell.superview as! UICollectionView
+            let controller = collection.parentViewController
+            if controller is DetailViewController {
+                pictures = (controller as! DetailViewController).pictures
+            }else{
+                pictures = (controller as! SearchPage).filteredPictures
+            }
+        }
+        
+        let imageViewer = ImageViewer(senderView: self, highQualityImageUrl: recognizer.highQualityImageUrl,pictures:pictures, backgroundColor: recognizer.backgroundColor)
         imageViewer.presentFromRootViewController()
     }
 }
@@ -26,7 +41,6 @@ public extension UIImageView {
 class ImageViewerTapGestureRecognizer: UITapGestureRecognizer {
     var highQualityImageUrl: NSURL?
     var backgroundColor: UIColor!
-    
     init(target: AnyObject, action: Selector, highQualityImageUrl: NSURL?, backgroundColor: UIColor) {
         self.highQualityImageUrl = highQualityImageUrl
         self.backgroundColor = backgroundColor
