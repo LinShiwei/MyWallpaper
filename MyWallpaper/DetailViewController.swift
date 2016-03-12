@@ -34,7 +34,7 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
         self.imageCollectionView.collectionViewLayout = getLayout()
         self.imageCollectionView.registerNib(UINib(nibName: "ImageCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ImageCollectionViewCell")
 
-        view.backgroundColor = UIColor.blackColor()
+        view.backgroundColor = themeBlack.detailViewBackgroundColor
         // Do any additional setup after loading the view.
     }
 
@@ -49,10 +49,8 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-//        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("imageCollectionViewCell", forIndexPath: indexPath) as! CollectionViewCell
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ImageCollectionViewCell", forIndexPath: indexPath) as! ImageCollectionViewCell
 
-        cell.backgroundColor = UIColor.whiteColor()
         let url = NSURL(string: pictures[indexPath.row].url)
         cell.loadingView.hidden = false
         cell.imageView.hnk_setImageFromURL(url!, success: {
@@ -60,7 +58,7 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
             cell.imageView.image = image
             cell.loadingView.hidden = true
         })
-        cell.imageView.setupForImageViewer(url, backgroundColor: UIColor.blackColor())
+        cell.imageView.setupForImageViewer(url, backgroundColor: view.backgroundColor!)
         cell.backgroundColor = UIColor.clearColor()
         return cell
     }
@@ -83,7 +81,7 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
     }
     //MARK: Get image from URL
     func fetchDataWithAlbumID(){
-        var stringURL:String = "http://api.tietuku.com/v2/api/getpiclist/key/a5rMlZpnZG6VnpNllmaUkpJon2NrlZVsmGdplGOXamxpmczKm2KVbMObmGSWYpY="
+        var stringURL:String = urlGetPicList
         pictures.removeAll()
         if let timer = timer {
             timer.invalidate()
@@ -104,7 +102,9 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
         let URL = NSURL(string: stringURL)!
         cache.removeAll()
         cache.fetch(URL: URL,failure:{ error in
-            print("fail to fetch")
+            dispatch_async(dispatch_get_main_queue()) {
+                print("fail to fetch pic")
+            }
         }).onSuccess{ jsonObject in
             let json = JSON(jsonObject.dictionary)
             for  picJSON in json["pic"].array! {
@@ -117,7 +117,7 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
                 }
             }
             if self.albumID != albumIndex {
-                dispatch_async(dispatch_get_main_queue()) {
+                dispatch_async(dispatch_get_main_queue()) { [unowned self] in
                     self.imageCollectionView.reloadData()
                 }
             }else{
@@ -136,9 +136,9 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
             let cache = Cache<UIImage>(name: "indexImageCache")
             let URL = NSURL(string: pictures[index].url)!
 
-            cache.fetch(URL:URL).onSuccess{ image in
+            cache.fetch(URL:URL).onSuccess{ [unowned self] image in
                 scrollImageView.image = image
-                scrollImageView.setupForImageViewer(URL, backgroundColor: UIColor.blackColor())
+                scrollImageView.setupForImageViewer(URL, backgroundColor: self.view.backgroundColor!)
                 self.albumHomeScrollView.addSubview(scrollImageView)
                 
             }

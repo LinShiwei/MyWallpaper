@@ -12,7 +12,7 @@ class SplitViewController: UISplitViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.blackColor()
+        self.view.backgroundColor = themeBlack.splitViewBackgroundColor
         maximumPrimaryColumnWidth = CGFloat(MAXFLOAT)
         let ratio:CGFloat = 180/(self.view.frame.width)
         preferredPrimaryColumnWidthFraction = ratio

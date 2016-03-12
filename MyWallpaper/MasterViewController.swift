@@ -9,7 +9,11 @@
 import UIKit
 import SwiftyJSON
 import Haneke
-
+struct Picture {
+    let name :String
+    let url  :String
+    let size :CGSize
+}
 protocol CategorySelectionDelegate: class {
     func categorySelected(albumID: String)
 }
@@ -27,9 +31,9 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.blackColor()
+        view.backgroundColor = themeBlack.masterViewBackgroundColor
         categoryTableView.backgroundView = UIView()
-        categoryTableView.backgroundView?.backgroundColor = UIColor.blackColor()
+        categoryTableView.backgroundView?.backgroundColor = view.backgroundColor
         initAlbumList()
         searchBar.delegate = self
 
@@ -43,11 +47,15 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
     
     
     func initAlbumList() {
-        let stringURL:String = "http://api.tietuku.com/v2/api/getalbum/key/a5rMlZpnZG6VnpNllmaUkpJon2NrlZVsmGdplGOXamxpmczKm2KVbMObmGSWYpY="
+        let stringURL:String = albumURL
         let cache = Shared.JSONCache
         let URL = NSURL(string: stringURL)!
         cache.removeAll()
-        cache.fetch(URL: URL).onSuccess { jsonObject in
+        cache.fetch(URL: URL,failure:{ error in
+            dispatch_async(dispatch_get_main_queue()) {
+                print("fail to fetch albumList")
+            }
+            }).onSuccess { jsonObject in
             let json = JSON(jsonObject.dictionary)
             if let albums = json["album"].array?.reverse() {
                 for albumJSON in albums{
@@ -73,7 +81,7 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
                 print("album key no found")
             }
             
-            dispatch_async(dispatch_get_main_queue()) {
+            dispatch_async(dispatch_get_main_queue()) { [unowned self] in
                 self.categoryTableView.reloadData()
             }
         }
@@ -87,7 +95,7 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
         cell.titleLabel.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI / 2))
         cell.cellImageView.hnk_setImageFromURL(NSURL(string: albumList[indexPath.row][1])!)
         let view = UIView()
-        view.backgroundColor = UIColor(white: 0, alpha: 1)
+        view.backgroundColor = self.view.backgroundColor
         cell.selectedBackgroundView = view
         cell.contentView.backgroundColor = view.backgroundColor
         setTableViewCellImageLayer(cell)
@@ -156,20 +164,19 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
                 tableView.userInteractionEnabled = true
         })
     }
-    
-    
+
     //MARK: Cell Layer
     func setTableViewCellImageLayer(cell:TableViewCell){
         let layer = CALayer()
         let bounds = cell.cellImageView.bounds
         let boarderWidth = CGFloat(5)
         layer.frame = bounds
-        layer.backgroundColor = UIColor(white: 0,  alpha: 1).CGColor
+        layer.backgroundColor = view.backgroundColor!.CGColor
         layer.hidden = false
         layer.masksToBounds = false
         layer.cornerRadius = 0
         layer.borderWidth = boarderWidth
-        layer.borderColor = UIColor(white: 0.1, alpha: 1).CGColor
+        layer.borderColor = themeBlack.lineColor.CGColor
         layer.opacity = 0
         
         let textLayer = CATextLayer()
@@ -191,7 +198,7 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
 extension MasterViewController: UISearchBarDelegate{
 
     func searchBarShouldBeginEditing(searchBar: UISearchBar) -> Bool {
-        let searchPage = SearchPage(senderView:searchBar,backgroundColor: UIColor.blackColor())
+        let searchPage = SearchPage(senderView:searchBar,backgroundColor: view.backgroundColor!)
         searchPage.presentFromRootViewController()
 
         return false

@@ -283,7 +283,7 @@ class ImageViewer: UIViewController {
     // MARK: - Animation
     func animateEntry() {
         self.imageView.frame.origin.x += scrollView.frame.width
-        UIView.animateWithDuration(0.8, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {() -> Void in
+        UIView.animateWithDuration(0.8, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {[unowned self]() -> Void in
             if let image = self.imageView.image {
                 var frame = self.centerFrameFromImageSize(image.size)
                 frame.origin.x += self.scrollView.frame.width
@@ -293,7 +293,7 @@ class ImageViewer: UIViewController {
             }
             }, completion: nil)
     
-        UIView.animateWithDuration(0.4, delay: 0.03, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {() -> Void in
+        UIView.animateWithDuration(0.4, delay: 0.03, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {[unowned self]() -> Void in
             self.closeButton.alpha = 0.5
             self.downloadButton.alpha = self.closeButton.alpha
             self.maskView.alpha = 1.0
@@ -328,13 +328,16 @@ class ImageViewer: UIViewController {
             }
     }
     func image(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo:UnsafePointer<Void>) {
-        if error == nil {
-            let icon = UIImage(named: "ImageDownloaded", inBundle: NSBundle(forClass: ImageViewer.self), compatibleWithTraitCollection: nil)
-            downloadButton.setImage(icon, forState: .Normal)
-//            downloadButton.enabled = false
-        } else {
-            
+        dispatch_async(dispatch_get_main_queue()) {[unowned self] in
+            if error == nil {
+                let icon = UIImage(named: "ImageDownloaded", inBundle: NSBundle(forClass: ImageViewer.self), compatibleWithTraitCollection: nil)
+                self.downloadButton.setImage(icon, forState: .Normal)
+                //            downloadButton.enabled = false
+            } else {
+                
+            }
         }
+        
     }
     // MARK: - Misc.
     func centerScrollViewContents() {
@@ -357,18 +360,18 @@ class ImageViewer: UIViewController {
     }
     func dismissViewController() {
         initTimer()
-        dispatch_async(dispatch_get_main_queue(), {
+        dispatch_async(dispatch_get_main_queue()){ [unowned self] in
             self.imageView.clipsToBounds = true
             
-            UIView.animateWithDuration(0.2, animations: {() in
+            UIView.animateWithDuration(0.2){[unowned self]() in
                 self.closeButton.alpha = 0.0
                 self.downloadButton.alpha = self.closeButton.alpha
-            })
+            }
             
             var frame = self.originalFrameRelativeToScreen
             frame.origin.x += self.scrollView.frame.width
 
-            UIView.animateWithDuration(0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {() in
+            UIView.animateWithDuration(0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {[unowned self]() in
                 
                 self.imageView.frame = frame
                 self.maskView.alpha = 0.0
@@ -378,7 +381,7 @@ class ImageViewer: UIViewController {
                     self.removeFromParentViewController()
                     self.senderView.alpha = 1.0
             })
-        })
+        }
     }
     
     func presentFromRootViewController() {

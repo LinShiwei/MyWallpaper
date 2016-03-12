@@ -14,7 +14,7 @@ class LoadingView: UIView {
     let replicatorLayer = CAReplicatorLayer()
     let instanceLayer = CALayer()
     let fadeAnimation = CABasicAnimation(keyPath: "opacity")
-    let whiteColor = UIColor.whiteColor().CGColor
+    let whiteColor = themeBlack.textColor.CGColor
     
     
     func setUpReplicatorLayer() {

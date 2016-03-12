@@ -9,11 +9,7 @@
 import UIKit
 import Haneke
 import SwiftyJSON
-struct Picture {
-        let name :String
-        let url  :String
-        let size :CGSize
-    }
+
 class SearchPage: UIViewController{
     
     var rootViewController: UIViewController!
@@ -23,11 +19,11 @@ class SearchPage: UIViewController{
     var originalFrameRelativeToScreen: CGRect!
     var maskView = UIView()
     var collectionView : UICollectionView?
-
+    var guideView : UIView?
     var pictures = [Picture]()
     var filteredPictures = [Picture]()
    
-
+    
     init(senderView : UISearchBar,backgroundColor:UIColor){
         self.senderView = senderView
         self.maskView.backgroundColor = backgroundColor
@@ -45,6 +41,7 @@ class SearchPage: UIViewController{
         configureMaskView()
         configureSearchBar()
         configureCollectionView()
+        configureGuideView()
         animateEntry()
         initPicturesData()
     }
@@ -86,9 +83,29 @@ class SearchPage: UIViewController{
             collectionView.delegate = self
             collectionView.alpha = 0
             collectionView.registerNib(UINib(nibName: "ImageCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ImageCollectionViewCell")
-//            collectionView.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
-            collectionView.backgroundColor = UIColor.blueColor()
+            collectionView.backgroundColor = UIColor.clearColor()
             view.addSubview(collectionView)
+        }
+        
+    }
+    func configureGuideView(){
+        guideView = UIView(frame: CGRect(x: 0, y: collectionView!.frame.origin.y - 52, width: windowBounds.width, height: 44))
+        if let guideView = guideView{
+            let guideLabel = UILabel(frame: CGRect(x: guideView.frame.width/2-150, y: 0, width: 300, height: 44))
+            guideLabel.text = "猜您喜欢"
+            guideLabel.textAlignment = .Center
+            guideLabel.font = UIFont(name: "AmericanTypewriter-Bold", size: 24)
+            guideLabel.textColor = themeBlack.textColor
+            
+            let lineView = UIView(frame: CGRect(x: 0, y: 20, width: guideView.frame.width, height: 4))
+            lineView.backgroundColor = themeBlack.lineColor
+            guideLabel.backgroundColor = maskView.backgroundColor
+            guideView.backgroundColor = UIColor.clearColor()
+
+            guideView.addSubview(lineView)
+            guideView.addSubview(guideLabel)
+            guideView.alpha = 0
+            view.addSubview(guideView)
         }
         
     }
@@ -96,7 +113,7 @@ class SearchPage: UIViewController{
     func setSearchBarFrame()->CGRect{
         let barWidth : CGFloat = windowBounds.width/2
         let barHeight: CGFloat = 44
-        let origin = CGPoint(x: windowBounds.width/2 - barWidth/2, y: windowBounds.height/4)
+        let origin = CGPoint(x: windowBounds.width/2 - barWidth/2, y: windowBounds.height/5)
         let size = CGSize(width: barWidth, height: barHeight)
         return CGRect(origin: origin, size: size)
     }
@@ -110,7 +127,7 @@ class SearchPage: UIViewController{
     }
     
     func initPicturesData(){
-        let stringURL:String = "http://api.tietuku.com/v2/api/getpiclist/key/a5rMlZpnZG6VnpNllmaUkpJon2NrlZVsmGdplGOXamxpmczKm2KVbMObmGSWYpY="
+        let stringURL:String = urlGetPicList
         let cache = Shared.JSONCache
         let URL = NSURL(string: stringURL)!
         cache.fetch(URL: URL).onSuccess{ jsonObject in
@@ -141,21 +158,23 @@ class SearchPage: UIViewController{
         }
     }
     func animateEntry(){
-        UIView.animateWithDuration(0.8, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {() -> Void in
+        UIView.animateWithDuration(0.8, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {[unowned self]() -> Void in
             self.searchBar.frame = self.setSearchBarFrame()
             }, completion: nil)
         
-        UIView.animateWithDuration(0.4, delay: 0.03, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {() -> Void in
+        UIView.animateWithDuration(0.4, delay: 0.03, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {[unowned self]() -> Void in
             self.maskView.alpha = 1.0
             self.collectionView!.alpha = 1.0
+            self.guideView!.alpha = 1.0
             }, completion: nil)
         
     }
     func dismissViewController() {
-//        isAnimating = true
         dispatch_async(dispatch_get_main_queue(), {
-
-            UIView.animateWithDuration(0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {() in
+            UIView.animateWithDuration(0.1){[unowned self]() in
+                self.guideView!.alpha = 0.0
+                }
+            UIView.animateWithDuration(0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {[unowned self]() in
                 self.searchBar.frame = self.originalFrameRelativeToScreen
                 self.collectionView!.alpha = 0.0
                 self.maskView.alpha = 0.0
@@ -164,7 +183,6 @@ class SearchPage: UIViewController{
                     self.view.removeFromSuperview()
                     self.removeFromParentViewController()
                     self.senderView.alpha = 1.0
-//                    self.isAnimating = false
             })
         })
     }
@@ -187,7 +205,7 @@ extension SearchPage:UICollectionViewDataSource,UIScrollViewDelegate {
             cell.imageView.image = image
             cell.loadingView.hidden = true
         })
-        cell.imageView.setupForImageViewer(url, backgroundColor: UIColor.blackColor())
+        cell.imageView.setupForImageViewer(url, backgroundColor: view.backgroundColor!)
         cell.backgroundColor = UIColor.clearColor()
         return cell
     }
@@ -227,6 +245,19 @@ extension SearchPage:UISearchBarDelegate{
             }
         })
         collectionView!.reloadData()
+        
+        for view in guideView!.subviews {
+            if view is UILabel {
+                UIView.animateWithDuration(0.5, delay: 0, options: .AllowAnimatedContent, animations: {[unowned self]() in
+                    if self.filteredPictures.count > 0 {
+                        (view as! UILabel).text = "为您搜索到以下图片"
+                    }else{
+                        (view as! UILabel).text = "未找到相关图片"
+                    }
+                    
+                    }, completion: nil)
+            }
+        }
     }
 }
 

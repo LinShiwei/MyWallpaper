@@ -45,44 +45,7 @@
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="imageCollectionViewCell" id="Vy5-OC-0dA" customClass="CollectionViewCell" customModule="MyWallpaper" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="184" height="185"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="184" height="185"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ORd-El-Zr9">
-                                                    <rect key="frame" x="0.0" y="0.0" width="184" height="185"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                                </imageView>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d2G-Hd-MRE" customClass="LoadingView" customModule="MyWallpaper" customModuleProvider="target">
-                                                    <rect key="frame" x="67" y="68" width="50" height="50"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="50" id="Bi7-eP-J3s"/>
-                                                        <constraint firstAttribute="height" constant="50" id="rNY-5i-LTF"/>
-                                                    </constraints>
-                                                </view>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        </view>
-                                        <constraints>
-                                            <constraint firstItem="ORd-El-Zr9" firstAttribute="leading" secondItem="Vy5-OC-0dA" secondAttribute="leadingMargin" constant="-8" id="I6o-eN-oE7"/>
-                                            <constraint firstItem="ORd-El-Zr9" firstAttribute="top" secondItem="Vy5-OC-0dA" secondAttribute="topMargin" constant="-8" id="IXo-Bh-1jZ"/>
-                                            <constraint firstAttribute="trailingMargin" secondItem="ORd-El-Zr9" secondAttribute="trailing" constant="-8" id="MvB-K0-nPr"/>
-                                            <constraint firstItem="d2G-Hd-MRE" firstAttribute="centerX" secondItem="Vy5-OC-0dA" secondAttribute="centerX" id="V8h-VG-oVc"/>
-                                            <constraint firstItem="d2G-Hd-MRE" firstAttribute="centerY" secondItem="Vy5-OC-0dA" secondAttribute="centerY" id="a2t-4n-dwJ"/>
-                                            <constraint firstAttribute="bottomMargin" secondItem="ORd-El-Zr9" secondAttribute="bottom" constant="-8" id="m0v-Py-bI5"/>
-                                        </constraints>
-                                        <size key="customSize" width="184" height="185"/>
-                                        <connections>
-                                            <outlet property="imageView" destination="ORd-El-Zr9" id="I1u-ht-Ttf"/>
-                                            <outlet property="loadingView" destination="d2G-Hd-MRE" id="RXF-rc-Mji"/>
-                                        </connections>
-                                    </collectionViewCell>
-                                </cells>
+                                <cells/>
                                 <connections>
                                     <outlet property="dataSource" destination="BoJ-w3-Hah" id="2Tg-Td-Olt"/>
                                     <outlet property="delegate" destination="BoJ-w3-Hah" id="R9Z-0I-tSP"/>
