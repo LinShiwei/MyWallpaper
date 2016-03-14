@@ -9,11 +9,7 @@
 import UIKit
 import SwiftyJSON
 import Haneke
-struct Picture {
-    let name :String
-    let url  :String
-    let size :CGSize
-}
+
 protocol CategorySelectionDelegate: class {
     func categorySelected(albumID: String)
 }
@@ -27,7 +23,6 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
     @IBOutlet weak var searchBar: UISearchBar!
     
     var albumList = [[String]]()
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,7 +31,6 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
         categoryTableView.backgroundView?.backgroundColor = view.backgroundColor
         initAlbumList()
         searchBar.delegate = self
-
     }
 
     override func didReceiveMemoryWarning() {
@@ -47,7 +41,7 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
     
     
     func initAlbumList() {
-        let stringURL:String = albumURL
+        let stringURL:String = urlGetAlbum
         let cache = Shared.JSONCache
         let URL = NSURL(string: stringURL)!
         cache.removeAll()
@@ -55,7 +49,7 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
             dispatch_async(dispatch_get_main_queue()) {
                 print("fail to fetch albumList")
             }
-            }).onSuccess { jsonObject in
+            }).onSuccess { [unowned self] jsonObject in
             let json = JSON(jsonObject.dictionary)
             if let albums = json["album"].array?.reverse() {
                 for albumJSON in albums{

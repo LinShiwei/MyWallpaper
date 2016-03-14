@@ -14,8 +14,17 @@ let tieTuKuURL = "http://api.tietuku.cn/v2/api"
 
 let urlGetAlbum   = tieTuKuURL + "/getalbum" + tieTuKuOpenkey
 let urlGetPicList = tieTuKuURL + "/getpiclist" + tieTuKuOpenkey
-
-let albumURL = "http://api.tietuku.cn/v2/api/getalbum/key/a5rMlZpnZG6VnpNllmaUkpJon2NrlZVsmGdplGOXamxpmczKm2KVbMObmGSWYpY="
+//let urlGetRandomRecommandedPhotos = tieTuKuURL + "/getrandrec" + tieTuKuOpenkey
+class Picture : AnyObject{
+    let name :String
+    let url  :String
+    let size :CGSize
+    init(name:String,url:String,size:CGSize){
+        self.name = name
+        self.url = url
+        self.size = size
+    }
+}
 
 struct Theme {
     let splitViewBackgroundColor : UIColor

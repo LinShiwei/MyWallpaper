@@ -21,11 +21,22 @@
 		56402D5B1C64F9E3008B0499 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56402D5A1C64F9E3008B0499 /* DetailViewController.swift */; };
 		564496871C81B97800E4F217 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564496861C81B97800E4F217 /* LoadingView.swift */; };
 		564D90B51C9280A100AAD9B6 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564D90B41C9280A100AAD9B6 /* Constant.swift */; };
+		56F620201C95985E007DEE2A /* MyWallpaperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F6201F1C95985E007DEE2A /* MyWallpaperTests.swift */; };
 		56F66AAD1C6710A300240006 /* CollectionViewWaterfallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F66AAC1C6710A300240006 /* CollectionViewWaterfallLayout.swift */; };
 		56F66AAF1C672D6500240006 /* Haneke.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56F66AAE1C672D6500240006 /* Haneke.framework */; };
 		56F66AB21C672ED000240006 /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F66AB01C672ED000240006 /* ImageViewer.swift */; };
 		56F66AB31C672ED000240006 /* UIImageView+ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F66AB11C672ED000240006 /* UIImageView+ImageViewer.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		56F620221C95985E007DEE2A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 563D44F21C63226200A581FA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 563D44F91C63226200A581FA;
+			remoteInfo = MyWallpaper;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		5628482A1C85D678001C0256 /* ImageCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -44,6 +55,9 @@
 		56402D5A1C64F9E3008B0499 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		564496861C81B97800E4F217 /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		564D90B41C9280A100AAD9B6 /* Constant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		56F6201D1C95985E007DEE2A /* MyWallpaperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyWallpaperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		56F6201F1C95985E007DEE2A /* MyWallpaperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWallpaperTests.swift; sourceTree = "<group>"; };
+		56F620211C95985E007DEE2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		56F66AAC1C6710A300240006 /* CollectionViewWaterfallLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewWaterfallLayout.swift; sourceTree = "<group>"; };
 		56F66AAE1C672D6500240006 /* Haneke.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Haneke.framework; path = Carthage/Build/iOS/Haneke.framework; sourceTree = "<group>"; };
 		56F66AB01C672ED000240006 /* ImageViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewer.swift; sourceTree = "<group>"; };
@@ -57,6 +71,13 @@
 			files = (
 				56402D521C645E86008B0499 /* SwiftyJSON.framework in Frameworks */,
 				56F66AAF1C672D6500240006 /* Haneke.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		56F6201A1C95985E007DEE2A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,6 +111,7 @@
 				56402D511C645E86008B0499 /* SwiftyJSON.framework */,
 				563D44FB1C63226200A581FA /* Products */,
 				563D44FC1C63226200A581FA /* MyWallpaper */,
+				56F6201E1C95985E007DEE2A /* MyWallpaperTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -97,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				563D44FA1C63226200A581FA /* MyWallpaper.app */,
+				56F6201D1C95985E007DEE2A /* MyWallpaperTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -117,6 +140,15 @@
 				5638603E1C8531FC00C59C68 /* SearchPage */,
 			);
 			path = MyWallpaper;
+			sourceTree = "<group>";
+		};
+		56F6201E1C95985E007DEE2A /* MyWallpaperTests */ = {
+			isa = PBXGroup;
+			children = (
+				56F6201F1C95985E007DEE2A /* MyWallpaperTests.swift */,
+				56F620211C95985E007DEE2A /* Info.plist */,
+			);
+			path = MyWallpaperTests;
 			sourceTree = "<group>";
 		};
 		56F66AB51C672F1100240006 /* ImageViewer */ = {
@@ -166,6 +198,24 @@
 			productReference = 563D44FA1C63226200A581FA /* MyWallpaper.app */;
 			productType = "com.apple.product-type.application";
 		};
+		56F6201C1C95985E007DEE2A /* MyWallpaperTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 56F620261C95985F007DEE2A /* Build configuration list for PBXNativeTarget "MyWallpaperTests" */;
+			buildPhases = (
+				56F620191C95985E007DEE2A /* Sources */,
+				56F6201A1C95985E007DEE2A /* Frameworks */,
+				56F6201B1C95985E007DEE2A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				56F620231C95985E007DEE2A /* PBXTargetDependency */,
+			);
+			name = MyWallpaperTests;
+			productName = MyWallpaperTests;
+			productReference = 56F6201D1C95985E007DEE2A /* MyWallpaperTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -179,6 +229,11 @@
 					563D44F91C63226200A581FA = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = 4F6NMKB449;
+					};
+					56F6201C1C95985E007DEE2A = {
+						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = 4F6NMKB449;
+						TestTargetID = 563D44F91C63226200A581FA;
 					};
 				};
 			};
@@ -196,6 +251,7 @@
 			projectRoot = "";
 			targets = (
 				563D44F91C63226200A581FA /* MyWallpaper */,
+				56F6201C1C95985E007DEE2A /* MyWallpaperTests */,
 			);
 		};
 /* End PBXProject section */
@@ -209,6 +265,13 @@
 				563D45051C63226200A581FA /* Assets.xcassets in Resources */,
 				5628482B1C85D678001C0256 /* ImageCollectionViewCell.xib in Resources */,
 				563D45031C63226200A581FA /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		56F6201B1C95985E007DEE2A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,7 +315,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		56F620191C95985E007DEE2A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				56F620201C95985E007DEE2A /* MyWallpaperTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		56F620231C95985E007DEE2A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 563D44F91C63226200A581FA /* MyWallpaper */;
+			targetProxy = 56F620221C95985E007DEE2A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		563D45011C63226200A581FA /* Main.storyboard */ = {
@@ -387,6 +466,30 @@
 			};
 			name = Release;
 		};
+		56F620241C95985F007DEE2A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = MyWallpaperTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = lsw.self.MyWallpaperTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyWallpaper.app/MyWallpaper";
+			};
+			name = Debug;
+		};
+		56F620251C95985F007DEE2A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = MyWallpaperTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = lsw.self.MyWallpaperTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyWallpaper.app/MyWallpaper";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -407,6 +510,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		56F620261C95985F007DEE2A /* Build configuration list for PBXNativeTarget "MyWallpaperTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				56F620241C95985F007DEE2A /* Debug */,
+				56F620251C95985F007DEE2A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

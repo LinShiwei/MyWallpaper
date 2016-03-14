@@ -228,7 +228,7 @@ class ImageViewer: UIViewController {
         previousImageView.frame = centerFrameFromImageSize(previousImageSize)
         previousImageView.contentMode = UIViewContentMode.ScaleAspectFill
         let previousURL = getImageURLAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: -1)
-        cache.fetch(URL: previousURL).onSuccess { image in
+        cache.fetch(URL: previousURL).onSuccess {[unowned self] image in
             self.previousImageView.image = image
         }
         
@@ -238,7 +238,7 @@ class ImageViewer: UIViewController {
         nextImageView.frame = nextFrame
         nextImageView.contentMode = UIViewContentMode.ScaleAspectFill
         let nextURL = getImageURLAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: 1)
-        cache.fetch(URL: nextURL).onSuccess { image in
+        cache.fetch(URL: nextURL).onSuccess { [unowned self] image in
             self.nextImageView.image = image
         }
         
@@ -249,7 +249,7 @@ class ImageViewer: UIViewController {
         imageView.contentMode = UIViewContentMode.ScaleAspectFill
         
         if let highQualityImageUrl = highQualityImageUrl {
-            cache.fetch(URL: highQualityImageUrl).onSuccess { image in
+            cache.fetch(URL: highQualityImageUrl).onSuccess { [unowned self] image in
                 self.imageView.image = image
                 self.animateEntry()
             }
@@ -418,7 +418,7 @@ extension ImageViewer: UIScrollViewDelegate {
             
             let nextURL = getImageURLAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: 1)
             let cache = Cache<UIImage>(name: "highQualityImageCache")
-            cache.fetch(URL: nextURL).onSuccess { image in
+            cache.fetch(URL: nextURL).onSuccess {[unowned self]  image in
                 self.nextImageView.image = image
             }
             initSenderView(currentIndexPathRow)
@@ -443,7 +443,7 @@ extension ImageViewer: UIScrollViewDelegate {
 
                 let previousURL = getImageURLAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: -1)
                 let cache = Cache<UIImage>(name: "highQualityImageCache")
-                cache.fetch(URL: previousURL).onSuccess { image in
+                cache.fetch(URL: previousURL).onSuccess { [unowned self] image in
                     self.previousImageView.image = image
                 }
                 initSenderView(currentIndexPathRow)

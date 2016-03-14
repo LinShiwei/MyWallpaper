@@ -90,7 +90,7 @@
         <!--Split View Controller-->
         <scene sceneID="5je-kZ-XjU">
             <objects>
-                <splitViewController id="AJN-VC-s3r" customClass="SplitViewController" customModule="MyWallpaper" customModuleProvider="target" sceneMemberID="viewController">
+                <splitViewController storyboardIdentifier="SplitViewController" id="AJN-VC-s3r" customClass="SplitViewController" customModule="MyWallpaper" customModuleProvider="target" sceneMemberID="viewController">
                     <connections>
                         <segue destination="BoJ-w3-Hah" kind="relationship" relationship="detailViewController" id="nvq-FZ-EUG"/>
                         <segue destination="ivP-zE-DQg" kind="relationship" relationship="masterViewController" id="j3u-0n-Uxc"/>

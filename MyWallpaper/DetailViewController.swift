@@ -100,12 +100,12 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
         }
         let cache = Shared.JSONCache
         let URL = NSURL(string: stringURL)!
-        cache.removeAll()
+//        cache.removeAll()
         cache.fetch(URL: URL,failure:{ error in
             dispatch_async(dispatch_get_main_queue()) {
                 print("fail to fetch pic")
             }
-        }).onSuccess{ jsonObject in
+        }).onSuccess{ [unowned self] jsonObject in
             let json = JSON(jsonObject.dictionary)
             for  picJSON in json["pic"].array! {
                 if let url = picJSON["linkurl"].string,let width = picJSON["width"].string ,let height = picJSON["height"].string,let name = picJSON["name"].string {

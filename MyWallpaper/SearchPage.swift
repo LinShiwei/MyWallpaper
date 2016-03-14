@@ -9,7 +9,7 @@
 import UIKit
 import Haneke
 import SwiftyJSON
-
+import GameplayKit
 class SearchPage: UIViewController{
     
     var rootViewController: UIViewController!
@@ -17,33 +17,24 @@ class SearchPage: UIViewController{
     var senderView : UISearchBar
     let windowBounds = UIScreen.mainScreen().bounds
     var originalFrameRelativeToScreen: CGRect!
+    
     var maskView = UIView()
     var collectionView : UICollectionView?
     var guideView : UIView?
+    
     var pictures = [Picture]()
     var filteredPictures = [Picture]()
-   
     
     init(senderView : UISearchBar,backgroundColor:UIColor){
         self.senderView = senderView
         self.maskView.backgroundColor = backgroundColor
         rootViewController = UIApplication.sharedApplication().keyWindow!.rootViewController!
         super.init(nibName: nil, bundle: nil)
+        
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func loadView() {
-        super.loadView()
-        configureView()
-        configureMaskView()
-        configureSearchBar()
-        configureCollectionView()
-        configureGuideView()
-        animateEntry()
-        initPicturesData()
     }
     func presentFromRootViewController() {
         willMoveToParentViewController(rootViewController)
@@ -51,6 +42,21 @@ class SearchPage: UIViewController{
         rootViewController.addChildViewController(self)
         didMoveToParentViewController(rootViewController)
     }
+    override func loadView() {
+        super.loadView()
+        configureView()
+        configureMaskView()
+        configureSearchBar()
+        configureCollectionView()
+        configureGuideView()
+
+        animateEntry()
+    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        initPicturesData()
+    }
+    
     //MARK: Configure Views
     func configureView() {
         senderView.alpha = 0
@@ -73,20 +79,12 @@ class SearchPage: UIViewController{
         searchBar.delegate = self
         view.addSubview(searchBar)
     }
+
     func configureCollectionView(){
-        let origin = CGPoint(x: 20, y: windowBounds.height/3)
-        let size = CGSize(width: windowBounds.width - 20*2, height: windowBounds.height - origin.y - 20)
-        let frame = CGRect(origin: origin, size: size)
-        collectionView = UICollectionView(frame: frame, collectionViewLayout: getLayout())
-        if let collectionView = collectionView {
-            collectionView.dataSource = self
-            collectionView.delegate = self
-            collectionView.alpha = 0
-            collectionView.registerNib(UINib(nibName: "ImageCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ImageCollectionViewCell")
-            collectionView.backgroundColor = UIColor.clearColor()
-            view.addSubview(collectionView)
-        }
-        
+        collectionView = getOriginCollectionView()
+        collectionView!.delegate = self
+        collectionView!.dataSource = self
+        view.addSubview(collectionView!)
     }
     func configureGuideView(){
         guideView = UIView(frame: CGRect(x: 0, y: collectionView!.frame.origin.y - 52, width: windowBounds.width, height: 44))
@@ -117,7 +115,7 @@ class SearchPage: UIViewController{
         let size = CGSize(width: barWidth, height: barHeight)
         return CGRect(origin: origin, size: size)
     }
-        func initSwipeGestureRecognizer()->UISwipeGestureRecognizer{
+    func initSwipeGestureRecognizer()->UISwipeGestureRecognizer{
         let recognizer = UISwipeGestureRecognizer(target: self, action: "didSwipe:")
         recognizer.direction = .Up
         return recognizer
@@ -130,14 +128,18 @@ class SearchPage: UIViewController{
         let stringURL:String = urlGetPicList
         let cache = Shared.JSONCache
         let URL = NSURL(string: stringURL)!
-        cache.fetch(URL: URL).onSuccess{ jsonObject in
+        cache.fetch(URL: URL,failure:{ error in
+            dispatch_async(dispatch_get_main_queue()) {
+                print("fail to initPicturesData")
+            }
+        }).onSuccess{[unowned self] jsonObject in
             let listjson = JSON(jsonObject.dictionary)
             
             if let pageCount = listjson["pages"].int {
                 for page in 1...pageCount {
                     let string = stringURL + "/p/" + String(page)
                     let cache = Shared.JSONCache
-                    cache.fetch(URL: NSURL(string: string)!).onSuccess({ object in
+                    cache.fetch(URL: NSURL(string: string)!).onSuccess{[unowned self] object in
                         let json = JSON(object.dictionary)
                         
                         for  picJSON in json["pic"].array! {
@@ -145,15 +147,21 @@ class SearchPage: UIViewController{
                                 let size = CGSize(width: Int(width)!, height: Int(height)!)
                                 let picture = Picture(name: name, url: url, size: size)
                                 self.pictures.append(picture)
-                            }else {
-                                print("picture no found")
                             }
                         }
-
-                    })
+                        if page == pageCount {
+                            self.filteredPictures = Array(GKRandomSource.sharedRandom().arrayByShufflingObjectsInArray(self.pictures).suffix(15)) as! [Picture]
+                            dispatch_async(dispatch_get_main_queue()) { [unowned self] in
+                                self.collectionView!.reloadData()
+                            }
+                        }
+                    }
                 }
             }else{
-                print("pages key no found")
+                dispatch_async(dispatch_get_main_queue()) {
+
+                    print("pages key no found")
+                }
             }
         }
     }
@@ -187,12 +195,23 @@ class SearchPage: UIViewController{
         })
     }
     
-    
+    //MARK: Support Function
+    func getOriginCollectionView()->UICollectionView {
+        let origin = CGPoint(x: 20, y: windowBounds.height/3)
+        let size = CGSize(width: windowBounds.width - 20*2, height: windowBounds.height - origin.y - 20)
+        let frame = CGRect(origin: origin, size: size)
+        let collectionView = UICollectionView(frame: frame, collectionViewLayout:getLayout())
+        collectionView.registerNib(UINib(nibName: "ImageCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ImageCollectionViewCell")
+        collectionView.backgroundColor = UIColor.blueColor()
+        collectionView.alpha = 0
+        return collectionView
+    }
 }
 //MARK: UICollectionView DataSource
-extension SearchPage:UICollectionViewDataSource,UIScrollViewDelegate {
+extension SearchPage:UICollectionViewDataSource{
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return filteredPictures.count
+            return filteredPictures.count
+
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -200,22 +219,23 @@ extension SearchPage:UICollectionViewDataSource,UIScrollViewDelegate {
         let url = NSURL(string: filteredPictures[indexPath.row].url)
   
         cell.loadingView.hidden = false
+        cell.imageView.contentMode = UIViewContentMode.ScaleAspectFill
         cell.imageView.hnk_setImageFromURL(url!, success: {
             image in
             cell.imageView.image = image
             cell.loadingView.hidden = true
         })
-        cell.imageView.setupForImageViewer(url, backgroundColor: view.backgroundColor!)
+        cell.imageView.setupForImageViewer(url, backgroundColor: maskView.backgroundColor!)
         cell.backgroundColor = UIColor.clearColor()
         return cell
     }
-    
 }
 // MARK: WaterfallLayoutDelegate
 extension SearchPage:CollectionViewWaterfallLayoutDelegate{
     
     func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return filteredPictures[indexPath.row].size
+//        return filteredPictures[indexPath.row].size
+        return windowBounds.size
     }
     func getLayout()->CollectionViewWaterfallLayout{
         let layout = CollectionViewWaterfallLayout()
@@ -234,29 +254,22 @@ extension SearchPage:UISearchBarDelegate{
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         filteredPictures = pictures.filter({(picture : Picture)->Bool in
-            if let text = searchBar.text {
-                if picture.name.containsString(text){
-                    return true
-                }else{
-                    return false
-                }
-            }else{
+            guard let text = searchBar.text where picture.name.containsString(text) else {
                 return false
             }
+            return true
         })
         collectionView!.reloadData()
         
-        for view in guideView!.subviews {
-            if view is UILabel {
-                UIView.animateWithDuration(0.5, delay: 0, options: .AllowAnimatedContent, animations: {[unowned self]() in
-                    if self.filteredPictures.count > 0 {
-                        (view as! UILabel).text = "为您搜索到以下图片"
-                    }else{
-                        (view as! UILabel).text = "未找到相关图片"
-                    }
-                    
-                    }, completion: nil)
-            }
+        for view in guideView!.subviews where view is UILabel {
+            UIView.animateWithDuration(0.5, delay: 0, options: .AllowAnimatedContent, animations: {[unowned self]() in
+                if self.filteredPictures.count > 0 {
+                    (view as! UILabel).text = "为您搜索到以下图片"
+                }else{
+                    (view as! UILabel).text = "未找到相关图片"
+                }
+                }, completion: nil)
+            return
         }
     }
 }
