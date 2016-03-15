@@ -132,27 +132,28 @@ class SearchPage: UIViewController{
             dispatch_async(dispatch_get_main_queue()) {
                 print("fail to initPicturesData")
             }
-        }).onSuccess{[unowned self] jsonObject in
+        }).onSuccess{[weak self] jsonObject in
             let listjson = JSON(jsonObject.dictionary)
             
             if let pageCount = listjson["pages"].int {
                 for page in 1...pageCount {
                     let string = stringURL + "/p/" + String(page)
                     let cache = Shared.JSONCache
-                    cache.fetch(URL: NSURL(string: string)!).onSuccess{[unowned self] object in
+                    cache.fetch(URL: NSURL(string: string)!).onSuccess{[weak self] object in
                         let json = JSON(object.dictionary)
                         
                         for  picJSON in json["pic"].array! {
                             if let url = picJSON["linkurl"].string,let width = picJSON["width"].string ,let height = picJSON["height"].string,let name = picJSON["name"].string {
                                 let size = CGSize(width: Int(width)!, height: Int(height)!)
                                 let picture = Picture(name: name, url: url, size: size)
-                                self.pictures.append(picture)
+                                self?.pictures.append(picture)
                             }
                         }
-                        if page == pageCount {
-                            self.filteredPictures = Array(GKRandomSource.sharedRandom().arrayByShufflingObjectsInArray(self.pictures).suffix(15)) as! [Picture]
-                            dispatch_async(dispatch_get_main_queue()) { [unowned self] in
-                                self.collectionView!.reloadData()
+                        if page == pageCount,let pics = self?.pictures {
+                            self?.filteredPictures = Array(GKRandomSource.sharedRandom().arrayByShufflingObjectsInArray(pics).suffix(15)) as! [Picture]
+                            dispatch_async(dispatch_get_main_queue()) { [weak self] in
+                                
+                                self?.collectionView!.reloadData()
                             }
                         }
                     }
@@ -202,8 +203,13 @@ class SearchPage: UIViewController{
         let frame = CGRect(origin: origin, size: size)
         let collectionView = UICollectionView(frame: frame, collectionViewLayout:getLayout())
         collectionView.registerNib(UINib(nibName: "ImageCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ImageCollectionViewCell")
-        collectionView.backgroundColor = UIColor.blueColor()
+        collectionView.backgroundColor = UIColor.clearColor()
         collectionView.alpha = 0
+        
+        let center = self.view.convertPoint(collectionView.center, toView: collectionView)
+        let loadingView = LoadingView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
+        loadingView.center = center
+        collectionView.addSubview(loadingView)
         return collectionView
     }
 }
@@ -211,13 +217,14 @@ class SearchPage: UIViewController{
 extension SearchPage:UICollectionViewDataSource{
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
             return filteredPictures.count
-
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ImageCollectionViewCell", forIndexPath: indexPath) as! ImageCollectionViewCell
         let url = NSURL(string: filteredPictures[indexPath.row].url)
-  
+        for view in collectionView.subviews where view is LoadingView {
+            view.hidden = true
+        }
         cell.loadingView.hidden = false
         cell.imageView.contentMode = UIViewContentMode.ScaleAspectFill
         cell.imageView.hnk_setImageFromURL(url!, success: {
@@ -269,7 +276,6 @@ extension SearchPage:UISearchBarDelegate{
                     (view as! UILabel).text = "未找到相关图片"
                 }
                 }, completion: nil)
-            return
         }
     }
 }

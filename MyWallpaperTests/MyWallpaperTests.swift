@@ -28,27 +28,7 @@ class MyWallpaperTests: XCTestCase {
     }
 
     
-    func testSearchPageGuideLabelTextDidChangeCorrectlyAfterSearch(){
-        let searchPage = SearchPage(senderView: masterViewController.searchBar, backgroundColor: UIColor.blackColor())
-        let _ = searchPage.view
-        var guideLabel = UILabel()
-        for view in searchPage.guideView!.subviews where view is UILabel{
-            guideLabel = view as! UILabel
-        }
-        searchPage.searchBar.text = "风景"
-        searchPage.searchBarSearchButtonClicked(searchPage.searchBar)
-        print("fengjing")
-        print(searchPage.filteredPictures)
-
-        XCTAssertEqual(guideLabel.text, "为您搜索到以下图片")
-        searchPage.searchBar.text = "图片没有这个名称"
-        searchPage.searchBarSearchButtonClicked(searchPage.searchBar)
-        print("wu")
-        print(searchPage.filteredPictures)
-
-        XCTAssertEqual(guideLabel.text, "未找到相关图片")
-    }
-    
+        
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measureBlock {

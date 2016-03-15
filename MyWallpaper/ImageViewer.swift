@@ -228,8 +228,9 @@ class ImageViewer: UIViewController {
         previousImageView.frame = centerFrameFromImageSize(previousImageSize)
         previousImageView.contentMode = UIViewContentMode.ScaleAspectFill
         let previousURL = getImageURLAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: -1)
-        cache.fetch(URL: previousURL).onSuccess {[unowned self] image in
-            self.previousImageView.image = image
+        cache.fetch(URL: previousURL).onSuccess {[weak self]image in
+            self?.previousImageView.image = image
+
         }
         
         let nextImageSize = getImageSizeAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: 1)
@@ -238,8 +239,9 @@ class ImageViewer: UIViewController {
         nextImageView.frame = nextFrame
         nextImageView.contentMode = UIViewContentMode.ScaleAspectFill
         let nextURL = getImageURLAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: 1)
-        cache.fetch(URL: nextURL).onSuccess { [unowned self] image in
-            self.nextImageView.image = image
+        cache.fetch(URL: nextURL).onSuccess {[weak self]image in
+            self?.nextImageView.image = image
+            
         }
         
         senderView.alpha = 0.0
@@ -249,9 +251,10 @@ class ImageViewer: UIViewController {
         imageView.contentMode = UIViewContentMode.ScaleAspectFill
         
         if let highQualityImageUrl = highQualityImageUrl {
-            cache.fetch(URL: highQualityImageUrl).onSuccess { [unowned self] image in
-                self.imageView.image = image
-                self.animateEntry()
+            cache.fetch(URL: highQualityImageUrl).onSuccess {[weak self] image in
+                self?.imageView.image = image
+                self?.animateEntry()
+                
             }
         } else {
             imageView.image = senderView.image
@@ -376,10 +379,10 @@ class ImageViewer: UIViewController {
                 self.imageView.frame = frame
                 self.maskView.alpha = 0.0
                 }, completion: {(finished) in
+                    self.senderView.alpha = 1.0
                     self.willMoveToParentViewController(nil)
                     self.view.removeFromSuperview()
                     self.removeFromParentViewController()
-                    self.senderView.alpha = 1.0
             })
         }
     }
@@ -418,8 +421,9 @@ extension ImageViewer: UIScrollViewDelegate {
             
             let nextURL = getImageURLAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: 1)
             let cache = Cache<UIImage>(name: "highQualityImageCache")
-            cache.fetch(URL: nextURL).onSuccess {[unowned self]  image in
-                self.nextImageView.image = image
+            cache.fetch(URL: nextURL).onSuccess {[weak self]image in
+                self?.nextImageView.image = image
+                
             }
             initSenderView(currentIndexPathRow)
             
@@ -443,8 +447,9 @@ extension ImageViewer: UIScrollViewDelegate {
 
                 let previousURL = getImageURLAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: -1)
                 let cache = Cache<UIImage>(name: "highQualityImageCache")
-                cache.fetch(URL: previousURL).onSuccess { [unowned self] image in
-                    self.previousImageView.image = image
+                cache.fetch(URL: previousURL).onSuccess { [weak self]image in
+                    self?.previousImageView.image = image
+                    
                 }
                 initSenderView(currentIndexPathRow)
             }else{

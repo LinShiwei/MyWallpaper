@@ -47,9 +47,18 @@ class LoadingView: UIView {
         fadeAnimation.duration = 1.0
         fadeAnimation.repeatCount = Float(Int.max)
     }
-    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        myInit()
+    }
+  
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        myInit()
+
+    }
+    
+    func myInit(){
         self.backgroundColor = UIColor.clearColor()
         setUpLayerFadeAnimation()
         setUpReplicatorLayer()
@@ -58,6 +67,5 @@ class LoadingView: UIView {
         replicatorLayer.addSublayer(instanceLayer)
         
     }
-    
     
 }

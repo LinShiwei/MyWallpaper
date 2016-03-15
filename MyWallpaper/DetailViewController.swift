@@ -52,6 +52,7 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ImageCollectionViewCell", forIndexPath: indexPath) as! ImageCollectionViewCell
 
         let url = NSURL(string: pictures[indexPath.row].url)
+        loadingView.hidden = true
         cell.loadingView.hidden = false
         cell.imageView.hnk_setImageFromURL(url!, success: {
         image in
@@ -92,15 +93,16 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
             albumHomeScrollView.alpha = 0
             pageControl.alpha = 0
             imageCollectionView.alpha = 1
+            loadingView.alpha = 1
             stringURL = stringURL + "/aid/" + albumID
         }else{
             imageCollectionView.alpha = 0
             self.albumHomeScrollView.alpha = 1
+            loadingView.alpha = 1
             stringURL = stringURL + "/aid/" + albumID
         }
         let cache = Shared.JSONCache
         let URL = NSURL(string: stringURL)!
-//        cache.removeAll()
         cache.fetch(URL: URL,failure:{ error in
             dispatch_async(dispatch_get_main_queue()) {
                 print("fail to fetch pic")
@@ -228,7 +230,6 @@ extension DetailViewController: CategorySelectionDelegate {
         self.albumID = albumID
     }
 }
-
 
 //MARK: UIView extension
 extension UIView {
