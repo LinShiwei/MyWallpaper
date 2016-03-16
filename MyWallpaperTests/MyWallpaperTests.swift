@@ -26,9 +26,13 @@ class MyWallpaperTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-
+//    func testSearchPageKeyWordsButtonDidTap(){
+//        let searchPage = SearchPage(senderView: masterViewController.searchBar, backgroundColor: UIColor.blackColor())
+//        let _ = searchPage.view
+//
+//    }
+//    
     
-        
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measureBlock {

@@ -21,6 +21,8 @@
 		56402D5B1C64F9E3008B0499 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56402D5A1C64F9E3008B0499 /* DetailViewController.swift */; };
 		564496871C81B97800E4F217 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564496861C81B97800E4F217 /* LoadingView.swift */; };
 		564D90B51C9280A100AAD9B6 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564D90B41C9280A100AAD9B6 /* Constant.swift */; };
+		566F246E1C98061700206228 /* KeyWordsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566F246D1C98061700206228 /* KeyWordsView.swift */; };
+		566F24701C98063C00206228 /* KeyWordsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 566F246F1C98063C00206228 /* KeyWordsView.xib */; };
 		56F620201C95985E007DEE2A /* MyWallpaperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F6201F1C95985E007DEE2A /* MyWallpaperTests.swift */; };
 		56F66AAD1C6710A300240006 /* CollectionViewWaterfallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F66AAC1C6710A300240006 /* CollectionViewWaterfallLayout.swift */; };
 		56F66AAF1C672D6500240006 /* Haneke.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56F66AAE1C672D6500240006 /* Haneke.framework */; };
@@ -55,6 +57,8 @@
 		56402D5A1C64F9E3008B0499 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		564496861C81B97800E4F217 /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		564D90B41C9280A100AAD9B6 /* Constant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		566F246D1C98061700206228 /* KeyWordsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyWordsView.swift; sourceTree = "<group>"; };
+		566F246F1C98063C00206228 /* KeyWordsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KeyWordsView.xib; sourceTree = "<group>"; };
 		56F6201D1C95985E007DEE2A /* MyWallpaperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyWallpaperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		56F6201F1C95985E007DEE2A /* MyWallpaperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWallpaperTests.swift; sourceTree = "<group>"; };
 		56F620211C95985E007DEE2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -92,6 +96,8 @@
 				5628482C1C85D914001C0256 /* ImageCollectionViewCell.swift */,
 				56F66AAC1C6710A300240006 /* CollectionViewWaterfallLayout.swift */,
 				564496861C81B97800E4F217 /* LoadingView.swift */,
+				566F246D1C98061700206228 /* KeyWordsView.swift */,
+				566F246F1C98063C00206228 /* KeyWordsView.xib */,
 			);
 			name = Support;
 			sourceTree = "<group>";
@@ -263,6 +269,7 @@
 			files = (
 				563D45081C63226200A581FA /* LaunchScreen.storyboard in Resources */,
 				563D45051C63226200A581FA /* Assets.xcassets in Resources */,
+				566F24701C98063C00206228 /* KeyWordsView.xib in Resources */,
 				5628482B1C85D678001C0256 /* ImageCollectionViewCell.xib in Resources */,
 				563D45031C63226200A581FA /* Main.storyboard in Resources */,
 			);
@@ -309,6 +316,7 @@
 				56402D5B1C64F9E3008B0499 /* DetailViewController.swift in Sources */,
 				56F66AAD1C6710A300240006 /* CollectionViewWaterfallLayout.swift in Sources */,
 				56F66AB21C672ED000240006 /* ImageViewer.swift in Sources */,
+				566F246E1C98061700206228 /* KeyWordsView.swift in Sources */,
 				563D44FE1C63226200A581FA /* AppDelegate.swift in Sources */,
 				56402D551C6474B1008B0499 /* MasterViewController.swift in Sources */,
 				564D90B51C9280A100AAD9B6 /* Constant.swift in Sources */,
@@ -518,6 +526,7 @@
 				56F620251C95985F007DEE2A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -21,6 +21,7 @@ class SearchPage: UIViewController{
     var maskView = UIView()
     var collectionView : UICollectionView?
     var guideView : UIView?
+    var keyWordsView: KeyWordsView?
     
     var pictures = [Picture]()
     var filteredPictures = [Picture]()
@@ -49,8 +50,9 @@ class SearchPage: UIViewController{
         configureSearchBar()
         configureCollectionView()
         configureGuideView()
-
         animateEntry()
+        configureKeysWordView()
+
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,7 +64,6 @@ class SearchPage: UIViewController{
         senderView.alpha = 0
         var originalFrame = senderView.convertRect(windowBounds, toView: nil)
         originalFrame.size = senderView.frame.size
-        
         originalFrameRelativeToScreen = originalFrame
     }
     
@@ -106,6 +107,33 @@ class SearchPage: UIViewController{
             view.addSubview(guideView)
         }
         
+    }
+    func configureKeysWordView(){
+        guard let viewFromNib = NSBundle.mainBundle().loadNibNamed("KeyWordsView", owner: self, options: nil).first as? KeyWordsView else{return}
+        keyWordsView = viewFromNib
+        keyWordsView!.backgroundColor = UIColor.clearColor()
+        keyWordsView!.configureKeyWords()
+        view.addSubview(keyWordsView!)
+        var origin = searchBar.frame.origin
+        origin.y = origin.y + searchBar.frame.height + 8
+        let size = CGSize(width: searchBar.frame.size.width, height: 30)
+        keyWordsView!.frame = CGRect(origin: origin, size: size)
+        if let stackView = keyWordsView!.subviews[0] as? UIStackView {
+            for view in stackView.subviews where view is UIButton {
+                let button = view as! UIButton
+                button.addTarget(self, action: "keyWordsButtonDidTap:", forControlEvents: .TouchUpInside)
+            }
+        }
+//        keyWordsView!.translatesAutoresizingMaskIntoConstraints = false
+//        let viewsDictionary = [
+//            "searchBar"    : searchBar,
+//            "keyWordsView" : keyWordsView!,
+//            "guideView"    : guideView!
+//        ]
+//        keyWordsView!.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[searchBar]-[keyWordsView]-[guideView]", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary))
+//        
+//        keyWordsView!.addConstraint(NSLayoutConstraint(item: keyWordsView!, attribute: .Width, relatedBy: .Equal, toItem: searchBar, attribute: .Width, multiplier: 1.0, constant: 0))
+//        
     }
     
     func setSearchBarFrame()->CGRect{
@@ -195,10 +223,14 @@ class SearchPage: UIViewController{
             })
         })
     }
-    
+    //MARK: Key Words Button Selector
+    func keyWordsButtonDidTap(sender:UIButton){
+        searchBar.text = sender.titleLabel?.text
+        searchBarSearchButtonClicked(searchBar)
+    }
     //MARK: Support Function
     func getOriginCollectionView()->UICollectionView {
-        let origin = CGPoint(x: 20, y: windowBounds.height/3)
+        let origin = CGPoint(x: 20, y: windowBounds.height*2/5)
         let size = CGSize(width: windowBounds.width - 20*2, height: windowBounds.height - origin.y - 20)
         let frame = CGRect(origin: origin, size: size)
         let collectionView = UICollectionView(frame: frame, collectionViewLayout:getLayout())
@@ -213,6 +245,7 @@ class SearchPage: UIViewController{
         return collectionView
     }
 }
+
 //MARK: UICollectionView DataSource
 extension SearchPage:UICollectionViewDataSource{
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
