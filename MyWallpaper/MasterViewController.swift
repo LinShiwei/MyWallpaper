@@ -38,8 +38,6 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
         // Dispose of any resources that can be recreated.
     }
     
-    
-    
     func initAlbumList() {
         let stringURL:String = urlGetAlbum
         let cache = Shared.JSONCache

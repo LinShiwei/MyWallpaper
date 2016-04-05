@@ -10,43 +10,33 @@ import UIKit
 import GameplayKit
 class KeyWordsView: UIView {
 
-    @IBOutlet weak var keyWordsLabel: UILabel!
     @IBOutlet weak var keyWord1: UIButton!
     @IBOutlet weak var keyWord2: UIButton!
     @IBOutlet weak var keyWord3: UIButton!
     @IBOutlet weak var keyWord4: UIButton!
-    let keyWords = ["风景","汽车","人物","动漫"]
-    
-    /*
-    // Only override drawRect: if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func drawRect(rect: CGRect) {
-        // Drawing code
-    }
-    */
-    
-//    required init?(coder aDecoder: NSCoder) {
-//        super.init(coder: aDecoder)
-//        
-//
-//    }
-    func configureKeyWords(){
+    @IBOutlet weak var keyWordsLabel: UILabel!
+
+    private let keyWords = ["风景","汽车","人物","动漫"]
+       
+
+    func configureKeyWordsWith(target target :AnyObject, action:Selector,forControlEvents controlEvent:UIControlEvents? = .TouchUpInside){
         let words = GKRandomSource.sharedRandom().arrayByShufflingObjectsInArray(keyWords) as! [String]
-        var index = 0
         if let stackView = self.subviews[0] as? UIStackView {
-            for view in stackView.subviews where view is UIButton {
+            print(stackView.subviews)
+            for (index,view) in stackView.subviews.enumerate() where view is UIButton {
                 let button = view as! UIButton
-                button.setTitle(words[index],forState:.Normal)
-                index += 1
+                button.addTarget(target, action: action, forControlEvents: controlEvent!)
+                button.setTitle(words[index-1],forState:.Normal)
                 button.backgroundColor = UIColor(white: 0.05, alpha: 1)
-                let layer = button.layer
-                layer.cornerRadius = 10.0
-//                layer.borderWidth = 1.0
-//                layer.borderColor = themeBlack.lineColor.CGColor
+                button.layer.cornerRadius = 10.0
             }
         }
         
     }
-    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        backgroundColor = UIColor.clearColor()
+
+    }
     
 }

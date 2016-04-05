@@ -11,10 +11,6 @@ import Haneke
 
 class ImageViewer: UIViewController {
     // MARK: - Properties
-    let kMinMaskViewAlpha: CGFloat = 0.3
-    let kMaxImageScale: CGFloat = 2.5
-    let kMinImageScale: CGFloat = 1.0
-    
     var senderView: UIImageView!
     var originalFrameRelativeToScreen: CGRect!
     var rootViewController: UIViewController!
@@ -39,7 +35,6 @@ class ImageViewer: UIViewController {
         self.pictures = pictures
         self.highQualityImageUrl = highQualityImageUrl
      
-        
         rootViewController = UIApplication.sharedApplication().keyWindow!.rootViewController!
         maskView.backgroundColor = backgroundColor
         
@@ -56,7 +51,6 @@ class ImageViewer: UIViewController {
     
     override func loadView() {
         super.loadView()
-        
         configureView()
         configureMaskView()
         configureScrollView()
@@ -64,7 +58,6 @@ class ImageViewer: UIViewController {
         configureDownloadButton()
         configureImageView()
         configureConstraints()
-        
     }
     
     override func prefersStatusBarHidden() -> Bool {
@@ -75,55 +68,37 @@ class ImageViewer: UIViewController {
     func configureScrollView() {
         scrollView.frame = windowBounds
         scrollView.delegate = self
-        scrollView.minimumZoomScale = kMinImageScale
-        scrollView.maximumZoomScale = kMaxImageScale
-        scrollView.zoomScale = 1
-        
-        //我添加的代码
-        scrollView.contentSize = CGSizeMake(scrollView.frame.width * 3, scrollView.frame.height)
         scrollView.pagingEnabled = true
+        scrollView.contentSize = CGSizeMake(scrollView.frame.width * 3, scrollView.frame.height)
         scrollView.setContentOffset(CGPoint(x: scrollView.frame.width, y: 0), animated: false)
-        
         view.addSubview(scrollView)
     }
     
     func configureMaskView() {
         maskView.frame = windowBounds
         maskView.alpha = 0.0
-        
         view.insertSubview(maskView, atIndex: 0)
     }
     
-    func configureCloseButton() {
-        closeButton.alpha = 0.0
-        
-        let image = UIImage(named: "ImageClose", inBundle: NSBundle(forClass: ImageViewer.self), compatibleWithTraitCollection: nil)
-        
-        closeButton.setImage(image, forState: .Normal)
-        closeButton.translatesAutoresizingMaskIntoConstraints = false
-        closeButton.addTarget(self, action: "closeButtonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
-        view.addSubview(closeButton)
-        
+    private func configureCloseButton() {
+        configureButton(closeButton, withImageName: "ImageClose", andAction: "closeButtonTapped:")
+    }
+    private func configureDownloadButton() {
+        configureButton(downloadButton, withImageName: "ImageDownload", andAction: "downloadButtonTapped:")
+    }
+    private func configureButton(button:UIButton,withImageName imageName:String, andAction action:Selector){
+        let image = UIImage(named: imageName, inBundle: NSBundle(forClass: ImageViewer.self), compatibleWithTraitCollection: nil)
+        button.alpha = 0
+        button.setImage(image, forState: .Normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: action, forControlEvents: UIControlEvents.TouchUpInside)
+        view.addSubview(button)
         view.setNeedsUpdateConstraints()
     }
-    func configureDownloadButton() {
-        downloadButton.alpha = 0.0
-        let image = UIImage(named: "ImageDownload", inBundle: NSBundle(forClass: ImageViewer.self), compatibleWithTraitCollection: nil)
-        
-        downloadButton.setImage(image, forState: .Normal)
-        downloadButton.translatesAutoresizingMaskIntoConstraints = false
-        downloadButton.addTarget(self, action: "downloadButtonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
-        view.addSubview(downloadButton)
-        
-        view.setNeedsUpdateConstraints()
-    }
-    
     func configureView() {
         var originalFrame = senderView.convertRect(windowBounds, toView: nil)
         originalFrame.size = senderView.frame.size
-        
         originalFrameRelativeToScreen = originalFrame
-    
     }
     func initSenderView(currentIndexPathRow:Int){
 
@@ -131,9 +106,15 @@ class ImageViewer: UIViewController {
             senderView.alpha = 1.0
             let cell = self.senderView.superview?.superview as! ImageCollectionViewCell
             let collection = cell.superview as! UICollectionView
-            let indexPath = NSIndexPath(forRow: currentIndexPathRow, inSection: 0)
+            let indexPath = NSIndexPath(forItem: currentIndexPathRow, inSection: 0)
+            
             collection.scrollToItemAtIndexPath(indexPath, atScrollPosition: .CenteredVertically, animated: false)
-            let senderCell = collection.cellForItemAtIndexPath(indexPath) as! ImageCollectionViewCell
+            print("indexPath")
+            print(indexPath)
+            guard let senderCell = collection.cellForItemAtIndexPath(indexPath) as? ImageCollectionViewCell else{
+                print(collection.cellForItemAtIndexPath(indexPath))
+                return
+            }
 
             senderView = senderCell.imageView
             senderView.alpha = 0
