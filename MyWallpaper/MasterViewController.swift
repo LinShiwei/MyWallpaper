@@ -43,38 +43,25 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
         let cache = Shared.JSONCache
         let URL = NSURL(string: stringURL)!
         cache.removeAll()
-        cache.fetch(URL: URL,failure:{ error in
-            dispatch_async(dispatch_get_main_queue()) {
-                print("fail to fetch albumList")
-            }
-            }).onSuccess { [unowned self] jsonObject in
-            let json = JSON(jsonObject.dictionary)
-            if let albums = json["album"].array?.reverse() {
-                for albumJSON in albums{
-                    var listCell = [String]()
-                    if let albumName = albumJSON["albumname"].string {
-                        listCell.append(albumName)
-                    }else{
-                        print(" albumname key no found")
-                    }
-                    if let picURL = albumJSON["pic"][0]["url"].string {
-                        listCell.append(picURL)
-                    }else{
-                        print("pic/url key no found")
-                    }
-                    if let albumID = albumJSON["aid"].string {
-                        listCell.append(albumID)
-                    }else{
-                        print("ID key no found")
-                    }
-                    self.albumList.append(listCell)
+        cache.fetch(URL: URL,failure:{ _ in
+                dispatch_async(dispatch_get_main_queue()) {
+                    print("fail to fetch albumList")
                 }
-            }else{
-                print("album key no found")
-            }
-            
-            dispatch_async(dispatch_get_main_queue()) { [unowned self] in
-                self.categoryTableView.reloadData()
+            }).onSuccess { [unowned self] jsonObject in
+                let json = JSON(jsonObject.dictionary)
+                if let albums = json["album"].array?.reverse() {
+                    for albumJSON in albums{
+                        if let albumName = albumJSON["albumname"].string,let picURL = albumJSON["pic"][0]["url"].string,let albumID = albumJSON["aid"].string {
+                            self.albumList.append([albumName,picURL,albumID])
+                        }else{
+                            print("album no found")
+                        }
+                    }
+                }else{
+                    print("album key no found")
+                }
+                dispatch_async(dispatch_get_main_queue()) { [unowned self] in
+                    self.categoryTableView.reloadData()
             }
         }
     }
@@ -149,7 +136,6 @@ class MasterViewController: UIViewController,UITableViewDelegate,UITableViewData
             layer.opacity = 0
             layer.addAnimation(fadeOutAnimation, forKey: "opacity")
         }
-
         UIView.animateWithDuration(duration, delay: duration, options: .TransitionNone, animations: {()-> Void in
             cell.titleLabel.alpha = 1
             }, completion: {(finish) in
@@ -192,7 +178,6 @@ extension MasterViewController: UISearchBarDelegate{
     func searchBarShouldBeginEditing(searchBar: UISearchBar) -> Bool {
         let searchPage = SearchPage(senderView:searchBar,backgroundColor: view.backgroundColor!)
         searchPage.presentFromRootViewController()
-
         return false
     }
     

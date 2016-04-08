@@ -11,12 +11,11 @@ import SwiftyJSON
 import Haneke
 let albumIndex = "1196824"
 
-class DetailViewController: UIViewController,UICollectionViewDataSource,UIScrollViewDelegate,CollectionViewWaterfallLayoutDelegate{
+class DetailViewController: UIViewController{
 
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var albumHomeScrollView: UIScrollView!
     @IBOutlet weak var loadingView: LoadingView!
-    
     @IBOutlet weak var imageCollectionView: UICollectionView!
     
     var timer:NSTimer?
@@ -35,50 +34,10 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
         self.imageCollectionView.registerNib(UINib(nibName: "ImageCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ImageCollectionViewCell")
 
         view.backgroundColor = themeBlack.detailViewBackgroundColor
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    //MARK: CollectionView data source
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return pictures.count
-    }
-    
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ImageCollectionViewCell", forIndexPath: indexPath) as! ImageCollectionViewCell
-
-        let url = NSURL(string: pictures[indexPath.row].url)
-        loadingView.hidden = true
-        cell.loadingView.hidden = false
-        cell.imageView.hnk_setImageFromURL(url!, success: {
-        image in
-            cell.imageView.image = image
-            cell.loadingView.hidden = true
-        })
-        cell.imageView.setupForImageViewer(url, backgroundColor: view.backgroundColor!)
-        cell.backgroundColor = UIColor.clearColor()
-        return cell
-    }
-    
-    // MARK: WaterfallLayoutDelegate
-    
-    func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return pictures[indexPath.row].size
-    }
-    func getLayout()->CollectionViewWaterfallLayout{
-        let layout = CollectionViewWaterfallLayout()
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        layout.headerInset = UIEdgeInsetsMake(0, 0, 0, 0)
-        layout.headerHeight = 0
-        layout.footerHeight = 0
-        layout.columnCount = 3
-        layout.minimumColumnSpacing = 10
-        layout.minimumInteritemSpacing = 10
-        return layout
     }
     //MARK: Get image from URL
     func fetchDataWithAlbumID(){
@@ -192,7 +151,10 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
         let newHeight = oldHeight * scaleFactor
         return CGSizeMake(newWidth, newHeight)
     }
-    //MARK: ScrollView Delegate
+    
+}
+//MARK: ScrollView Delegate
+extension DetailViewController: UIScrollViewDelegate{
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         let pageWidth:CGFloat = CGRectGetWidth(scrollView.frame)
         let currentPage:CGFloat = floor((scrollView.contentOffset.x-pageWidth/2)/pageWidth)+1
@@ -224,13 +186,54 @@ class DetailViewController: UIViewController,UICollectionViewDataSource,UIScroll
         }
     }
 }
+//MARK: CollectionView data source
+extension DetailViewController: UICollectionViewDataSource{
+    
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return pictures.count
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ImageCollectionViewCell", forIndexPath: indexPath) as! ImageCollectionViewCell
+        
+        let url = NSURL(string: pictures[indexPath.row].url)
+        loadingView.hidden = true
+        cell.loadingView.hidden = false
+        cell.imageView.hnk_setImageFromURL(url!, success: {
+            image in
+            cell.imageView.image = image
+            cell.loadingView.hidden = true
+        })
+        cell.imageView.setupForImageViewer(url, backgroundColor: view.backgroundColor!)
+        cell.backgroundColor = UIColor.clearColor()
+        return cell
+    }
+    
+}
+// MARK: WaterfallLayoutDelegate
+extension DetailViewController: CollectionViewWaterfallLayoutDelegate{
+    
+    func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        return pictures[indexPath.row].size
+    }
+    func getLayout()->CollectionViewWaterfallLayout{
+        let layout = CollectionViewWaterfallLayout()
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        layout.headerInset = UIEdgeInsetsMake(0, 0, 0, 0)
+        layout.headerHeight = 0
+        layout.footerHeight = 0
+        layout.columnCount = 3
+        layout.minimumColumnSpacing = 10
+        layout.minimumInteritemSpacing = 10
+        return layout
+    }
+}
 //MARK: CategorySelectionDelegate
 extension DetailViewController: CategorySelectionDelegate {
     func categorySelected(albumID:String) {
         self.albumID = albumID
     }
 }
-
 //MARK: UIView extension
 extension UIView {
     var parentViewController: UIViewController? {

@@ -12,13 +12,13 @@ import SwiftyJSON
 import GameplayKit
 class SearchPage: UIViewController{
     
-    var rootViewController: UIViewController!
-    var searchBar = UISearchBar()
-    var senderView : UISearchBar
     let windowBounds = UIScreen.mainScreen().bounds
+    let searchBar = UISearchBar()
+    var rootViewController: UIViewController!
+    var senderView : UISearchBar
     var originalFrameRelativeToScreen: CGRect!
     
-    var maskView = UIView()
+    let maskView = UIView()
     var collectionView : UICollectionView?
     var guideView : UIView?
     var keyWordsView: KeyWordsView?
@@ -31,9 +31,7 @@ class SearchPage: UIViewController{
         self.maskView.backgroundColor = backgroundColor
         rootViewController = UIApplication.sharedApplication().keyWindow!.rootViewController!
         super.init(nibName: nil, bundle: nil)
-        
     }
-
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -59,34 +57,32 @@ class SearchPage: UIViewController{
     }
     
     //MARK: Configure Views
-    func configureView() {
+    private func configureView() {
         senderView.alpha = 0
         var originalFrame = senderView.convertRect(windowBounds, toView: nil)
         originalFrame.size = senderView.frame.size
         originalFrameRelativeToScreen = originalFrame
     }
     
-    func configureMaskView() {
+    private func configureMaskView() {
         maskView.frame = windowBounds
         maskView.alpha = 0.0
         maskView.addGestureRecognizer(initSwipeGestureRecognizer())
         view.insertSubview(maskView, atIndex: 0)
     }
-
-    func configureSearchBar(){
+    private func configureSearchBar(){
         searchBar.barTintColor = UIColor.clearColor()
         searchBar.frame = originalFrameRelativeToScreen
         searchBar.delegate = self
         view.addSubview(searchBar)
     }
-
-    func configureCollectionView(){
+    private func configureCollectionView(){
         collectionView = getOriginCollectionView()
         collectionView!.delegate = self
         collectionView!.dataSource = self
         view.addSubview(collectionView!)
     }
-    func configureGuideView(){
+    private func configureGuideView(){
         guideView = UIView(frame: CGRect(x: 0, y: collectionView!.frame.origin.y - 52, width: windowBounds.width, height: 44))
         if let guideView = guideView{
             let guideLabel = UILabel(frame: CGRect(x: guideView.frame.width/2-150, y: 0, width: 300, height: 44))
@@ -105,9 +101,8 @@ class SearchPage: UIViewController{
             guideView.alpha = 0
             view.addSubview(guideView)
         }
-        
     }
-    func configureKeysWordView(){
+    private func configureKeysWordView(){
         guard let viewFromNib = NSBundle.mainBundle().loadNibNamed("KeyWordsView", owner: self, options: nil).first as? KeyWordsView else{return}
         keyWordsView = viewFromNib
         keyWordsView!.configureKeyWordsWith(target:self, action: "keyWordsButtonDidTap:")
@@ -119,15 +114,14 @@ class SearchPage: UIViewController{
         keyWordsView!.frame = CGRect(origin: origin, size: size)
 
     }
-    
-    func setSearchBarFrame()->CGRect{
+    private func setSearchBarFrame()->CGRect{
         let barWidth : CGFloat = windowBounds.width/2
         let barHeight: CGFloat = 44
         let origin = CGPoint(x: windowBounds.width/2 - barWidth/2, y: windowBounds.height/5)
         let size = CGSize(width: barWidth, height: barHeight)
         return CGRect(origin: origin, size: size)
     }
-    func initSwipeGestureRecognizer()->UISwipeGestureRecognizer{
+    private func initSwipeGestureRecognizer()->UISwipeGestureRecognizer{
         let recognizer = UISwipeGestureRecognizer(target: self, action: "didSwipe:")
         recognizer.direction = .Up
         return recognizer
@@ -135,8 +129,7 @@ class SearchPage: UIViewController{
     func didSwipe(recognizer:UISwipeGestureRecognizer){
         dismissViewController()
     }
-    
-    func initPicturesData(){
+    private func initPicturesData(){
         let stringURL:String = urlGetPicList
         let cache = Shared.JSONCache
         let URL = NSURL(string: stringURL)!
@@ -146,7 +139,6 @@ class SearchPage: UIViewController{
             }
         }).onSuccess{[weak self] jsonObject in
             let listjson = JSON(jsonObject.dictionary)
-            
             if let pageCount = listjson["pages"].int {
                 for page in 1...pageCount {
                     let string = stringURL + "/p/" + String(page)
@@ -172,13 +164,12 @@ class SearchPage: UIViewController{
                 }
             }else{
                 dispatch_async(dispatch_get_main_queue()) {
-
                     print("pages key no found")
                 }
             }
         }
     }
-    func animateEntry(){
+    private func animateEntry(){
         UIView.animateWithDuration(0.8, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {[unowned self]() -> Void in
             self.searchBar.frame = self.setSearchBarFrame()
             }, completion: nil)
@@ -192,7 +183,7 @@ class SearchPage: UIViewController{
             }, completion: nil)
         
     }
-    func dismissViewController() {
+    private func dismissViewController() {
         searchBar.text = nil
         searchBar.resignFirstResponder()
 
@@ -219,7 +210,7 @@ class SearchPage: UIViewController{
         searchBarSearchButtonClicked(searchBar)
     }
     //MARK: Support Function
-    func getOriginCollectionView()->UICollectionView {
+    private func getOriginCollectionView()->UICollectionView {
         let origin = CGPoint(x: 20, y: windowBounds.height*2/5)
         let size = CGSize(width: windowBounds.width - 20*2, height: windowBounds.height - origin.y - 20)
         let frame = CGRect(origin: origin, size: size)
@@ -264,7 +255,6 @@ extension SearchPage:UICollectionViewDataSource{
 extension SearchPage:CollectionViewWaterfallLayoutDelegate{
     
     func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-//        return filteredPictures[indexPath.row].size
         return windowBounds.size
     }
     func getLayout()->CollectionViewWaterfallLayout{

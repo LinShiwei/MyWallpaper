@@ -15,9 +15,9 @@ class ImageViewer: UIViewController {
     var originalFrameRelativeToScreen: CGRect!
     var rootViewController: UIViewController!
     
-    var imageView = UIImageView()
-    var nextImageView = UIImageView()
-    var previousImageView = UIImageView()
+    let imageView = UIImageView()
+    let nextImageView = UIImageView()
+    let previousImageView = UIImageView()
     var currentIndexPathRow :Int = 0
     
     var highQualityImageUrl: NSURL?
@@ -26,8 +26,8 @@ class ImageViewer: UIViewController {
     let downloadButton = UIButton()
     let closeButton = UIButton()
     let windowBounds = UIScreen.mainScreen().bounds
-    var scrollView = UIScrollView()
-    var maskView = UIView()
+    let scrollView = UIScrollView()
+    let maskView = UIView()
     
     // MARK: - Lifecycle methods
     init(senderView: UIImageView,highQualityImageUrl: NSURL?,pictures:[Picture], backgroundColor: UIColor) {
@@ -37,18 +37,15 @@ class ImageViewer: UIViewController {
      
         rootViewController = UIApplication.sharedApplication().keyWindow!.rootViewController!
         maskView.backgroundColor = backgroundColor
-        
         super.init(nibName: nil, bundle: nil)
         if let timer = self.getTimer() {
             timer.invalidate()
         }
         
     }
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     override func loadView() {
         super.loadView()
         configureView()
@@ -59,13 +56,11 @@ class ImageViewer: UIViewController {
         configureImageView()
         configureConstraints()
     }
-    
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
     // MARK: - View configuration
-   
-    func configureScrollView() {
+    private func configureScrollView() {
         scrollView.frame = windowBounds
         scrollView.delegate = self
         scrollView.pagingEnabled = true
@@ -73,13 +68,11 @@ class ImageViewer: UIViewController {
         scrollView.setContentOffset(CGPoint(x: scrollView.frame.width, y: 0), animated: false)
         view.addSubview(scrollView)
     }
-    
-    func configureMaskView() {
+    private func configureMaskView() {
         maskView.frame = windowBounds
         maskView.alpha = 0.0
         view.insertSubview(maskView, atIndex: 0)
     }
-    
     private func configureCloseButton() {
         configureButton(closeButton, withImageName: "ImageClose", andAction: "closeButtonTapped:")
     }
@@ -95,13 +88,12 @@ class ImageViewer: UIViewController {
         view.addSubview(button)
         view.setNeedsUpdateConstraints()
     }
-    func configureView() {
+    private func configureView() {
         var originalFrame = senderView.convertRect(windowBounds, toView: nil)
         originalFrame.size = senderView.frame.size
         originalFrameRelativeToScreen = originalFrame
     }
-    func initSenderView(currentIndexPathRow:Int){
-
+    private func initSenderView(currentIndexPathRow:Int){
         if !(self.senderView.superview is UIScrollView) {
             senderView.alpha = 1.0
             let cell = self.senderView.superview?.superview as! ImageCollectionViewCell
@@ -109,18 +101,13 @@ class ImageViewer: UIViewController {
             let indexPath = NSIndexPath(forItem: currentIndexPathRow, inSection: 0)
             
             collection.scrollToItemAtIndexPath(indexPath, atScrollPosition: .CenteredVertically, animated: false)
-            print("indexPath")
-            print(indexPath)
             guard let senderCell = collection.cellForItemAtIndexPath(indexPath) as? ImageCollectionViewCell else{
                 print(collection.cellForItemAtIndexPath(indexPath))
                 return
             }
-
             senderView = senderCell.imageView
             senderView.alpha = 0
             configureView()
-            
-
         }else{
             senderView.alpha = 1.0
             let scrollView = self.senderView.superview as! UIScrollView
@@ -136,24 +123,18 @@ class ImageViewer: UIViewController {
                     print("init finish senderview frame\(senderView.frame)")
             configureView()
         }
-        
     }
     func getTimer()->NSTimer?{
-        if senderView.superview is UIScrollView {
-            let controller = senderView.superview!.parentViewController as! DetailViewController
-            return controller.timer
-        }else{
-            return nil
-        }
+        guard senderView.superview is UIScrollView else{return nil}
+        let controller = senderView.superview!.parentViewController as! DetailViewController
+        return controller.timer
     }
     func initTimer(){
-        if senderView.superview is UIScrollView {
-            let controller = senderView.superview!.parentViewController as! DetailViewController
-            controller.initTimer()
-        }else{
-        }
+        guard senderView.superview is UIScrollView else{return}
+        let controller = senderView.superview!.parentViewController as! DetailViewController
+        controller.initTimer()
     }
-    func getCurrentIndexPathRow()->Int{
+    private func getCurrentIndexPathRow()->Int{
         if senderView.superview is UIScrollView{
             let scrollView = senderView.superview as! UIScrollView
             let index = Int(senderView.frame.origin.x / scrollView.frame.width)
@@ -165,31 +146,30 @@ class ImageViewer: UIViewController {
             return indexPath!.row
         }
     }
-    func nextIndexPathRow(currentIndexPathRow:Int)->Int{
+    private func nextIndexPathRow(currentIndexPathRow:Int)->Int{
         if currentIndexPathRow == pictures.count - 1 {
             return 0
         }else{
             return currentIndexPathRow + 1
         }
     }
-    func previousIndexPathRow(currentIndexPathRow:Int)->Int{
+    private func previousIndexPathRow(currentIndexPathRow:Int)->Int{
         if currentIndexPathRow == 0 {
             return pictures.count - 1
         }else{
             return currentIndexPathRow - 1
         }
     }
-    func getImageURLAtIndexPathRowWithOffset(indexPathRow:Int,previousOrCurrentOrNext:Int)->NSURL{
+    private func getImageURLAtIndexPathRowWithOffset(indexPathRow:Int,previousOrCurrentOrNext:Int)->NSURL{
         var row:Int
         switch previousOrCurrentOrNext{
         case -1: row = previousIndexPathRow(indexPathRow)
         case 1:  row = nextIndexPathRow(indexPathRow)
         default: row = indexPathRow
         }
-
         return NSURL(string: pictures[row].url)!
     }
-    func getImageSizeAtIndexPathRowWithOffset(indexPathRow:Int,previousOrCurrentOrNext:Int)->CGSize{
+    private func getImageSizeAtIndexPathRowWithOffset(indexPathRow:Int,previousOrCurrentOrNext:Int)->CGSize{
         var row:Int
         switch previousOrCurrentOrNext{
         case -1: row = previousIndexPathRow(indexPathRow)
@@ -198,8 +178,7 @@ class ImageViewer: UIViewController {
         }
         return pictures[row].size
     }
-    
-    func configureImageView() {
+    private func configureImageView() {
 
         let cache = Cache<UIImage>(name: "highQualityImageCache")
 
@@ -211,7 +190,6 @@ class ImageViewer: UIViewController {
         let previousURL = getImageURLAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: -1)
         cache.fetch(URL: previousURL).onSuccess {[weak self]image in
             self?.previousImageView.image = image
-
         }
         
         let nextImageSize = getImageSizeAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: 1)
@@ -222,7 +200,6 @@ class ImageViewer: UIViewController {
         let nextURL = getImageURLAtIndexPathRowWithOffset(currentIndexPathRow, previousOrCurrentOrNext: 1)
         cache.fetch(URL: nextURL).onSuccess {[weak self]image in
             self?.nextImageView.image = image
-            
         }
         
         senderView.alpha = 0.0
@@ -235,7 +212,6 @@ class ImageViewer: UIViewController {
             cache.fetch(URL: highQualityImageUrl).onSuccess {[weak self] image in
                 self?.imageView.image = image
                 self?.animateEntry()
-                
             }
         } else {
             imageView.image = senderView.image
@@ -246,8 +222,7 @@ class ImageViewer: UIViewController {
         scrollView.addSubview(nextImageView)
 
     }
-    
-    func configureConstraints() {
+    private func configureConstraints() {
         var constraints: [NSLayoutConstraint] = []
         
         let views: [String: UIView] = [
@@ -257,7 +232,6 @@ class ImageViewer: UIViewController {
         constraints.append(NSLayoutConstraint(item: closeButton, attribute: .CenterX, relatedBy: .Equal, toItem: closeButton.superview, attribute: .CenterX, multiplier: 1.0, constant: 0))
         constraints.appendContentsOf(NSLayoutConstraint.constraintsWithVisualFormat("V:[closeButton(==64)]-40-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views))
         constraints.appendContentsOf(NSLayoutConstraint.constraintsWithVisualFormat("H:[closeButton(==64)]", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views))
-        
         constraints.appendContentsOf(NSLayoutConstraint.constraintsWithVisualFormat("V:[downloadButton(==64)]-40-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views))
         constraints.appendContentsOf(NSLayoutConstraint.constraintsWithVisualFormat("H:[downloadButton(==64)]-40-[closeButton]", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views))
         
@@ -265,7 +239,7 @@ class ImageViewer: UIViewController {
     }
  
     // MARK: - Animation
-    func animateEntry() {
+    private func animateEntry() {
         self.imageView.frame.origin.x += scrollView.frame.width
         UIView.animateWithDuration(0.8, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {[unowned self]() -> Void in
             if let image = self.imageView.image {
@@ -288,14 +262,14 @@ class ImageViewer: UIViewController {
             }, completion: nil)
     }
     
-    func centerFrameFromImageSize(imageSize:CGSize) -> CGRect {
+    private func centerFrameFromImageSize(imageSize:CGSize) -> CGRect {
         var newImageSize = imageResizeBaseOnWidth(windowBounds.size.width, oldWidth: imageSize.width, oldHeight: imageSize.height)
         newImageSize.height = min(windowBounds.size.height, newImageSize.height)
        
         return CGRectMake(0, windowBounds.size.height / 2 - newImageSize.height / 2, newImageSize.width, newImageSize.height)
     }
     
-    func imageResizeBaseOnWidth(newWidth: CGFloat, oldWidth: CGFloat, oldHeight: CGFloat) -> CGSize {
+    private func imageResizeBaseOnWidth(newWidth: CGFloat, oldWidth: CGFloat, oldHeight: CGFloat) -> CGSize {
         let scaleFactor = newWidth / oldWidth
         let newHeight = oldHeight * scaleFactor
         return CGSizeMake(newWidth, newHeight)
@@ -311,12 +285,11 @@ class ImageViewer: UIViewController {
             UIImageWriteToSavedPhotosAlbum(self.senderView.image!, self, "image:didFinishSavingWithError:contextInfo:", nil)
             }
     }
-    func image(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo:UnsafePointer<Void>) {
+    private func image(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo:UnsafePointer<Void>) {
         dispatch_async(dispatch_get_main_queue()) {[unowned self] in
             if error == nil {
                 let icon = UIImage(named: "ImageDownloaded", inBundle: NSBundle(forClass: ImageViewer.self), compatibleWithTraitCollection: nil)
                 self.downloadButton.setImage(icon, forState: .Normal)
-                //            downloadButton.enabled = false
             } else {
                 
             }
@@ -324,7 +297,7 @@ class ImageViewer: UIViewController {
         
     }
     // MARK: - Misc.
-    func centerScrollViewContents() {
+    private func centerScrollViewContents() {
         let boundsSize = rootViewController.view.bounds.size
         var contentsFrame = imageView.frame
         
@@ -342,7 +315,7 @@ class ImageViewer: UIViewController {
         
         imageView.frame = contentsFrame
     }
-    func dismissViewController() {
+    private func dismissViewController() {
         initTimer()
         dispatch_async(dispatch_get_main_queue()){ [unowned self] in
             self.imageView.clipsToBounds = true
@@ -375,14 +348,9 @@ class ImageViewer: UIViewController {
         didMoveToParentViewController(rootViewController)
     }
 }
-
-
-
 // MARK: - ScrollView delegate
 extension ImageViewer: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        
-        
         if scrollView.contentOffset.x > scrollView.frame.width {
             currentIndexPathRow = nextIndexPathRow(currentIndexPathRow)
 
@@ -430,7 +398,6 @@ extension ImageViewer: UIScrollViewDelegate {
                 let cache = Cache<UIImage>(name: "highQualityImageCache")
                 cache.fetch(URL: previousURL).onSuccess { [weak self]image in
                     self?.previousImageView.image = image
-                    
                 }
                 initSenderView(currentIndexPathRow)
             }else{
