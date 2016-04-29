@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NAa-nR-L1h">
-                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </scrollView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Snh-fr-P2X" customClass="LoadingView" customModule="MyWallpaper" customModuleProvider="target">
@@ -36,7 +36,7 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0hq-Ed-rbs">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0hq-Ed-rbs" customClass="ImageCollectionView" customModule="MyWallpaper" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="20" width="600" height="580"/>
                                 <color key="backgroundColor" red="0.049104324489999997" green="0.049104324489999997" blue="0.049104324489999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="bsw-PA-L4J">
@@ -65,7 +65,7 @@
                             <constraint firstItem="0HG-mV-Cej" firstAttribute="top" secondItem="0hq-Ed-rbs" secondAttribute="bottom" id="I8j-jU-Qru"/>
                             <constraint firstItem="0hq-Ed-rbs" firstAttribute="leading" secondItem="XNV-Nl-zWX" secondAttribute="leadingMargin" constant="-20" id="LZa-uB-A1v"/>
                             <constraint firstItem="NAa-nR-L1h" firstAttribute="trailing" secondItem="XNV-Nl-zWX" secondAttribute="trailingMargin" constant="20" id="Yh8-ml-7ez"/>
-                            <constraint firstItem="NAa-nR-L1h" firstAttribute="top" secondItem="odn-7R-fAo" secondAttribute="bottom" id="bZT-pc-S9R"/>
+                            <constraint firstItem="NAa-nR-L1h" firstAttribute="top" secondItem="odn-7R-fAo" secondAttribute="bottom" constant="-20" id="bZT-pc-S9R"/>
                             <constraint firstItem="Snh-fr-P2X" firstAttribute="centerY" secondItem="XNV-Nl-zWX" secondAttribute="centerY" id="fAY-1s-OtK"/>
                             <constraint firstItem="0HG-mV-Cej" firstAttribute="top" secondItem="QF2-No-iom" secondAttribute="bottom" constant="64" id="r68-aK-A4N"/>
                             <constraint firstItem="Snh-fr-P2X" firstAttribute="centerX" secondItem="XNV-Nl-zWX" secondAttribute="centerX" id="xWc-cU-HwV"/>
@@ -78,7 +78,7 @@
                     </view>
                     <connections>
                         <outlet property="albumHomeScrollView" destination="NAa-nR-L1h" id="Iia-GJ-lIW"/>
-                        <outlet property="imageCollectionView" destination="0hq-Ed-rbs" id="oub-XH-AVS"/>
+                        <outlet property="imageCollectionView" destination="0hq-Ed-rbs" id="Aop-jY-9Ld"/>
                         <outlet property="loadingView" destination="Snh-fr-P2X" id="lTw-GN-W1p"/>
                         <outlet property="pageControl" destination="QF2-No-iom" id="5Qe-7n-huZ"/>
                     </connections>

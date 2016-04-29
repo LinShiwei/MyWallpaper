@@ -41,7 +41,6 @@ class ImageViewer: UIViewController {
         if let timer = self.getTimer() {
             timer.invalidate()
         }
-        
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -285,7 +284,7 @@ class ImageViewer: UIViewController {
             UIImageWriteToSavedPhotosAlbum(self.senderView.image!, self, "image:didFinishSavingWithError:contextInfo:", nil)
             }
     }
-    private func image(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo:UnsafePointer<Void>) {
+    func image(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo:UnsafePointer<Void>) {
         dispatch_async(dispatch_get_main_queue()) {[unowned self] in
             if error == nil {
                 let icon = UIImage(named: "ImageDownloaded", inBundle: NSBundle(forClass: ImageViewer.self), compatibleWithTraitCollection: nil)

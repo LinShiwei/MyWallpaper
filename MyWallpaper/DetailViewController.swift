@@ -9,6 +9,7 @@
 import UIKit
 import SwiftyJSON
 import Haneke
+import AVFoundation
 let albumIndex = "1196824"
 
 class DetailViewController: UIViewController{
@@ -16,11 +17,10 @@ class DetailViewController: UIViewController{
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var albumHomeScrollView: UIScrollView!
     @IBOutlet weak var loadingView: LoadingView!
-    @IBOutlet weak var imageCollectionView: UICollectionView!
+    @IBOutlet weak var imageCollectionView: ImageCollectionView!
     
     var timer:NSTimer?
     var pictures = [Picture]()
-    
     var albumID :String = albumIndex{
         didSet{
             self.fetchDataWithAlbumID()
@@ -30,9 +30,6 @@ class DetailViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchDataWithAlbumID()
-        self.imageCollectionView.collectionViewLayout = getLayout()
-        self.imageCollectionView.registerNib(UINib(nibName: "ImageCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ImageCollectionViewCell")
-
         view.backgroundColor = themeBlack.detailViewBackgroundColor
     }
 
@@ -40,7 +37,7 @@ class DetailViewController: UIViewController{
         super.didReceiveMemoryWarning()
     }
     //MARK: Get image from URL
-    func fetchDataWithAlbumID(){
+    private func fetchDataWithAlbumID(){
         var stringURL:String = urlGetPicList
         pictures.removeAll()
         if let timer = timer {
@@ -61,8 +58,7 @@ class DetailViewController: UIViewController{
             stringURL = stringURL + "/aid/" + albumID
         }
         let cache = Shared.JSONCache
-        let URL = NSURL(string: stringURL)!
-        cache.fetch(URL: URL,failure:{ error in
+        cache.fetch(URL: NSURL(string: stringURL)!,failure:{ error in
             dispatch_async(dispatch_get_main_queue()) {
                 print("fail to fetch pic")
             }
@@ -70,8 +66,7 @@ class DetailViewController: UIViewController{
             let json = JSON(jsonObject.dictionary)
             for  picJSON in json["pic"].array! {
                 if let url = picJSON["linkurl"].string,let width = picJSON["width"].string ,let height = picJSON["height"].string,let name = picJSON["name"].string {
-                    let size = CGSize(width: Int(width)!, height: Int(height)!)
-                    let picture = Picture(name: name, url: url, size: size)
+                    let picture = Picture(name: name, url: url, size: CGSize(width: Int(width)!, height: Int(height)!))
                     self.pictures.append(picture)
                 }else {
                     print("picture no found")
@@ -101,16 +96,14 @@ class DetailViewController: UIViewController{
                 scrollImageView.image = image
                 scrollImageView.setupForImageViewer(URL, backgroundColor: self.view.backgroundColor!)
                 self.albumHomeScrollView.addSubview(scrollImageView)
-                
             }
         }
         initPageControl()
     }
     func initScrollImageView(index:Int)->UIImageView {
-        let indexFloat = CGFloat(index)
-        let imageView = UIImageView()
         var frame = centerFrameFromImageSize(pictures[index].size)
-        frame.origin.x += albumHomeScrollView.frame.width * indexFloat
+        frame.origin.x += albumHomeScrollView.frame.width * CGFloat(index)
+        let imageView = UIImageView()
         imageView.frame = frame
         return imageView
     }
@@ -141,17 +134,8 @@ class DetailViewController: UIViewController{
     }
 
     func centerFrameFromImageSize(imageSize:CGSize) -> CGRect {
-        var newImageSize = imageResizeBaseOnWidth(albumHomeScrollView.frame.size.width, oldWidth: imageSize.width, oldHeight: imageSize.height)
-        newImageSize.height = min(albumHomeScrollView.frame.size.height, newImageSize.height)
-        return CGRectMake(0,albumHomeScrollView.frame.size.height / 2 - newImageSize.height / 2, newImageSize.width, newImageSize.height)
+        return AVMakeRectWithAspectRatioInsideRect(imageSize, albumHomeScrollView.frame)
     }
-    
-    func imageResizeBaseOnWidth(newWidth: CGFloat, oldWidth: CGFloat, oldHeight: CGFloat) -> CGSize {
-        let scaleFactor = newWidth / oldWidth
-        let newHeight = oldHeight * scaleFactor
-        return CGSizeMake(newWidth, newHeight)
-    }
-    
 }
 //MARK: ScrollView Delegate
 extension DetailViewController: UIScrollViewDelegate{
@@ -188,11 +172,9 @@ extension DetailViewController: UIScrollViewDelegate{
 }
 //MARK: CollectionView data source
 extension DetailViewController: UICollectionViewDataSource{
-    
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return pictures.count
     }
-    
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ImageCollectionViewCell", forIndexPath: indexPath) as! ImageCollectionViewCell
         
@@ -205,32 +187,19 @@ extension DetailViewController: UICollectionViewDataSource{
             cell.loadingView.hidden = true
         })
         cell.imageView.setupForImageViewer(url, backgroundColor: view.backgroundColor!)
-        cell.backgroundColor = UIColor.clearColor()
         return cell
     }
     
 }
 // MARK: WaterfallLayoutDelegate
 extension DetailViewController: CollectionViewWaterfallLayoutDelegate{
-    
     func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         return pictures[indexPath.row].size
-    }
-    func getLayout()->CollectionViewWaterfallLayout{
-        let layout = CollectionViewWaterfallLayout()
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        layout.headerInset = UIEdgeInsetsMake(0, 0, 0, 0)
-        layout.headerHeight = 0
-        layout.footerHeight = 0
-        layout.columnCount = 3
-        layout.minimumColumnSpacing = 10
-        layout.minimumInteritemSpacing = 10
-        return layout
     }
 }
 //MARK: CategorySelectionDelegate
 extension DetailViewController: CategorySelectionDelegate {
-    func categorySelected(albumID:String) {
+    func categorySelected(albumID albumID:String) {
         self.albumID = albumID
     }
 }

@@ -17,8 +17,7 @@ class KeyWordsView: UIView {
     @IBOutlet weak var keyWordsLabel: UILabel!
 
     private let keyWords = ["风景","汽车","人物","动漫"]
-       
-
+    
     func configureKeyWordsWith(target target :AnyObject, action:Selector,forControlEvents controlEvent:UIControlEvents? = .TouchUpInside){
         let words = GKRandomSource.sharedRandom().arrayByShufflingObjectsInArray(keyWords) as! [String]
         if let stackView = self.subviews[0] as? UIStackView {
@@ -27,16 +26,14 @@ class KeyWordsView: UIView {
                 let button = view as! UIButton
                 button.addTarget(target, action: action, forControlEvents: controlEvent!)
                 button.setTitle(words[index-1],forState:.Normal)
-                button.backgroundColor = UIColor(white: 0.05, alpha: 1)
+                button.backgroundColor = themeBlack.lineColor
                 button.layer.cornerRadius = 10.0
             }
         }
-        
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         backgroundColor = UIColor.clearColor()
-
     }
     
 }

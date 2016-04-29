@@ -14,30 +14,27 @@ class LoadingView: UIView {
     private let replicatorLayer = CAReplicatorLayer()
     private let instanceLayer = CALayer()
     private let fadeAnimation = CABasicAnimation(keyPath: "opacity")
-    private let instanceColor = themeBlack.textColor.CGColor
-    
-    
+  
     private func setUpReplicatorLayer() {
         replicatorLayer.frame = self.bounds
-        let count :Float = 12.0
+        let count : Float = 12.0
         replicatorLayer.instanceCount = Int(count)
         replicatorLayer.instanceDelay = CFTimeInterval(1/count)
-        replicatorLayer.preservesDepth = false
-        replicatorLayer.instanceColor = instanceColor
-        replicatorLayer.instanceRedOffset = 0
-        replicatorLayer.instanceGreenOffset = 0
-        replicatorLayer.instanceBlueOffset = 0
-        replicatorLayer.instanceAlphaOffset = 0
+        replicatorLayer.instanceColor = themeBlack.textColor.CGColor
         let angle = Float(M_PI * 2.0) / count
         replicatorLayer.instanceTransform = CATransform3DMakeRotation(CGFloat(angle), 0.0, 0.0, 1.0)
+        
+        setUpInstanceLayer()
+        replicatorLayer.addSublayer(instanceLayer)
+        layer.addSublayer(replicatorLayer)
     }
     
     private func setUpInstanceLayer() {
         let layerWidth = CGFloat(self.bounds.width/20)
         let midX = CGRectGetMidX(self.bounds) - layerWidth / 2.0
-        instanceLayer.frame = CGRect(x: midX, y: 0.0, width: layerWidth, height: layerWidth * lengthMultiplier)
-        instanceLayer.backgroundColor = instanceColor
         instanceLayer.opacity = 0.0
+        instanceLayer.frame = CGRect(x: midX, y: 0.0, width: layerWidth, height: layerWidth * lengthMultiplier)
+        instanceLayer.backgroundColor = themeBlack.textColor.CGColor
         instanceLayer.addAnimation(fadeAnimation, forKey: "FadeAnimation")
     }
     
@@ -52,10 +49,6 @@ class LoadingView: UIView {
         self.backgroundColor = UIColor.clearColor()
         setUpLayerFadeAnimation()
         setUpReplicatorLayer()
-        self.layer.addSublayer(replicatorLayer)
-        setUpInstanceLayer()
-        replicatorLayer.addSublayer(instanceLayer)
-        
     }
     
     override init(frame: CGRect) {

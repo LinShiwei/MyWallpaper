@@ -16,12 +16,9 @@ class SplitViewController: UISplitViewController {
         maximumPrimaryColumnWidth = CGFloat(MAXFLOAT)
         let ratio:CGFloat = 180/(self.view.frame.width)
         preferredPrimaryColumnWidthFraction = ratio
-        // Do any additional setup after loading the view.
     }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     override func prefersStatusBarHidden() -> Bool {
         return false

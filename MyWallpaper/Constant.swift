@@ -15,16 +15,6 @@ let tieTuKuURL = "http://api.tietuku.cn/v2/api"
 let urlGetAlbum   = tieTuKuURL + "/getalbum" + tieTuKuOpenkey
 let urlGetPicList = tieTuKuURL + "/getpiclist" + tieTuKuOpenkey
 //let urlGetRandomRecommandedPhotos = tieTuKuURL + "/getrandrec" + tieTuKuOpenkey
-class Picture : AnyObject{
-    let name :String
-    let url  :String
-    let size :CGSize
-    init(name:String,url:String,size:CGSize){
-        self.name = name
-        self.url = url
-        self.size = size
-    }
-}
 
 struct Theme {
     let splitViewBackgroundColor : UIColor
@@ -36,9 +26,9 @@ struct Theme {
 }
 
 let themeBlack = Theme(
-    splitViewBackgroundColor: UIColor.blackColor(),
+    splitViewBackgroundColor : UIColor.blackColor(),
     masterViewBackgroundColor: UIColor.blackColor(),
     detailViewBackgroundColor: UIColor.blackColor(),
-    textColor: UIColor.whiteColor(),
-    lineColor: UIColor(white: 0.1, alpha: 1)
+    textColor                : UIColor.whiteColor(),
+    lineColor                : UIColor(white: 0.1, alpha: 1)
 )

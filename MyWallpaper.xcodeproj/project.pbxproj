@@ -21,6 +21,9 @@
 		56402D5B1C64F9E3008B0499 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56402D5A1C64F9E3008B0499 /* DetailViewController.swift */; };
 		564496871C81B97800E4F217 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564496861C81B97800E4F217 /* LoadingView.swift */; };
 		564D90B51C9280A100AAD9B6 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564D90B41C9280A100AAD9B6 /* Constant.swift */; };
+		564E2AE11CD2EBEB0042B397 /* ImageCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564E2AE01CD2EBEB0042B397 /* ImageCollectionView.swift */; };
+		564E2AE31CD350CE0042B397 /* Picture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564E2AE21CD350CE0042B397 /* Picture.swift */; };
+		566C036B1CD1F4450011EF36 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566C036A1CD1F4450011EF36 /* Album.swift */; };
 		566F246E1C98061700206228 /* KeyWordsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566F246D1C98061700206228 /* KeyWordsView.swift */; };
 		566F24701C98063C00206228 /* KeyWordsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 566F246F1C98063C00206228 /* KeyWordsView.xib */; };
 		56F620201C95985E007DEE2A /* MyWallpaperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F6201F1C95985E007DEE2A /* MyWallpaperTests.swift */; };
@@ -57,6 +60,9 @@
 		56402D5A1C64F9E3008B0499 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		564496861C81B97800E4F217 /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		564D90B41C9280A100AAD9B6 /* Constant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		564E2AE01CD2EBEB0042B397 /* ImageCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCollectionView.swift; sourceTree = "<group>"; };
+		564E2AE21CD350CE0042B397 /* Picture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Picture.swift; sourceTree = "<group>"; };
+		566C036A1CD1F4450011EF36 /* Album.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		566F246D1C98061700206228 /* KeyWordsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyWordsView.swift; sourceTree = "<group>"; };
 		566F246F1C98063C00206228 /* KeyWordsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KeyWordsView.xib; sourceTree = "<group>"; };
 		56F6201D1C95985E007DEE2A /* MyWallpaperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyWallpaperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -170,6 +176,8 @@
 			isa = PBXGroup;
 			children = (
 				56402D5A1C64F9E3008B0499 /* DetailViewController.swift */,
+				564E2AE01CD2EBEB0042B397 /* ImageCollectionView.swift */,
+				564E2AE21CD350CE0042B397 /* Picture.swift */,
 			);
 			name = DetailView;
 			sourceTree = "<group>";
@@ -179,6 +187,7 @@
 			children = (
 				56402D541C6474B1008B0499 /* MasterViewController.swift */,
 				56402D561C64758C008B0499 /* TableViewCell.swift */,
+				566C036A1CD1F4450011EF36 /* Album.swift */,
 			);
 			name = MasterView;
 			sourceTree = "<group>";
@@ -311,7 +320,10 @@
 				56402D591C64AA5D008B0499 /* SplitViewController.swift in Sources */,
 				5628482D1C85D914001C0256 /* ImageCollectionViewCell.swift in Sources */,
 				5638603D1C8531E100C59C68 /* SearchPage.swift in Sources */,
+				564E2AE31CD350CE0042B397 /* Picture.swift in Sources */,
+				564E2AE11CD2EBEB0042B397 /* ImageCollectionView.swift in Sources */,
 				56402D571C64758C008B0499 /* TableViewCell.swift in Sources */,
+				566C036B1CD1F4450011EF36 /* Album.swift in Sources */,
 				564496871C81B97800E4F217 /* LoadingView.swift in Sources */,
 				56402D5B1C64F9E3008B0499 /* DetailViewController.swift in Sources */,
 				56F66AAD1C6710A300240006 /* CollectionViewWaterfallLayout.swift in Sources */,

@@ -25,7 +25,7 @@ class SearchPage: UIViewController{
     
     var pictures = [Picture]()
     var filteredPictures = [Picture]()
-    
+    //MARK: View
     init(senderView : UISearchBar,backgroundColor:UIColor){
         self.senderView = senderView
         self.maskView.backgroundColor = backgroundColor
@@ -41,6 +41,11 @@ class SearchPage: UIViewController{
         rootViewController.addChildViewController(self)
         didMoveToParentViewController(rootViewController)
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        initPicturesData()
+    }
     override func loadView() {
         super.loadView()
         configureView()
@@ -51,11 +56,41 @@ class SearchPage: UIViewController{
         animateEntry()
 
     }
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        initPicturesData()
+    private func animateEntry(){
+        UIView.animateWithDuration(0.8, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {[unowned self]() -> Void in
+            self.searchBar.frame = self.setSearchBarFrame()
+            }, completion: nil)
+        configureKeysWordView()
+
+        UIView.animateWithDuration(0.4, delay: 0.03, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {[unowned self]() -> Void in
+            self.maskView.alpha = 1.0
+            self.collectionView!.alpha = 1.0
+            self.guideView!.alpha = 1.0
+            self.keyWordsView!.alpha = 1.0
+            }, completion: nil)
+        
     }
-    
+    private func dismissViewController() {
+        searchBar.text = nil
+        searchBar.resignFirstResponder()
+
+        dispatch_async(dispatch_get_main_queue(), {
+            UIView.animateWithDuration(0.1){[unowned self]() in
+                self.guideView!.alpha = 0.0
+                }
+            UIView.animateWithDuration(0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {[unowned self]() in
+                self.searchBar.frame = self.originalFrameRelativeToScreen
+                self.collectionView!.alpha = 0.0
+                self.maskView.alpha = 0.0
+                self.keyWordsView!.alpha = 0.0
+                }, completion: {(finished) in
+                    self.willMoveToParentViewController(nil)
+                    self.view.removeFromSuperview()
+                    self.removeFromParentViewController()
+                    self.senderView.alpha = 1.0
+            })
+        })
+    }
     //MARK: Configure Views
     private func configureView() {
         senderView.alpha = 0
@@ -63,7 +98,6 @@ class SearchPage: UIViewController{
         originalFrame.size = senderView.frame.size
         originalFrameRelativeToScreen = originalFrame
     }
-    
     private func configureMaskView() {
         maskView.frame = windowBounds
         maskView.alpha = 0.0
@@ -169,42 +203,8 @@ class SearchPage: UIViewController{
             }
         }
     }
-    private func animateEntry(){
-        UIView.animateWithDuration(0.8, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {[unowned self]() -> Void in
-            self.searchBar.frame = self.setSearchBarFrame()
-            }, completion: nil)
-        configureKeysWordView()
-
-        UIView.animateWithDuration(0.4, delay: 0.03, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {[unowned self]() -> Void in
-            self.maskView.alpha = 1.0
-            self.collectionView!.alpha = 1.0
-            self.guideView!.alpha = 1.0
-            self.keyWordsView!.alpha = 1.0
-            }, completion: nil)
-        
-    }
-    private func dismissViewController() {
-        searchBar.text = nil
-        searchBar.resignFirstResponder()
-
-        dispatch_async(dispatch_get_main_queue(), {
-            UIView.animateWithDuration(0.1){[unowned self]() in
-                self.guideView!.alpha = 0.0
-                }
-            UIView.animateWithDuration(0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {[unowned self]() in
-                self.searchBar.frame = self.originalFrameRelativeToScreen
-                self.collectionView!.alpha = 0.0
-                self.maskView.alpha = 0.0
-                self.keyWordsView!.alpha = 0.0
-                }, completion: {(finished) in
-                    self.willMoveToParentViewController(nil)
-                    self.view.removeFromSuperview()
-                    self.removeFromParentViewController()
-                    self.senderView.alpha = 1.0
-            })
-        })
-    }
-    //MARK: Key Words Button Selector
+    
+   //MARK: Key Words Button Selector
     func keyWordsButtonDidTap(sender:UIButton){
         searchBar.text = sender.titleLabel?.text
         searchBarSearchButtonClicked(searchBar)
@@ -247,7 +247,6 @@ extension SearchPage:UICollectionViewDataSource{
             cell.loadingView.hidden = true
         })
         cell.imageView.setupForImageViewer(url, backgroundColor: maskView.backgroundColor!)
-        cell.backgroundColor = UIColor.clearColor()
         return cell
     }
 }

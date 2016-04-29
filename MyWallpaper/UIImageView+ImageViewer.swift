@@ -10,13 +10,10 @@ import Foundation
 import UIKit
 
 public extension UIImageView {
-    
     public func setupForImageViewer(highQualityImageUrl: NSURL? = nil, backgroundColor: UIColor = themeBlack.splitViewBackgroundColor) {
         userInteractionEnabled = true
-        let gestureRecognizer = ImageViewerTapGestureRecognizer(target: self, action: "didTap:", highQualityImageUrl: highQualityImageUrl, backgroundColor: backgroundColor)
-        addGestureRecognizer(gestureRecognizer)
+        addGestureRecognizer(ImageViewerTapGestureRecognizer(target: self, action: "didTap:", highQualityImageUrl: highQualityImageUrl, backgroundColor: backgroundColor))
     }
-    
     internal func didTap(recognizer: ImageViewerTapGestureRecognizer) {
         var pictures=[Picture]()
         if self.superview is UIScrollView {
@@ -24,17 +21,14 @@ public extension UIImageView {
             pictures = controller.pictures
         }else{
             let cell = self.superview?.superview as! ImageCollectionViewCell
-            let collection = cell.superview as! UICollectionView
-            let controller = collection.parentViewController
+            let controller = (cell.superview as! UICollectionView).parentViewController
             if controller is DetailViewController {
                 pictures = (controller as! DetailViewController).pictures
             }else{
                 pictures = (controller as! SearchPage).filteredPictures
             }
         }
-        
-        let imageViewer = ImageViewer(senderView: self, highQualityImageUrl: recognizer.highQualityImageUrl,pictures:pictures, backgroundColor: recognizer.backgroundColor)
-        imageViewer.presentFromRootViewController()
+        ImageViewer(senderView: self, highQualityImageUrl: recognizer.highQualityImageUrl,pictures:pictures, backgroundColor: recognizer.backgroundColor).presentFromRootViewController()
     }
 }
 
