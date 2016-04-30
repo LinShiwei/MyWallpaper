@@ -16,19 +16,23 @@ public extension UIImageView {
     }
     internal func didTap(recognizer: ImageViewerTapGestureRecognizer) {
         var pictures=[Picture]()
-        if self.superview is UIScrollView {
-            let controller = self.superview!.parentViewController as! DetailViewController
-            pictures = controller.pictures
+        var currentIndex : Int
+        if self.superview is ImageScrollView {
+            let scrollView = self.superview as! ImageScrollView
+            pictures = scrollView.pictures
+            currentIndex = scrollView.currentIndex
         }else{
             let cell = self.superview?.superview as! ImageCollectionViewCell
-            let controller = (cell.superview as! UICollectionView).parentViewController
+            let collectionView = cell.superview as! UICollectionView
+            currentIndex = collectionView.indexPathForCell(cell)!.row
+            let controller = collectionView.parentViewController
             if controller is DetailViewController {
                 pictures = (controller as! DetailViewController).pictures
             }else{
                 pictures = (controller as! SearchPage).filteredPictures
             }
         }
-        ImageViewer(senderView: self, highQualityImageUrl: recognizer.highQualityImageUrl,pictures:pictures, backgroundColor: recognizer.backgroundColor).presentFromRootViewController()
+        ImageViewer(senderView: self, currentIndex:currentIndex, pictures:pictures, backgroundColor: recognizer.backgroundColor).presentFromRootViewController()
     }
 }
 

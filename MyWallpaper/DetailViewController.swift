@@ -15,11 +15,10 @@ let albumIndex = "1196824"
 class DetailViewController: UIViewController{
 
     @IBOutlet weak var pageControl: UIPageControl!
-    @IBOutlet weak var albumHomeScrollView: UIScrollView!
+    @IBOutlet weak var albumHomeScrollView: ImageScrollView!
     @IBOutlet weak var loadingView: LoadingView!
     @IBOutlet weak var imageCollectionView: ImageCollectionView!
     
-    var timer:NSTimer?
     var pictures = [Picture]()
     var albumID :String = albumIndex{
         didSet{
@@ -40,11 +39,7 @@ class DetailViewController: UIViewController{
     private func fetchDataWithAlbumID(){
         var stringURL:String = urlGetPicList
         pictures.removeAll()
-        if let timer = timer {
-            timer.invalidate()
-        }
-        timer = nil
-        
+
         if albumID != albumIndex {
             albumHomeScrollView.alpha = 0
             pageControl.alpha = 0
@@ -86,88 +81,27 @@ class DetailViewController: UIViewController{
     //MARK: Home Page (Scroll view)
     func initScrollView(){
         albumHomeScrollView.delegate = self
-        albumHomeScrollView.contentSize = CGSizeMake(albumHomeScrollView.frame.width * CGFloat(pictures.count), albumHomeScrollView.frame.height)
-        for index in 0...pictures.count-1 {
-            let scrollImageView = initScrollImageView(index)
-            let cache = Cache<UIImage>(name: "indexImageCache")
-            let URL = NSURL(string: pictures[index].url)!
-
-            cache.fetch(URL:URL).onSuccess{ [unowned self] image in
-                scrollImageView.image = image
-                scrollImageView.setupForImageViewer(URL, backgroundColor: self.view.backgroundColor!)
-                self.albumHomeScrollView.addSubview(scrollImageView)
-            }
-        }
+        albumHomeScrollView.setUp(pictures: pictures)
         initPageControl()
-    }
-    func initScrollImageView(index:Int)->UIImageView {
-        var frame = centerFrameFromImageSize(pictures[index].size)
-        frame.origin.x += albumHomeScrollView.frame.width * CGFloat(index)
-        let imageView = UIImageView()
-        imageView.frame = frame
-        return imageView
     }
     func initPageControl(){
         pageControl.numberOfPages = pictures.count
-        initTimer()
-    }
-    func initTimer(){
-        timer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "moveToNextPage", userInfo: nil, repeats: true)
-    }
-    func moveToNextPage (){
-        // Move to next page
-        albumHomeScrollView.userInteractionEnabled = false
-        for view in albumHomeScrollView.subviews {
-            view.userInteractionEnabled = false
-        }
-        let pageWidth:CGFloat = CGRectGetWidth(albumHomeScrollView.frame)
-        let maxWidth:CGFloat = pageWidth * CGFloat(pictures.count)
-        let contentOffset:CGFloat = albumHomeScrollView.contentOffset.x
-        
-        var slideToX = contentOffset + pageWidth
-        
-        if  contentOffset + pageWidth == maxWidth{
-            slideToX = 0
-        }
-        
-        albumHomeScrollView.scrollRectToVisible(CGRectMake(slideToX, 0, pageWidth, CGRectGetHeight(albumHomeScrollView.frame)), animated: true)
-    }
-
-    func centerFrameFromImageSize(imageSize:CGSize) -> CGRect {
-        return AVMakeRectWithAspectRatioInsideRect(imageSize, albumHomeScrollView.frame)
     }
 }
 //MARK: ScrollView Delegate
 extension DetailViewController: UIScrollViewDelegate{
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        let pageWidth:CGFloat = CGRectGetWidth(scrollView.frame)
-        let currentPage:CGFloat = floor((scrollView.contentOffset.x-pageWidth/2)/pageWidth)+1
-        // Change the indicator
-        pageControl.currentPage = Int(currentPage)
-        scrollView.userInteractionEnabled = true
-        for view in scrollView.subviews {
-            view.userInteractionEnabled = true
-        }
-        initTimer()
+        guard let view = scrollView as? ImageScrollView else {return}
+        pageControl.currentPage = view.updateCurrentPage()
+        view.initTimer()
     }
     func scrollViewWillBeginDragging(scrollView: UIScrollView) {
-        scrollView.userInteractionEnabled = false
-        for view in scrollView.subviews {
-            view.userInteractionEnabled = false
-        }
-        if let timer = timer {
-            timer.invalidate()
-        }
+        guard let view = scrollView as? ImageScrollView else {return}
+        view.prepareForDragging()
     }
     func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
-        let pageWidth:CGFloat = CGRectGetWidth(scrollView.frame)
-        let currentPage:CGFloat = floor((scrollView.contentOffset.x-pageWidth/2)/pageWidth)+1
-        // Change the indicator
-        pageControl.currentPage = Int(currentPage)
-        scrollView.userInteractionEnabled = true
-        for view in scrollView.subviews {
-            view.userInteractionEnabled = true
-        }
+        guard let view = scrollView as? ImageScrollView else {return}
+        pageControl.currentPage = view.updateCurrentPage()
     }
 }
 //MARK: CollectionView data source
@@ -189,7 +123,6 @@ extension DetailViewController: UICollectionViewDataSource{
         cell.imageView.setupForImageViewer(url, backgroundColor: view.backgroundColor!)
         return cell
     }
-    
 }
 // MARK: WaterfallLayoutDelegate
 extension DetailViewController: CollectionViewWaterfallLayoutDelegate{

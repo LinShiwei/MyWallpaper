@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		561E31791CD389820039302E /* Viewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 561E31781CD389820039302E /* Viewer.swift */; };
 		5628482B1C85D678001C0256 /* ImageCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5628482A1C85D678001C0256 /* ImageCollectionViewCell.xib */; };
 		5628482D1C85D914001C0256 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5628482C1C85D914001C0256 /* ImageCollectionViewCell.swift */; };
 		5638603D1C8531E100C59C68 /* SearchPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5638603C1C8531E100C59C68 /* SearchPage.swift */; };
@@ -23,6 +24,7 @@
 		564D90B51C9280A100AAD9B6 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564D90B41C9280A100AAD9B6 /* Constant.swift */; };
 		564E2AE11CD2EBEB0042B397 /* ImageCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564E2AE01CD2EBEB0042B397 /* ImageCollectionView.swift */; };
 		564E2AE31CD350CE0042B397 /* Picture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564E2AE21CD350CE0042B397 /* Picture.swift */; };
+		564F8B5C1CD48BE4003D94B6 /* ImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564F8B5B1CD48BE4003D94B6 /* ImageScrollView.swift */; };
 		566C036B1CD1F4450011EF36 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566C036A1CD1F4450011EF36 /* Album.swift */; };
 		566F246E1C98061700206228 /* KeyWordsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566F246D1C98061700206228 /* KeyWordsView.swift */; };
 		566F24701C98063C00206228 /* KeyWordsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 566F246F1C98063C00206228 /* KeyWordsView.xib */; };
@@ -31,6 +33,7 @@
 		56F66AAF1C672D6500240006 /* Haneke.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56F66AAE1C672D6500240006 /* Haneke.framework */; };
 		56F66AB21C672ED000240006 /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F66AB01C672ED000240006 /* ImageViewer.swift */; };
 		56F66AB31C672ED000240006 /* UIImageView+ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F66AB11C672ED000240006 /* UIImageView+ImageViewer.swift */; };
+		56FE32D41CD3970600D213CA /* ImageViewerScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FE32D31CD3970600D213CA /* ImageViewerScrollView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +47,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		561E31781CD389820039302E /* Viewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Viewer.swift; sourceTree = "<group>"; };
 		5628482A1C85D678001C0256 /* ImageCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageCollectionViewCell.xib; sourceTree = "<group>"; };
 		5628482C1C85D914001C0256 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		5638603C1C8531E100C59C68 /* SearchPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchPage.swift; sourceTree = "<group>"; };
@@ -62,6 +66,7 @@
 		564D90B41C9280A100AAD9B6 /* Constant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		564E2AE01CD2EBEB0042B397 /* ImageCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCollectionView.swift; sourceTree = "<group>"; };
 		564E2AE21CD350CE0042B397 /* Picture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Picture.swift; sourceTree = "<group>"; };
+		564F8B5B1CD48BE4003D94B6 /* ImageScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageScrollView.swift; sourceTree = "<group>"; };
 		566C036A1CD1F4450011EF36 /* Album.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		566F246D1C98061700206228 /* KeyWordsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyWordsView.swift; sourceTree = "<group>"; };
 		566F246F1C98063C00206228 /* KeyWordsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KeyWordsView.xib; sourceTree = "<group>"; };
@@ -72,6 +77,7 @@
 		56F66AAE1C672D6500240006 /* Haneke.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Haneke.framework; path = Carthage/Build/iOS/Haneke.framework; sourceTree = "<group>"; };
 		56F66AB01C672ED000240006 /* ImageViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewer.swift; sourceTree = "<group>"; };
 		56F66AB11C672ED000240006 /* UIImageView+ImageViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+ImageViewer.swift"; sourceTree = "<group>"; };
+		56FE32D31CD3970600D213CA /* ImageViewerScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewerScrollView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +174,8 @@
 			children = (
 				56F66AB01C672ED000240006 /* ImageViewer.swift */,
 				56F66AB11C672ED000240006 /* UIImageView+ImageViewer.swift */,
+				561E31781CD389820039302E /* Viewer.swift */,
+				56FE32D31CD3970600D213CA /* ImageViewerScrollView.swift */,
 			);
 			name = ImageViewer;
 			sourceTree = "<group>";
@@ -177,6 +185,7 @@
 			children = (
 				56402D5A1C64F9E3008B0499 /* DetailViewController.swift */,
 				564E2AE01CD2EBEB0042B397 /* ImageCollectionView.swift */,
+				564F8B5B1CD48BE4003D94B6 /* ImageScrollView.swift */,
 				564E2AE21CD350CE0042B397 /* Picture.swift */,
 			);
 			name = DetailView;
@@ -319,10 +328,12 @@
 				56F66AB31C672ED000240006 /* UIImageView+ImageViewer.swift in Sources */,
 				56402D591C64AA5D008B0499 /* SplitViewController.swift in Sources */,
 				5628482D1C85D914001C0256 /* ImageCollectionViewCell.swift in Sources */,
+				564F8B5C1CD48BE4003D94B6 /* ImageScrollView.swift in Sources */,
 				5638603D1C8531E100C59C68 /* SearchPage.swift in Sources */,
 				564E2AE31CD350CE0042B397 /* Picture.swift in Sources */,
 				564E2AE11CD2EBEB0042B397 /* ImageCollectionView.swift in Sources */,
 				56402D571C64758C008B0499 /* TableViewCell.swift in Sources */,
+				56FE32D41CD3970600D213CA /* ImageViewerScrollView.swift in Sources */,
 				566C036B1CD1F4450011EF36 /* Album.swift in Sources */,
 				564496871C81B97800E4F217 /* LoadingView.swift in Sources */,
 				56402D5B1C64F9E3008B0499 /* DetailViewController.swift in Sources */,
@@ -330,6 +341,7 @@
 				56F66AB21C672ED000240006 /* ImageViewer.swift in Sources */,
 				566F246E1C98061700206228 /* KeyWordsView.swift in Sources */,
 				563D44FE1C63226200A581FA /* AppDelegate.swift in Sources */,
+				561E31791CD389820039302E /* Viewer.swift in Sources */,
 				56402D551C6474B1008B0499 /* MasterViewController.swift in Sources */,
 				564D90B51C9280A100AAD9B6 /* Constant.swift in Sources */,
 			);
