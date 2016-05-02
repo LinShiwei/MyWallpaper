@@ -12,7 +12,6 @@ import SwiftyJSON
 import GameplayKit
 class SearchPage: UIViewController{
     
-    let windowBounds = UIScreen.mainScreen().bounds
     let searchBar = UISearchBar()
     var rootViewController: UIViewController!
     var senderView : UISearchBar
@@ -30,6 +29,7 @@ class SearchPage: UIViewController{
         self.senderView = senderView
         self.maskView.backgroundColor = backgroundColor
         rootViewController = UIApplication.sharedApplication().keyWindow!.rootViewController!
+        originalFrameRelativeToScreen = CGRect(origin: senderView.convertPoint(CGPoint(x: 0, y: 0), toView: nil), size: senderView.frame.size)
         super.init(nibName: nil, bundle: nil)
     }
     required init?(coder aDecoder: NSCoder) {
@@ -48,15 +48,14 @@ class SearchPage: UIViewController{
     }
     override func loadView() {
         super.loadView()
-        configureView()
         configureMaskView()
         configureSearchBar()
         configureCollectionView()
         configureGuideView()
         animateEntry()
-
     }
     private func animateEntry(){
+        senderView.alpha = 0
         UIView.animateWithDuration(0.8, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {[unowned self]() -> Void in
             self.searchBar.frame = self.setSearchBarFrame()
             }, completion: nil)
@@ -92,12 +91,6 @@ class SearchPage: UIViewController{
         })
     }
     //MARK: Configure Views
-    private func configureView() {
-        senderView.alpha = 0
-        var originalFrame = senderView.convertRect(windowBounds, toView: nil)
-        originalFrame.size = senderView.frame.size
-        originalFrameRelativeToScreen = originalFrame
-    }
     private func configureMaskView() {
         maskView.frame = windowBounds
         maskView.alpha = 0.0
@@ -146,7 +139,6 @@ class SearchPage: UIViewController{
         origin.y = origin.y + searchBar.frame.height + 8
         let size = CGSize(width: searchBar.frame.size.width, height: 30)
         keyWordsView!.frame = CGRect(origin: origin, size: size)
-
     }
     private func setSearchBarFrame()->CGRect{
         let barWidth : CGFloat = windowBounds.width/2
@@ -156,41 +148,35 @@ class SearchPage: UIViewController{
         return CGRect(origin: origin, size: size)
     }
     private func initSwipeGestureRecognizer()->UISwipeGestureRecognizer{
-        let recognizer = UISwipeGestureRecognizer(target: self, action: "didSwipe:")
+        let recognizer = UISwipeGestureRecognizer(target: self, action: "didSwipeUp:")
         recognizer.direction = .Up
         return recognizer
     }
-    func didSwipe(recognizer:UISwipeGestureRecognizer){
+    func didSwipeUp(recognizer:UISwipeGestureRecognizer){
         dismissViewController()
     }
     private func initPicturesData(){
         let stringURL:String = urlGetPicList
         let cache = Shared.JSONCache
-        let URL = NSURL(string: stringURL)!
-        cache.fetch(URL: URL,failure:{ error in
+        cache.fetch(URL: NSURL(string: stringURL)!,failure:{ error in
             dispatch_async(dispatch_get_main_queue()) {
                 print("fail to initPicturesData")
             }
         }).onSuccess{[weak self] jsonObject in
-            let listjson = JSON(jsonObject.dictionary)
-            if let pageCount = listjson["pages"].int {
+            if let pageCount = JSON(jsonObject.dictionary)["pages"].int {
                 for page in 1...pageCount {
                     let string = stringURL + "/p/" + String(page)
                     let cache = Shared.JSONCache
                     cache.fetch(URL: NSURL(string: string)!).onSuccess{[weak self] object in
-                        let json = JSON(object.dictionary)
-                        
-                        for  picJSON in json["pic"].array! {
+                        for  picJSON in JSON(object.dictionary)["pic"].array! {
                             if let url = picJSON["linkurl"].string,let width = picJSON["width"].string ,let height = picJSON["height"].string,let name = picJSON["name"].string {
-                                let size = CGSize(width: Int(width)!, height: Int(height)!)
-                                let picture = Picture(name: name, url: url, size: size)
+                                let picture = Picture(name: name, url: url, size: CGSize(width: Int(width)!, height: Int(height)!))
                                 self?.pictures.append(picture)
                             }
                         }
                         if page == pageCount,let pics = self?.pictures {
                             self?.filteredPictures = Array(GKRandomSource.sharedRandom().arrayByShufflingObjectsInArray(pics).suffix(15)) as! [Picture]
                             dispatch_async(dispatch_get_main_queue()) { [weak self] in
-                                
                                 self?.collectionView!.reloadData()
                             }
                         }
@@ -203,7 +189,6 @@ class SearchPage: UIViewController{
             }
         }
     }
-    
    //MARK: Key Words Button Selector
     func keyWordsButtonDidTap(sender:UIButton){
         searchBar.text = sender.titleLabel?.text
@@ -219,9 +204,8 @@ class SearchPage: UIViewController{
         collectionView.backgroundColor = UIColor.clearColor()
         collectionView.alpha = 0
         
-        let center = self.view.convertPoint(collectionView.center, toView: collectionView)
         let loadingView = LoadingView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
-        loadingView.center = center
+        loadingView.center = self.view.convertPoint(collectionView.center, toView: collectionView)
         collectionView.addSubview(loadingView)
         return collectionView
     }
@@ -232,21 +216,12 @@ extension SearchPage:UICollectionViewDataSource{
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
             return filteredPictures.count
     }
-    
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ImageCollectionViewCell", forIndexPath: indexPath) as! ImageCollectionViewCell
-        let url = NSURL(string: filteredPictures[indexPath.row].url)
         for view in collectionView.subviews where view is LoadingView {
             view.hidden = true
         }
-        cell.loadingView.hidden = false
-        cell.imageView.contentMode = UIViewContentMode.ScaleAspectFill
-        cell.imageView.hnk_setImageFromURL(url!, success: {
-            image in
-            cell.imageView.image = image
-            cell.loadingView.hidden = true
-        })
-        cell.imageView.setupForImageViewer(url, backgroundColor: maskView.backgroundColor!)
+        cell.configureCell(filteredPictures[indexPath.row].url, backgroundColor: maskView.backgroundColor!)
         return cell
     }
 }
@@ -279,14 +254,13 @@ extension SearchPage:UISearchBarDelegate{
             return true
         })
         collectionView!.reloadData()
-        
         for view in guideView!.subviews where view is UILabel {
             UIView.animateWithDuration(0.5, delay: 0, options: .AllowAnimatedContent, animations: {[unowned self]() in
-                if self.filteredPictures.count > 0 {
-                    (view as! UILabel).text = "为您搜索到以下图片"
-                }else{
-                    (view as! UILabel).text = "未找到相关图片"
-                }
+                    if self.filteredPictures.count > 0 {
+                        (view as! UILabel).text = "为您搜索到以下图片"
+                    }else{
+                        (view as! UILabel).text = "未找到相关图片"
+                    }
                 }, completion: nil)
         }
     }

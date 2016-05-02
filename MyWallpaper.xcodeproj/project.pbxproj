@@ -24,9 +24,8 @@
 		56402D591C64AA5D008B0499 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56402D581C64AA5D008B0499 /* SplitViewController.swift */; };
 		56402D5B1C64F9E3008B0499 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56402D5A1C64F9E3008B0499 /* DetailViewController.swift */; };
 		564496871C81B97800E4F217 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564496861C81B97800E4F217 /* LoadingView.swift */; };
-		564D90B51C9280A100AAD9B6 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564D90B41C9280A100AAD9B6 /* Constant.swift */; };
+		564D90B51C9280A100AAD9B6 /* Define.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564D90B41C9280A100AAD9B6 /* Define.swift */; };
 		564E2AE11CD2EBEB0042B397 /* ImageCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564E2AE01CD2EBEB0042B397 /* ImageCollectionView.swift */; };
-		564E2AE31CD350CE0042B397 /* Picture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564E2AE21CD350CE0042B397 /* Picture.swift */; };
 		564F8B5C1CD48BE4003D94B6 /* ImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564F8B5B1CD48BE4003D94B6 /* ImageScrollView.swift */; };
 		566C036B1CD1F4450011EF36 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566C036A1CD1F4450011EF36 /* Album.swift */; };
 		566F246E1C98061700206228 /* KeyWordsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566F246D1C98061700206228 /* KeyWordsView.swift */; };
@@ -68,9 +67,8 @@
 		56402D581C64AA5D008B0499 /* SplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
 		56402D5A1C64F9E3008B0499 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		564496861C81B97800E4F217 /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
-		564D90B41C9280A100AAD9B6 /* Constant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		564D90B41C9280A100AAD9B6 /* Define.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Define.swift; sourceTree = "<group>"; };
 		564E2AE01CD2EBEB0042B397 /* ImageCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCollectionView.swift; sourceTree = "<group>"; };
-		564E2AE21CD350CE0042B397 /* Picture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Picture.swift; sourceTree = "<group>"; };
 		564F8B5B1CD48BE4003D94B6 /* ImageScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageScrollView.swift; sourceTree = "<group>"; };
 		566C036A1CD1F4450011EF36 /* Album.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		566F246D1C98061700206228 /* KeyWordsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyWordsView.swift; sourceTree = "<group>"; };
@@ -107,13 +105,14 @@
 		562848281C85CCD5001C0256 /* Support */ = {
 			isa = PBXGroup;
 			children = (
-				564D90B41C9280A100AAD9B6 /* Constant.swift */,
-				5628482A1C85D678001C0256 /* ImageCollectionViewCell.xib */,
-				5628482C1C85D914001C0256 /* ImageCollectionViewCell.swift */,
+				563D44FD1C63226200A581FA /* AppDelegate.swift */,
+				563D45011C63226200A581FA /* Main.storyboard */,
+				563D45041C63226200A581FA /* Assets.xcassets */,
+				563D45061C63226200A581FA /* LaunchScreen.storyboard */,
+				563D45091C63226200A581FA /* Info.plist */,
+				56402D581C64AA5D008B0499 /* SplitViewController.swift */,
+				564D90B41C9280A100AAD9B6 /* Define.swift */,
 				56F66AAC1C6710A300240006 /* CollectionViewWaterfallLayout.swift */,
-				564496861C81B97800E4F217 /* LoadingView.swift */,
-				566F246D1C98061700206228 /* KeyWordsView.swift */,
-				566F246F1C98063C00206228 /* KeyWordsView.xib */,
 			);
 			name = Support;
 			sourceTree = "<group>";
@@ -122,6 +121,8 @@
 			isa = PBXGroup;
 			children = (
 				5638603C1C8531E100C59C68 /* SearchPage.swift */,
+				566F246D1C98061700206228 /* KeyWordsView.swift */,
+				566F246F1C98063C00206228 /* KeyWordsView.xib */,
 			);
 			name = SearchPage;
 			sourceTree = "<group>";
@@ -159,12 +160,6 @@
 		563D44FC1C63226200A581FA /* MyWallpaper */ = {
 			isa = PBXGroup;
 			children = (
-				563D44FD1C63226200A581FA /* AppDelegate.swift */,
-				563D45011C63226200A581FA /* Main.storyboard */,
-				563D45041C63226200A581FA /* Assets.xcassets */,
-				563D45061C63226200A581FA /* LaunchScreen.storyboard */,
-				563D45091C63226200A581FA /* Info.plist */,
-				56402D581C64AA5D008B0499 /* SplitViewController.swift */,
 				563C99671CD71A3700562540 /* SwiftPrompts */,
 				562848281C85CCD5001C0256 /* Support */,
 				56F66AB71C672F6D00240006 /* MasterView */,
@@ -199,8 +194,10 @@
 			children = (
 				56402D5A1C64F9E3008B0499 /* DetailViewController.swift */,
 				564E2AE01CD2EBEB0042B397 /* ImageCollectionView.swift */,
+				5628482A1C85D678001C0256 /* ImageCollectionViewCell.xib */,
+				5628482C1C85D914001C0256 /* ImageCollectionViewCell.swift */,
 				564F8B5B1CD48BE4003D94B6 /* ImageScrollView.swift */,
-				564E2AE21CD350CE0042B397 /* Picture.swift */,
+				564496861C81B97800E4F217 /* LoadingView.swift */,
 			);
 			name = DetailView;
 			sourceTree = "<group>";
@@ -345,7 +342,6 @@
 				5628482D1C85D914001C0256 /* ImageCollectionViewCell.swift in Sources */,
 				564F8B5C1CD48BE4003D94B6 /* ImageScrollView.swift in Sources */,
 				5638603D1C8531E100C59C68 /* SearchPage.swift in Sources */,
-				564E2AE31CD350CE0042B397 /* Picture.swift in Sources */,
 				564E2AE11CD2EBEB0042B397 /* ImageCollectionView.swift in Sources */,
 				56402D571C64758C008B0499 /* TableViewCell.swift in Sources */,
 				56FE32D41CD3970600D213CA /* ImageViewerScrollView.swift in Sources */,
@@ -358,7 +354,7 @@
 				563D44FE1C63226200A581FA /* AppDelegate.swift in Sources */,
 				561E31791CD389820039302E /* ImageViewer.swift in Sources */,
 				56402D551C6474B1008B0499 /* MasterViewController.swift in Sources */,
-				564D90B51C9280A100AAD9B6 /* Constant.swift in Sources */,
+				564D90B51C9280A100AAD9B6 /* Define.swift in Sources */,
 				563C99661CD71A2800562540 /* UIImageEffects.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

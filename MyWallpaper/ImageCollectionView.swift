@@ -15,7 +15,6 @@ class ImageCollectionView: UICollectionView {
         collectionViewLayout = getLayout()
         registerNib(UINib(nibName: "ImageCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ImageCollectionViewCell")
     }
-    
     private func getLayout()->CollectionViewWaterfallLayout{
         let layout = CollectionViewWaterfallLayout()
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)

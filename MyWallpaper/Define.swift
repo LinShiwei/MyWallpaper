@@ -33,4 +33,13 @@ let themeBlack = Theme(
     textColor                : UIColor.whiteColor(),
     lineColor                : UIColor(white: 0.1, alpha: 1)
 )
-
+class Picture {
+    let name :String
+    let url  :String
+    let size :CGSize
+    init(name:String,url:String,size:CGSize){
+        self.name = name
+        self.url = url
+        self.size = size
+    }
+}

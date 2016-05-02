@@ -110,16 +110,8 @@ extension DetailViewController: UICollectionViewDataSource{
     }
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ImageCollectionViewCell", forIndexPath: indexPath) as! ImageCollectionViewCell
-        
-        let url = NSURL(string: pictures[indexPath.row].url)
         loadingView.hidden = true
-        cell.loadingView.hidden = false
-        cell.imageView.hnk_setImageFromURL(url!, success: {
-            image in
-            cell.imageView.image = image
-            cell.loadingView.hidden = true
-        })
-        cell.imageView.setupForImageViewer(url, backgroundColor: view.backgroundColor!)
+        cell.configureCell(pictures[indexPath.row].url, backgroundColor: view.backgroundColor!)
         return cell
     }
 }

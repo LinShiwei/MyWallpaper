@@ -17,5 +17,13 @@ class ImageCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
     }
-
+    func configureCell(url:String, backgroundColor:UIColor){
+        loadingView.hidden = false
+        imageView.hnk_setImageFromURL(NSURL(string: url)!, success: {
+            [unowned self] image in
+            self.imageView.image = image
+            self.loadingView.hidden = true
+        })
+        imageView.setupForImageViewer(NSURL(string: url), backgroundColor: backgroundColor)
+    }
 }

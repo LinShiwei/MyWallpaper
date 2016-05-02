@@ -32,7 +32,7 @@ class ImageViewer: UIViewController {
 
         super.init(nibName: nil, bundle: nil)
         
-        configureView()
+        configureGestureRecognizer()
         configureMaskView()
         configureScrollView()
         animateEntry()
@@ -40,16 +40,11 @@ class ImageViewer: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    override func loadView() {
-        super.loadView()
-    }
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
-    private func convertViewFrameToScreen(view:UIView)->CGRect{
-        return CGRect(origin: view.convertPoint(CGPoint(x: 0, y: 0), toView: nil), size: view.frame.size)
-    }
-    private func configureView(){
+    //MARK: Configure view
+    private func configureGestureRecognizer(){
         let swipeDownRecognizer = UISwipeGestureRecognizer(target: self, action: "didSwipeDown:")
         swipeDownRecognizer.direction = .Down
         view.addGestureRecognizer(swipeDownRecognizer)
@@ -99,7 +94,6 @@ class ImageViewer: UIViewController {
         prompt = SwiftPromptsView(frame: self.view.bounds)
         prompt.delegate = self
         prompt.enableLightEffectView()
-        
         //Set the properties of the prompt
         prompt.setPromptHeader("Success")
         prompt.setPromptContentText("The photo was successfully saved to your photo album.")
@@ -113,25 +107,8 @@ class ImageViewer: UIViewController {
         prompt.setMainButtonText("OK")
         view.addSubview(prompt)
     }
-    func didSwipeUp(sender:UISwipeGestureRecognizer){
-        dismissViewController()
-    }
-    func didSwipeDown(sender:UISwipeGestureRecognizer){
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)){
-            UIImageWriteToSavedPhotosAlbum(self.scrollView!.centerImage, self, "image:didFinishSavingWithError:contextInfo:", nil)
-        }
-    }
-    func image(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo:UnsafePointer<Void>) {
-        dispatch_async(dispatch_get_main_queue()) {[unowned self] in
-            if error == nil {
-                print("Download succeed")
-                self.initPromptsView()
-            } else {
-                print("Download fail")
-            }
-        }
-    }
-    // MARK: - Animation
+    
+    // MARK: Entry and Dismiss Animation
     private func animateEntry() {
         senderView.alpha = 0
         UIView.animateWithDuration(1.2, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.6, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut], animations: {[unowned self]() -> Void in
@@ -162,6 +139,28 @@ class ImageViewer: UIViewController {
         rootViewController.addChildViewController(self)
         didMoveToParentViewController(rootViewController)
     }
+    //MARK: Help Function
+    private func convertViewFrameToScreen(view:UIView)->CGRect{
+        return CGRect(origin: view.convertPoint(CGPoint(x: 0, y: 0), toView: nil), size: view.frame.size)
+    }
+    func didSwipeUp(sender:UISwipeGestureRecognizer){
+        dismissViewController()
+    }
+    func didSwipeDown(sender:UISwipeGestureRecognizer){
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)){
+            UIImageWriteToSavedPhotosAlbum(self.scrollView!.centerImage, self, "image:didFinishSavingWithError:contextInfo:", nil)
+        }
+    }
+    func image(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo:UnsafePointer<Void>) {
+        dispatch_async(dispatch_get_main_queue()) {[unowned self] in
+            if error == nil {
+                print("Download succeed")
+                self.initPromptsView()
+            } else {
+                print("Download fail")
+            }
+        }
+    }
 }
 // MARK: - ScrollView delegate
 extension ImageViewer: UIScrollViewDelegate {
@@ -184,6 +183,7 @@ extension ImageViewer: UIScrollViewDelegate {
         view.userInteractionEnabled = true
     }
 }
+//MARK: SwiftPromptsProtocol
 extension ImageViewer: SwiftPromptsProtocol{
     func clickedOnTheMainButton() {
         print("Clicked on the main button")
