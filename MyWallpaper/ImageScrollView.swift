@@ -23,6 +23,7 @@ class ImageScrollView: UIScrollView {
         configureView()
         initTimer()
     }
+    
     private func configureView(){
         pagingEnabled = true
         showsHorizontalScrollIndicator = false
@@ -82,7 +83,6 @@ class ImageScrollView: UIScrollView {
         currentIndex = currentPage
         assert(currentPage < pictures.count)
         assert(currentPage >= 0)
-        print(currentPage)
         return currentPage
     }
     private func initScrollImageView(index:Int)->UIImageView {

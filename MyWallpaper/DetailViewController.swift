@@ -31,7 +31,6 @@ class DetailViewController: UIViewController{
         fetchDataWithAlbumID()
         view.backgroundColor = themeBlack.detailViewBackgroundColor
     }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -42,6 +41,7 @@ class DetailViewController: UIViewController{
 
         if albumID != albumIndex {
             albumHomeScrollView.alpha = 0
+            albumHomeScrollView.timer?.invalidate()
             pageControl.alpha = 0
             imageCollectionView.alpha = 1
             loadingView.alpha = 1
@@ -92,14 +92,13 @@ class DetailViewController: UIViewController{
 extension DetailViewController: UIScrollViewDelegate{
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         guard let view = scrollView as? ImageScrollView else {return}
-        pageControl.currentPage = view.updateCurrentPage()
         view.initTimer()
     }
     func scrollViewWillBeginDragging(scrollView: UIScrollView) {
         guard let view = scrollView as? ImageScrollView else {return}
         view.prepareForDragging()
     }
-    func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
+    func scrollViewDidScroll(scrollView: UIScrollView) {
         guard let view = scrollView as? ImageScrollView else {return}
         pageControl.currentPage = view.updateCurrentPage()
     }

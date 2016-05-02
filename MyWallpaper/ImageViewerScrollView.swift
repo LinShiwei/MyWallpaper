@@ -11,38 +11,34 @@ import Haneke
 
 class ImageViewerScrollView: UIScrollView {
 
-    /*
-    // Only override drawRect: if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func drawRect(rect: CGRect) {
-        // Drawing code
-    }
-    */
     var currentIndex : Int
     let pictures :[Picture]
-
+    var originFrameRelativeToScrollView : CGRect!
+    var centerImage : UIImage{
+        get{
+            return centerImageViewInScrollView()!.image!
+        }
+    }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    init(frame:CGRect,currentIndex index:Int, pictures pics:[Picture]){
+    init(originFrame:CGRect,currentIndex index:Int, pictures pics:[Picture]){
         currentIndex = index
         pictures = pics
-        
-        super.init(frame:frame)
-        
+        super.init(frame:windowBounds)
         pagingEnabled = true
         showsHorizontalScrollIndicator = false
         showsVerticalScrollIndicator = false
         contentSize = CGSize(width: self.frame.width * 3, height: self.frame.height)
         setContentOffset(CGPoint(x: self.frame.width, y: 0), animated: false)
-    
-        backgroundColor = UIColor.purpleColor()
+        configureOriginFrameToScrollView(originFrame)
         configureImageViews()
     }
     private func configureImageViews(){
         addSubview(createImageView(0, imageURL: pictures[previousIndex(currentIndex)].url))
         addSubview(createImageView(frame.width, imageURL: pictures[currentIndex].url))
         addSubview(createImageView(frame.width*2, imageURL: pictures[nextIndex(currentIndex)].url))
+        centerImageViewInScrollView()?.frame = originFrameRelativeToScrollView
     }
     private func previousIndex(index:Int)->Int{
         if index == 0 {
@@ -75,7 +71,7 @@ class ImageViewerScrollView: UIScrollView {
         return nil
     }
     private func centerImageViewInScrollView()->UIImageView?{
-        for imageView in subviews where imageView.frame.origin.x == frame.width {
+        for imageView in subviews where (imageView.frame.origin.x >= frame.width)&&(imageView.frame.origin.x < frame.width*2) {
             return imageView as? UIImageView
         }
         return nil
@@ -85,6 +81,9 @@ class ImageViewerScrollView: UIScrollView {
             return imageView as? UIImageView
         }
         return nil
+    }
+    func configureOriginFrameToScrollView(frame:CGRect){
+        originFrameRelativeToScrollView = CGRect(origin: CGPoint(x: frame.origin.x + self.frame.width, y: frame.origin.y), size: frame.size)
     }
     func scrollViewSwipeRight(){
         currentIndex = previousIndex(currentIndex)
@@ -97,7 +96,6 @@ class ImageViewerScrollView: UIScrollView {
             rightImageView.image = image
         }
         setContentOffset(CGPoint(x: self.frame.width, y: 0), animated: false)
-
     }
     func scrollViewSwipeLeft(){
         assert(leftImageViewInScrollView() != nil)
@@ -114,6 +112,13 @@ class ImageViewerScrollView: UIScrollView {
             leftImageView.image = image
         }
         setContentOffset(CGPoint(x: self.frame.width, y: 0), animated: false)
-
+    }
+    func zoomIn(){
+        guard let centerImageView = centerImageViewInScrollView() else { return }
+        centerImageView.frame = CGRect(x: frame.width, y: 0, width: frame.width, height: frame.height)
+    }
+    func zoomOut(){
+        guard let centerImageView = centerImageViewInScrollView() else { return }
+        centerImageView.frame = self.originFrameRelativeToScrollView
     }
 }

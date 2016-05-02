@@ -19,6 +19,7 @@ public extension UIImageView {
         var currentIndex : Int
         if self.superview is ImageScrollView {
             let scrollView = self.superview as! ImageScrollView
+            scrollView.timer?.invalidate()
             pictures = scrollView.pictures
             currentIndex = scrollView.currentIndex
         }else{

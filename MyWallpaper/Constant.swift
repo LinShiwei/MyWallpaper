@@ -15,6 +15,7 @@ let tieTuKuURL = "http://api.tietuku.cn/v2/api"
 let urlGetAlbum   = tieTuKuURL + "/getalbum" + tieTuKuOpenkey
 let urlGetPicList = tieTuKuURL + "/getpiclist" + tieTuKuOpenkey
 //let urlGetRandomRecommandedPhotos = tieTuKuURL + "/getrandrec" + tieTuKuOpenkey
+let windowBounds = UIScreen.mainScreen().bounds
 
 struct Theme {
     let splitViewBackgroundColor : UIColor
