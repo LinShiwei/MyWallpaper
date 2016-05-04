@@ -41,7 +41,6 @@ class SearchPage: UIViewController{
         rootViewController.addChildViewController(self)
         didMoveToParentViewController(rootViewController)
     }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         initPicturesData()
@@ -132,13 +131,9 @@ class SearchPage: UIViewController{
     private func configureKeysWordView(){
         guard let viewFromNib = NSBundle.mainBundle().loadNibNamed("KeyWordsView", owner: self, options: nil).first as? KeyWordsView else{return}
         keyWordsView = viewFromNib
-        keyWordsView!.configureKeyWordsWith(target:self, action: "keyWordsButtonDidTap:")
+        keyWordsView!.attachTo(searchBar)
         keyWordsView!.alpha = 0
         view.addSubview(keyWordsView!)
-        var origin = searchBar.frame.origin
-        origin.y = origin.y + searchBar.frame.height + 8
-        let size = CGSize(width: searchBar.frame.size.width, height: 30)
-        keyWordsView!.frame = CGRect(origin: origin, size: size)
     }
     private func setSearchBarFrame()->CGRect{
         let barWidth : CGFloat = windowBounds.width/2
@@ -152,7 +147,7 @@ class SearchPage: UIViewController{
         recognizer.direction = .Up
         return recognizer
     }
-    func didSwipeUp(recognizer:UISwipeGestureRecognizer){
+    func didSwipeUp(sender:UISwipeGestureRecognizer){
         dismissViewController()
     }
     private func initPicturesData(){
@@ -171,13 +166,13 @@ class SearchPage: UIViewController{
                         for  picJSON in JSON(object.dictionary)["pic"].array! {
                             if let url = picJSON["linkurl"].string,let width = picJSON["width"].string ,let height = picJSON["height"].string,let name = picJSON["name"].string {
                                 let picture = Picture(name: name, url: url, size: CGSize(width: Int(width)!, height: Int(height)!))
-                                self?.pictures.append(picture)
+                                self!.pictures.append(picture)
                             }
                         }
                         if page == pageCount,let pics = self?.pictures {
-                            self?.filteredPictures = Array(GKRandomSource.sharedRandom().arrayByShufflingObjectsInArray(pics).suffix(15)) as! [Picture]
+                            self!.filteredPictures = Array(GKRandomSource.sharedRandom().arrayByShufflingObjectsInArray(pics).suffix(15)) as! [Picture]
                             dispatch_async(dispatch_get_main_queue()) { [weak self] in
-                                self?.collectionView!.reloadData()
+                                self!.collectionView!.reloadData()
                             }
                         }
                     }
@@ -189,18 +184,13 @@ class SearchPage: UIViewController{
             }
         }
     }
-   //MARK: Key Words Button Selector
-    func keyWordsButtonDidTap(sender:UIButton){
-        searchBar.text = sender.titleLabel?.text
-        searchBarSearchButtonClicked(searchBar)
-    }
     //MARK: Support Function
     private func getOriginCollectionView()->UICollectionView {
         let origin = CGPoint(x: 20, y: windowBounds.height*2/5)
         let size = CGSize(width: windowBounds.width - 20*2, height: windowBounds.height - origin.y - 20)
         let frame = CGRect(origin: origin, size: size)
-        let collectionView = UICollectionView(frame: frame, collectionViewLayout:getLayout())
-        collectionView.registerNib(UINib(nibName: "ImageCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ImageCollectionViewCell")
+        let collectionView = ImageCollectionView(frame: frame)
+        (collectionView.collectionViewLayout as! CollectionViewWaterfallLayout).columnCount = 5
         collectionView.backgroundColor = UIColor.clearColor()
         collectionView.alpha = 0
         
@@ -227,20 +217,8 @@ extension SearchPage:UICollectionViewDataSource{
 }
 // MARK: WaterfallLayoutDelegate
 extension SearchPage:CollectionViewWaterfallLayoutDelegate{
-    
     func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         return windowBounds.size
-    }
-    func getLayout()->CollectionViewWaterfallLayout{
-        let layout = CollectionViewWaterfallLayout()
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        layout.headerInset = UIEdgeInsetsMake(0, 0, 0, 0)
-        layout.headerHeight = 0
-        layout.footerHeight = 0
-        layout.columnCount = 5
-        layout.minimumColumnSpacing = 10
-        layout.minimumInteritemSpacing = 10
-        return layout
     }
 }
 //MARK: UISearchBarDelegate
@@ -256,11 +234,7 @@ extension SearchPage:UISearchBarDelegate{
         collectionView!.reloadData()
         for view in guideView!.subviews where view is UILabel {
             UIView.animateWithDuration(0.5, delay: 0, options: .AllowAnimatedContent, animations: {[unowned self]() in
-                    if self.filteredPictures.count > 0 {
-                        (view as! UILabel).text = "为您搜索到以下图片"
-                    }else{
-                        (view as! UILabel).text = "未找到相关图片"
-                    }
+                (view as! UILabel).text = self.filteredPictures.count > 0 ? "为您搜索到以下图片":"未找到相关图片"
                 }, completion: nil)
         }
     }

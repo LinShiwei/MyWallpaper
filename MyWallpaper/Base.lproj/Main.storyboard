@@ -177,6 +177,9 @@
                                     <string>Title</string>
                                     <string>Title</string>
                                 </scopeButtonTitles>
+                                <connections>
+                                    <outlet property="delegate" destination="ivP-zE-DQg" id="XoC-C3-SNy"/>
+                                </connections>
                             </searchBar>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -193,7 +196,6 @@
                     </view>
                     <connections>
                         <outlet property="categoryTableView" destination="gRd-I0-sYe" id="HXh-c0-1tz"/>
-                        <outlet property="searchBar" destination="9aW-5S-KFG" id="GZ4-zH-bdv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QUg-k2-ZFg" userLabel="First Responder" sceneMemberID="firstResponder"/>

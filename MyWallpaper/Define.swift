@@ -43,3 +43,12 @@ class Picture {
         self.size = size
     }
 }
+
+class Album {
+    let name,url,id : String
+    init(name:String, url:String, id:String){
+        self.name = name
+        self.url = url
+        self.id = id
+    }
+}

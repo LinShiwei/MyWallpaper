@@ -61,7 +61,6 @@ class ImageScrollView: UIScrollView {
         if  contentOffset + pageWidth == maxWidth{
             slideToX = 0
         }
-        
         scrollRectToVisible(CGRect(x: slideToX, y: 0, width: pageWidth, height: frame.height), animated: true)
     }
     func prepareForDragging() {
@@ -81,8 +80,7 @@ class ImageScrollView: UIScrollView {
         let pageWidth:CGFloat = frame.width
         let currentPage:Int = Int(floor((self.contentOffset.x-pageWidth/2)/pageWidth)+1)
         currentIndex = currentPage
-        assert(currentPage < pictures.count)
-        assert(currentPage >= 0)
+        assert(0..<pictures.count ~= currentPage)
         return currentPage
     }
     private func initScrollImageView(index:Int)->UIImageView {

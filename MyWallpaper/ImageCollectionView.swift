@@ -10,10 +10,15 @@ import UIKit
 
 class ImageCollectionView: UICollectionView {
 
+    let loadingView = LoadingView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        collectionViewLayout = getLayout()
-        registerNib(UINib(nibName: "ImageCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ImageCollectionViewCell")
+        self.setUp()
+    }
+    init(frame:CGRect){
+        super.init(frame: frame, collectionViewLayout: UICollectionViewLayout())
+        self.setUp()
     }
     private func getLayout()->CollectionViewWaterfallLayout{
         let layout = CollectionViewWaterfallLayout()
@@ -26,4 +31,9 @@ class ImageCollectionView: UICollectionView {
         layout.minimumInteritemSpacing = 10
         return layout
     }
+    private func setUp(){
+        collectionViewLayout = getLayout()
+        registerNib(UINib(nibName: "ImageCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ImageCollectionViewCell")
+    }
+    
 }

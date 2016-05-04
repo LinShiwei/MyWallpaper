@@ -27,7 +27,6 @@
 		564D90B51C9280A100AAD9B6 /* Define.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564D90B41C9280A100AAD9B6 /* Define.swift */; };
 		564E2AE11CD2EBEB0042B397 /* ImageCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564E2AE01CD2EBEB0042B397 /* ImageCollectionView.swift */; };
 		564F8B5C1CD48BE4003D94B6 /* ImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564F8B5B1CD48BE4003D94B6 /* ImageScrollView.swift */; };
-		566C036B1CD1F4450011EF36 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566C036A1CD1F4450011EF36 /* Album.swift */; };
 		566F246E1C98061700206228 /* KeyWordsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566F246D1C98061700206228 /* KeyWordsView.swift */; };
 		566F24701C98063C00206228 /* KeyWordsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 566F246F1C98063C00206228 /* KeyWordsView.xib */; };
 		56F620201C95985E007DEE2A /* MyWallpaperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F6201F1C95985E007DEE2A /* MyWallpaperTests.swift */; };
@@ -70,7 +69,6 @@
 		564D90B41C9280A100AAD9B6 /* Define.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Define.swift; sourceTree = "<group>"; };
 		564E2AE01CD2EBEB0042B397 /* ImageCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCollectionView.swift; sourceTree = "<group>"; };
 		564F8B5B1CD48BE4003D94B6 /* ImageScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageScrollView.swift; sourceTree = "<group>"; };
-		566C036A1CD1F4450011EF36 /* Album.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		566F246D1C98061700206228 /* KeyWordsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyWordsView.swift; sourceTree = "<group>"; };
 		566F246F1C98063C00206228 /* KeyWordsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KeyWordsView.xib; sourceTree = "<group>"; };
 		56F6201D1C95985E007DEE2A /* MyWallpaperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyWallpaperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -207,7 +205,6 @@
 			children = (
 				56402D541C6474B1008B0499 /* MasterViewController.swift */,
 				56402D561C64758C008B0499 /* TableViewCell.swift */,
-				566C036A1CD1F4450011EF36 /* Album.swift */,
 			);
 			name = MasterView;
 			sourceTree = "<group>";
@@ -345,7 +342,6 @@
 				564E2AE11CD2EBEB0042B397 /* ImageCollectionView.swift in Sources */,
 				56402D571C64758C008B0499 /* TableViewCell.swift in Sources */,
 				56FE32D41CD3970600D213CA /* ImageViewerScrollView.swift in Sources */,
-				566C036B1CD1F4450011EF36 /* Album.swift in Sources */,
 				563C99641CD71A2800562540 /* SwiftPrompts.swift in Sources */,
 				564496871C81B97800E4F217 /* LoadingView.swift in Sources */,
 				56402D5B1C64F9E3008B0499 /* DetailViewController.swift in Sources */,

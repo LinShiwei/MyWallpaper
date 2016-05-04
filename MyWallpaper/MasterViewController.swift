@@ -19,18 +19,14 @@ class MasterViewController: UIViewController{
     weak var delegate: CategorySelectionDelegate?
     
     @IBOutlet weak var categoryTableView: UITableView!
-    
-    @IBOutlet weak var searchBar: UISearchBar!
-    
+        
     var albumList = [Album]()
     //MARK: view
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = themeBlack.masterViewBackgroundColor
-        categoryTableView.backgroundView = UIView()
-        categoryTableView.backgroundView?.backgroundColor = view.backgroundColor
+        categoryTableView.backgroundColor = view.backgroundColor
         initAlbumList()
-        searchBar.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -49,7 +45,7 @@ class MasterViewController: UIViewController{
                 if let albums = json["album"].array?.reverse() {
                     for albumJSON in albums{
                         if let albumName = albumJSON["albumname"].string,let picURL = albumJSON["pic"][0]["url"].string,let albumID = albumJSON["aid"].string {
-                            self.albumList.append(Album(albumName, url: picURL, id: albumID))
+                            self.albumList.append(Album(name: albumName, url: picURL, id: albumID))
                         }else{
                             print("album no found")
                         }
