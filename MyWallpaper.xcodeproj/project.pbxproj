@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		56027F411CDF4B2700F3DC36 /* ActionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56027F401CDF4B2700F3DC36 /* ActionTableViewCell.swift */; };
 		561E31791CD389820039302E /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 561E31781CD389820039302E /* ImageViewer.swift */; };
 		5628482B1C85D678001C0256 /* ImageCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5628482A1C85D678001C0256 /* ImageCollectionViewCell.xib */; };
 		5628482D1C85D914001C0256 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5628482C1C85D914001C0256 /* ImageCollectionViewCell.swift */; };
@@ -20,7 +21,7 @@
 		563D45081C63226200A581FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 563D45061C63226200A581FA /* LaunchScreen.storyboard */; };
 		56402D521C645E86008B0499 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56402D511C645E86008B0499 /* SwiftyJSON.framework */; };
 		56402D551C6474B1008B0499 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56402D541C6474B1008B0499 /* MasterViewController.swift */; };
-		56402D571C64758C008B0499 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56402D561C64758C008B0499 /* TableViewCell.swift */; };
+		56402D571C64758C008B0499 /* CategroyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56402D561C64758C008B0499 /* CategroyTableViewCell.swift */; };
 		56402D591C64AA5D008B0499 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56402D581C64AA5D008B0499 /* SplitViewController.swift */; };
 		56402D5B1C64F9E3008B0499 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56402D5A1C64F9E3008B0499 /* DetailViewController.swift */; };
 		564496871C81B97800E4F217 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564496861C81B97800E4F217 /* LoadingView.swift */; };
@@ -47,6 +48,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		56027F401CDF4B2700F3DC36 /* ActionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionTableViewCell.swift; sourceTree = "<group>"; };
 		561E31781CD389820039302E /* ImageViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewer.swift; sourceTree = "<group>"; };
 		5628482A1C85D678001C0256 /* ImageCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageCollectionViewCell.xib; sourceTree = "<group>"; };
 		5628482C1C85D914001C0256 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -62,7 +64,7 @@
 		563D45091C63226200A581FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		56402D511C645E86008B0499 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/iOS/SwiftyJSON.framework; sourceTree = "<group>"; };
 		56402D541C6474B1008B0499 /* MasterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
-		56402D561C64758C008B0499 /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		56402D561C64758C008B0499 /* CategroyTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategroyTableViewCell.swift; sourceTree = "<group>"; };
 		56402D581C64AA5D008B0499 /* SplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
 		56402D5A1C64F9E3008B0499 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		564496861C81B97800E4F217 /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
@@ -204,7 +206,8 @@
 			isa = PBXGroup;
 			children = (
 				56402D541C6474B1008B0499 /* MasterViewController.swift */,
-				56402D561C64758C008B0499 /* TableViewCell.swift */,
+				56402D561C64758C008B0499 /* CategroyTableViewCell.swift */,
+				56027F401CDF4B2700F3DC36 /* ActionTableViewCell.swift */,
 			);
 			name = MasterView;
 			sourceTree = "<group>";
@@ -340,12 +343,13 @@
 				564F8B5C1CD48BE4003D94B6 /* ImageScrollView.swift in Sources */,
 				5638603D1C8531E100C59C68 /* SearchPage.swift in Sources */,
 				564E2AE11CD2EBEB0042B397 /* ImageCollectionView.swift in Sources */,
-				56402D571C64758C008B0499 /* TableViewCell.swift in Sources */,
+				56402D571C64758C008B0499 /* CategroyTableViewCell.swift in Sources */,
 				56FE32D41CD3970600D213CA /* ImageViewerScrollView.swift in Sources */,
 				563C99641CD71A2800562540 /* SwiftPrompts.swift in Sources */,
 				564496871C81B97800E4F217 /* LoadingView.swift in Sources */,
 				56402D5B1C64F9E3008B0499 /* DetailViewController.swift in Sources */,
 				56F66AAD1C6710A300240006 /* CollectionViewWaterfallLayout.swift in Sources */,
+				56027F411CDF4B2700F3DC36 /* ActionTableViewCell.swift in Sources */,
 				566F246E1C98061700206228 /* KeyWordsView.swift in Sources */,
 				563D44FE1C63226200A581FA /* AppDelegate.swift in Sources */,
 				561E31791CD389820039302E /* ImageViewer.swift in Sources */,

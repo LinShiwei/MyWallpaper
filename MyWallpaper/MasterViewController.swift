@@ -19,7 +19,7 @@ class MasterViewController: UIViewController{
     weak var delegate: CategorySelectionDelegate?
     
     @IBOutlet weak var categoryTableView: UITableView!
-        
+
     var albumList = [Album]()
     //MARK: view
     override func viewDidLoad() {
@@ -62,32 +62,34 @@ class MasterViewController: UIViewController{
 //MARK: TableView DataSource
 extension MasterViewController: UITableViewDataSource{
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("categoryCell", forIndexPath: indexPath) as! TableViewCell
-        cell.titleLabel.text = albumList[indexPath.row].name
-        cell.titleLabel.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI / 2))
-        cell.cellImageView.hnk_setImageFromURL(NSURL(string: albumList[indexPath.row].url)!)
-        cell.setUpLayer()
-        if indexPath.row == 0 {
-            cell.titleLabel.alpha = 0
-            for layer in cell.cellImageView.layer.sublayers! {
-                layer.opacity = 1
+        if indexPath.row != albumList.count{
+            let cell = tableView.dequeueReusableCellWithIdentifier("CategoryCell", forIndexPath: indexPath) as! CategroyTableViewCell
+            cell.titleLabel.text = albumList[indexPath.row].name
+            cell.titleLabel.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI / 2))
+            cell.cellImageView.hnk_setImageFromURL(NSURL(string: albumList[indexPath.row].url)!)
+            cell.setUpLayer()
+            if indexPath.row == 0 {
+                cell.titleLabel.alpha = 0
+                for layer in cell.cellImageView.layer.sublayers! {
+                    layer.opacity = 1
+                }
+                tableView.selectRowAtIndexPath(indexPath, animated: false, scrollPosition: .None)
             }
-            tableView.selectRowAtIndexPath(indexPath, animated: false, scrollPosition: .None)
+            return cell
+        }else{
+            let cell = tableView.dequeueReusableCellWithIdentifier("ActionCell",forIndexPath: indexPath) as! ActionTableViewCell
+            return cell
         }
-        return cell
     }
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return albumList.count
-    }
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        return albumList.count + 1
     }
 }
 //MARK: TableView Delegate
 extension MasterViewController: UITableViewDelegate{
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         self.delegate?.categorySelected(albumID: self.albumList[indexPath.row].id)
-        let cell = tableView.cellForRowAtIndexPath(indexPath) as! TableViewCell
+        let cell = tableView.cellForRowAtIndexPath(indexPath) as! CategroyTableViewCell
         UIView.animateWithDuration(0.5, animations: {()-> Void in
             cell.titleLabel.alpha = 0
             }, completion: {(finish) in
@@ -96,13 +98,26 @@ extension MasterViewController: UITableViewDelegate{
     }
     func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.userInteractionEnabled = false
-        let cell = tableView.cellForRowAtIndexPath(indexPath) as! TableViewCell
+        let cell = tableView.cellForRowAtIndexPath(indexPath) as! CategroyTableViewCell
         cell.imageViewFadeOutAnimation()
         UIView.animateWithDuration(0.5, delay: 0.5, options: .TransitionNone, animations: {()-> Void in
             cell.titleLabel.alpha = 1
             }, completion: {(finish) in
                 tableView.userInteractionEnabled = true
         })
+    }
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if indexPath.row != albumList.count {
+            return 140
+        }else{
+            return 38
+        }
+    }
+    func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
+        if indexPath.row == albumList.count {
+            return nil
+        }
+        return indexPath
     }
 }
 //MARK: UISearchBarDelegate

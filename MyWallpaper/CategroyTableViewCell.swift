@@ -1,5 +1,5 @@
 //
-//  TableViewCell.swift
+//  CategroyTableViewCell.swift
 //  MyWallpaper
 //
 //  Created by Linsw on 16/2/5.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TableViewCell: UITableViewCell {
+class CategroyTableViewCell: UITableViewCell {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var cellImageView: UIImageView!

@@ -85,7 +85,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="t09-GP-HcK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="640" y="1022"/>
+            <point key="canvasLocation" x="675" y="1022"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="5je-kZ-XjU">
@@ -117,7 +117,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="categoryCell" id="ISC-4O-lD1" customClass="TableViewCell" customModule="MyWallpaper" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="CategoryCell" id="ISC-4O-lD1" customClass="CategroyTableViewCell" customModule="MyWallpaper" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="560" height="140"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ISC-4O-lD1" id="JpK-hq-lPv">
@@ -159,8 +159,49 @@
                                             </variation>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="cellImageView" destination="HvE-9l-YVU" id="w0v-aZ-vGv"/>
-                                            <outlet property="titleLabel" destination="N70-6C-91g" id="seX-Hp-zS6"/>
+                                            <outlet property="cellImageView" destination="HvE-9l-YVU" id="DiD-Mr-chp"/>
+                                            <outlet property="titleLabel" destination="N70-6C-91g" id="Ebl-p8-OHw"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ActionCell" id="Ism-NL-Qj1" customClass="ActionTableViewCell" customModule="MyWallpaper" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="168" width="560" height="140"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ism-NL-Qj1" id="tlZ-Sz-qFD">
+                                            <rect key="frame" x="0.0" y="0.0" width="560" height="140"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IUD-dK-tk8">
+                                                    <rect key="frame" x="8" y="8" width="544" height="44"/>
+                                                    <subviews>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="BroomFilled" translatesAutoresizingMaskIntoConstraints="NO" id="2Zh-X2-DXE">
+                                                            <rect key="frame" x="0.0" y="0.0" width="22" height="44"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="22" id="NmG-o6-14q"/>
+                                                                <constraint firstAttribute="width" constant="22" id="pUS-sd-F0a"/>
+                                                            </constraints>
+                                                        </imageView>
+                                                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4ZK-vK-oc9">
+                                                            <rect key="frame" x="22" y="0.0" width="522" height="44"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                            <state key="normal" title="Clear Cache">
+                                                                <color key="titleColor" red="0.75686274509803919" green="0.75686274509803919" blue="0.75686274509803919" alpha="1" colorSpace="calibratedRGB"/>
+                                                            </state>
+                                                            <connections>
+                                                                <action selector="clearCache:" destination="Ism-NL-Qj1" eventType="touchUpInside" id="ymO-5n-nP6"/>
+                                                            </connections>
+                                                        </button>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailingMargin" secondItem="IUD-dK-tk8" secondAttribute="trailing" id="9cZ-pu-blC"/>
+                                                <constraint firstItem="IUD-dK-tk8" firstAttribute="top" secondItem="tlZ-Sz-qFD" secondAttribute="topMargin" id="P2n-hK-Dtc"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="IUD-dK-tk8" secondAttribute="bottom" id="sWa-cB-y3M"/>
+                                                <constraint firstItem="IUD-dK-tk8" firstAttribute="leading" secondItem="tlZ-Sz-qFD" secondAttribute="leadingMargin" id="zm2-h8-Nt5"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="clearCacheButton" destination="4ZK-vK-oc9" id="5FL-SD-EWe"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -203,4 +244,7 @@
             <point key="canvasLocation" x="675" y="314"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="BroomFilled" width="44" height="44"/>
+    </resources>
 </document>
