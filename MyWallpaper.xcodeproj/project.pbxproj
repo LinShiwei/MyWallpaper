@@ -105,14 +105,14 @@
 		562848281C85CCD5001C0256 /* Support */ = {
 			isa = PBXGroup;
 			children = (
-				563D44FD1C63226200A581FA /* AppDelegate.swift */,
 				563D45011C63226200A581FA /* Main.storyboard */,
 				563D45041C63226200A581FA /* Assets.xcassets */,
-				563D45061C63226200A581FA /* LaunchScreen.storyboard */,
-				563D45091C63226200A581FA /* Info.plist */,
-				56402D581C64AA5D008B0499 /* SplitViewController.swift */,
 				564D90B41C9280A100AAD9B6 /* Define.swift */,
+				56402D581C64AA5D008B0499 /* SplitViewController.swift */,
 				56F66AAC1C6710A300240006 /* CollectionViewWaterfallLayout.swift */,
+				563D45061C63226200A581FA /* LaunchScreen.storyboard */,
+				563D44FD1C63226200A581FA /* AppDelegate.swift */,
+				563D45091C63226200A581FA /* Info.plist */,
 			);
 			name = Support;
 			sourceTree = "<group>";
