@@ -19,39 +19,50 @@ class DetailViewController: UIViewController{
     @IBOutlet weak var loadingView: LoadingView!
     @IBOutlet weak var imageCollectionView: ImageCollectionView!
     
-    var pictures = [Picture]()
+    var pictures = [Picture](){
+        didSet{
+            guard pictures.count != 0 else {return}
+            if albumID != albumIndex {
+                albumHomeScrollView.alpha = 0
+                albumHomeScrollView.timer?.invalidate()
+                pageControl.alpha = 0
+                imageCollectionView.alpha = 1
+                loadingView.alpha = 1
+                dispatch_async(dispatch_get_main_queue()) { [unowned self] in
+                    self.imageCollectionView.reloadData()
+                }
+            }else{
+                albumHomeScrollView.alpha = 1
+                albumHomeScrollView.initTimer()
+                pageControl.alpha = 1
+                imageCollectionView.alpha = 0
+                loadingView.alpha = 0
+                if pictures.count != albumHomeScrollView.pictures.count {
+                    albumHomeScrollView.pictures = pictures
+                    pageControl.numberOfPages = pictures.count
+                }
+            }
+        }
+    }
     var albumID :String = albumIndex{
         didSet{
-            self.fetchDataWithAlbumID()
+            self.fetchDataWithAlbumID(albumID)
         }
     }
     //MARK: view
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchDataWithAlbumID()
+        fetchDataWithAlbumID(albumID)
+        albumHomeScrollView.delegate = self
         view.backgroundColor = themeBlack.detailViewBackgroundColor
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     //MARK: Get image from URL
-    private func fetchDataWithAlbumID(){
-        var stringURL:String = urlGetPicList
-        pictures.removeAll()
-
-        if albumID != albumIndex {
-            albumHomeScrollView.alpha = 0
-            albumHomeScrollView.timer?.invalidate()
-            pageControl.alpha = 0
-            imageCollectionView.alpha = 1
-            loadingView.alpha = 1
-            stringURL = stringURL + "/aid/" + albumID
-        }else{
-            imageCollectionView.alpha = 0
-            self.albumHomeScrollView.alpha = 1
-            loadingView.alpha = 1
-            stringURL = stringURL + "/aid/" + albumID
-        }
+    private func fetchDataWithAlbumID(id:String){
+        let stringURL = urlGetPicList + "/aid/" + id
+        var pics = [Picture]()
         let cache = Shared.JSONCache
         cache.fetch(URL: NSURL(string: stringURL)!,failure:{ error in
             dispatch_async(dispatch_get_main_queue()) {
@@ -62,30 +73,13 @@ class DetailViewController: UIViewController{
             for  picJSON in json["pic"].array! {
                 if let url = picJSON["linkurl"].string,let width = picJSON["width"].string ,let height = picJSON["height"].string,let name = picJSON["name"].string {
                     let picture = Picture(name: name, url: url, size: CGSize(width: Int(width)!, height: Int(height)!))
-                    self.pictures.append(picture)
+                    pics.append(picture)
                 }else {
                     print("picture no found")
                 }
             }
-            if self.albumID != albumIndex {
-                dispatch_async(dispatch_get_main_queue()) { [unowned self] in
-                    self.imageCollectionView.reloadData()
-                }
-            }else{
-                self.initScrollView()
-                self.loadingView.alpha = 0
-                self.pageControl.alpha = 1
-            }
+            self.pictures = pics
         }
-    }
-    //MARK: Home Page (Scroll view)
-    func initScrollView(){
-        albumHomeScrollView.delegate = self
-        albumHomeScrollView.setUp(pictures: pictures)
-        initPageControl()
-    }
-    func initPageControl(){
-        pageControl.numberOfPages = pictures.count
     }
 }
 //MARK: ScrollView Delegate

@@ -11,42 +11,43 @@ import AVFoundation
 import Haneke
 class ImageScrollView: UIScrollView {
 
-    var pictures = [Picture]()
+    var pictures = [Picture](){
+        didSet{
+            guard pictures.count != 0 else {return}
+            for view in self.subviews where view is UIImageView {
+                view.removeFromSuperview()
+            }
+            contentSize = CGSize(width: frame.width * CGFloat(pictures.count), height: frame.height)
+            for index in 0...pictures.count-1 {
+                let scrollImageView = createScrollImageView(index)
+                let cache = Cache<UIImage>(name: "indexImageCache")
+                let URL = NSURL(string: pictures[index].url)!
+                
+                cache.fetch(URL:URL).onSuccess{ [unowned self] image in
+                    scrollImageView.image = image
+                    scrollImageView.setupForImageViewer(URL, backgroundColor: self.backgroundColor!)
+                    self.addSubview(scrollImageView)
+                }
+            }
+            initTimer()
+        }
+    }
     var currentIndex = 0
     var timer:NSTimer?
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder:aDecoder)
-    }
-    func setUp(pictures pics:[Picture]){
-        self.pictures = pics
-        configureView()
-        initTimer()
-    }
-    
-    private func configureView(){
         pagingEnabled = true
         showsHorizontalScrollIndicator = false
         showsVerticalScrollIndicator = false
-        backgroundColor = themeBlack.detailViewBackgroundColor  
-        contentSize = CGSize(width: frame.width * CGFloat(pictures.count), height: frame.height)
-        for index in 0...pictures.count-1 {
-            let scrollImageView = initScrollImageView(index)
-            let cache = Cache<UIImage>(name: "indexImageCache")
-            let URL = NSURL(string: pictures[index].url)!
-            
-            cache.fetch(URL:URL).onSuccess{ [unowned self] image in
-                scrollImageView.image = image
-                scrollImageView.setupForImageViewer(URL, backgroundColor: self.backgroundColor!)
-                self.addSubview(scrollImageView)
-            }
-        }
+        backgroundColor = themeBlack.detailViewBackgroundColor
     }
+
     func initTimer(){
         guard timer == nil || timer?.valid == false else{ return}
         timer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "moveToNextPage", userInfo: nil, repeats: true)
-        
     }
+    
     func moveToNextPage (){
         userInteractionEnabled = false
         for view in subviews {
@@ -63,6 +64,7 @@ class ImageScrollView: UIScrollView {
         }
         scrollRectToVisible(CGRect(x: slideToX, y: 0, width: pageWidth, height: frame.height), animated: true)
     }
+    
     func prepareForDragging() {
         userInteractionEnabled = false
         for view in subviews {
@@ -72,6 +74,7 @@ class ImageScrollView: UIScrollView {
             timer.invalidate()
         }
     }
+    
     func updateCurrentPage()->Int{
         userInteractionEnabled = true
         for view in subviews {
@@ -83,14 +86,15 @@ class ImageScrollView: UIScrollView {
         assert(0..<pictures.count ~= currentPage)
         return currentPage
     }
-    private func initScrollImageView(index:Int)->UIImageView {
+    
+    private func createScrollImageView(index:Int)->UIImageView {
         var frame = centerFrameFromImageSize(pictures[index].size)
         frame.origin.x += self.frame.width * CGFloat(index)
-        let imageView = UIImageView()
-        imageView.frame = frame
-        return imageView
+       
+        return UIImageView(frame: frame)
     }
+    
     private func centerFrameFromImageSize(imageSize:CGSize) -> CGRect {
-        return AVMakeRectWithAspectRatioInsideRect(imageSize, frame)
+        return AVMakeRectWithAspectRatioInsideRect(imageSize, CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height))
     }
 }

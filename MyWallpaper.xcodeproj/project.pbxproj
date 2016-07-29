@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		56027F411CDF4B2700F3DC36 /* ActionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56027F401CDF4B2700F3DC36 /* ActionTableViewCell.swift */; };
+		561CED5F1D20237C0018900F /* Haneke.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 561CED5E1D20237C0018900F /* Haneke.framework */; };
 		561E31791CD389820039302E /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 561E31781CD389820039302E /* ImageViewer.swift */; };
 		5628482B1C85D678001C0256 /* ImageCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5628482A1C85D678001C0256 /* ImageCollectionViewCell.xib */; };
 		5628482D1C85D914001C0256 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5628482C1C85D914001C0256 /* ImageCollectionViewCell.swift */; };
@@ -32,7 +33,6 @@
 		566F24701C98063C00206228 /* KeyWordsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 566F246F1C98063C00206228 /* KeyWordsView.xib */; };
 		56F620201C95985E007DEE2A /* MyWallpaperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F6201F1C95985E007DEE2A /* MyWallpaperTests.swift */; };
 		56F66AAD1C6710A300240006 /* CollectionViewWaterfallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F66AAC1C6710A300240006 /* CollectionViewWaterfallLayout.swift */; };
-		56F66AAF1C672D6500240006 /* Haneke.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56F66AAE1C672D6500240006 /* Haneke.framework */; };
 		56F66AB31C672ED000240006 /* UIImageView+ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F66AB11C672ED000240006 /* UIImageView+ImageViewer.swift */; };
 		56FE32D41CD3970600D213CA /* ImageViewerScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FE32D31CD3970600D213CA /* ImageViewerScrollView.swift */; };
 /* End PBXBuildFile section */
@@ -49,6 +49,7 @@
 
 /* Begin PBXFileReference section */
 		56027F401CDF4B2700F3DC36 /* ActionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionTableViewCell.swift; sourceTree = "<group>"; };
+		561CED5E1D20237C0018900F /* Haneke.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Haneke.framework; path = Carthage/Build/iOS/Haneke.framework; sourceTree = "<group>"; };
 		561E31781CD389820039302E /* ImageViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewer.swift; sourceTree = "<group>"; };
 		5628482A1C85D678001C0256 /* ImageCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageCollectionViewCell.xib; sourceTree = "<group>"; };
 		5628482C1C85D914001C0256 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -77,7 +78,6 @@
 		56F6201F1C95985E007DEE2A /* MyWallpaperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWallpaperTests.swift; sourceTree = "<group>"; };
 		56F620211C95985E007DEE2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		56F66AAC1C6710A300240006 /* CollectionViewWaterfallLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewWaterfallLayout.swift; sourceTree = "<group>"; };
-		56F66AAE1C672D6500240006 /* Haneke.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Haneke.framework; path = Carthage/Build/iOS/Haneke.framework; sourceTree = "<group>"; };
 		56F66AB11C672ED000240006 /* UIImageView+ImageViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+ImageViewer.swift"; sourceTree = "<group>"; };
 		56FE32D31CD3970600D213CA /* ImageViewerScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewerScrollView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -88,7 +88,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				56402D521C645E86008B0499 /* SwiftyJSON.framework in Frameworks */,
-				56F66AAF1C672D6500240006 /* Haneke.framework in Frameworks */,
+				561CED5F1D20237C0018900F /* Haneke.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,7 +140,7 @@
 		563D44F11C63226200A581FA = {
 			isa = PBXGroup;
 			children = (
-				56F66AAE1C672D6500240006 /* Haneke.framework */,
+				561CED5E1D20237C0018900F /* Haneke.framework */,
 				56402D511C645E86008B0499 /* SwiftyJSON.framework */,
 				563D44FB1C63226200A581FA /* Products */,
 				563D44FC1C63226200A581FA /* MyWallpaper */,
