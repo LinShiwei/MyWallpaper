@@ -17,7 +17,6 @@ class ActionTableViewCell: UITableViewCell {
     }
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
         clearCacheButton.titleLabel!.textColor = themeBlack.lineColor
         backgroundColor = themeBlack.masterViewBackgroundColor
     }

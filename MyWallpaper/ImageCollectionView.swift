@@ -10,8 +10,6 @@ import UIKit
 
 class ImageCollectionView: UICollectionView {
 
-    let loadingView = LoadingView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
-
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.setUp()
