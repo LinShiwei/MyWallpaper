@@ -45,10 +45,10 @@ class ImageViewer: UIViewController {
     }
     //MARK: Configure view
     private func configureGestureRecognizer(){
-        let swipeDownRecognizer = UISwipeGestureRecognizer(target: self, action: "didSwipeDown:")
+        let swipeDownRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(ImageViewer.didSwipeDown(_:)))
         swipeDownRecognizer.direction = .Down
         view.addGestureRecognizer(swipeDownRecognizer)
-        let swipeUpRecognizer = UISwipeGestureRecognizer(target: self, action: "didSwipeUp:")
+        let swipeUpRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(ImageViewer.didSwipeUp(_:)))
         swipeUpRecognizer.direction = .Up
         view.addGestureRecognizer(swipeUpRecognizer)
     }
@@ -148,7 +148,7 @@ class ImageViewer: UIViewController {
     }
     func didSwipeDown(sender:UISwipeGestureRecognizer){
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)){
-            UIImageWriteToSavedPhotosAlbum(self.scrollView!.centerImage, self, "image:didFinishSavingWithError:contextInfo:", nil)
+            UIImageWriteToSavedPhotosAlbum(self.scrollView!.centerImage, self, #selector(ImageViewer.image(_:didFinishSavingWithError:contextInfo:)), nil)
         }
     }
     func image(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo:UnsafePointer<Void>) {

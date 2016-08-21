@@ -143,7 +143,7 @@ class SearchPage: UIViewController{
         return CGRect(origin: origin, size: size)
     }
     private func initSwipeGestureRecognizer()->UISwipeGestureRecognizer{
-        let recognizer = UISwipeGestureRecognizer(target: self, action: "didSwipeUp:")
+        let recognizer = UISwipeGestureRecognizer(target: self, action: #selector(SearchPage.didSwipeUp(_:)))
         recognizer.direction = .Up
         return recognizer
     }

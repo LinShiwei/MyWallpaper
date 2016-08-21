@@ -45,7 +45,7 @@ class ImageScrollView: UIScrollView {
 
     func initTimer(){
         guard timer == nil || timer?.valid == false else{ return}
-        timer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "moveToNextPage", userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: #selector(ImageScrollView.moveToNextPage), userInfo: nil, repeats: true)
     }
     
     func moveToNextPage (){

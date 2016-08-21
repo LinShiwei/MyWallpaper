@@ -12,7 +12,7 @@ import UIKit
 public extension UIImageView {
     public func setupForImageViewer(highQualityImageUrl: NSURL? = nil, backgroundColor: UIColor = themeBlack.splitViewBackgroundColor) {
         userInteractionEnabled = true
-        addGestureRecognizer(ImageViewerTapGestureRecognizer(target: self, action: "didTap:", highQualityImageUrl: highQualityImageUrl, backgroundColor: backgroundColor))
+        addGestureRecognizer(ImageViewerTapGestureRecognizer(target: self, action: #selector(UIImageView.didTap(_:)), highQualityImageUrl: highQualityImageUrl, backgroundColor: backgroundColor))
     }
     internal func didTap(recognizer: ImageViewerTapGestureRecognizer) {
         var pictures=[Picture]()

@@ -34,7 +34,7 @@ class KeyWordsView: UIView {
         if let stackView = self.subviews[0] as? UIStackView {
             for (index,view) in stackView.subviews.enumerate() where view is UIButton {
                 let button = view as! UIButton
-                button.addTarget(self, action: "buttonDidTap:", forControlEvents:.TouchUpInside)
+                button.addTarget(self, action: #selector(KeyWordsView.buttonDidTap(_:)), forControlEvents:.TouchUpInside)
                 button.setTitle(words[index-1],forState:.Normal)
                 button.backgroundColor = themeBlack.lineColor
                 button.layer.cornerRadius = 10.0
